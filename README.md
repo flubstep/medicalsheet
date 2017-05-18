@@ -11,6 +11,7 @@
 - Just put a short description of what you changed in the subject box.
 - Make sure "commit directly to the master branch" is selected.
 - Click "Commit Changes".
+- See your updates on www.radiologistic.com once they're committed.
 
 ## How to add a new image:
 
