@@ -53,6 +53,8 @@ p {
 
 img {
     margin: auto;
+    width: 100%;
+    max-width: 100vw;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     cursor: pointer;
     transition: all 200ms ease-in-out;
@@ -69,5 +71,10 @@ img {
 @media (min-width: 640px) {
     .container {
         max-width: 640px;
+    }
+
+    img {
+        margin: auto;
+        width: auto;
     }
 }
