@@ -1,13 +1,18 @@
 body {
   font-family: "Avenir", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  padding: 0;
 }
 
-.container {
+#container {
     position: relative;
     width: 100%;
     padding: 10px;
     margin: 0 auto;
     box-sizing: border-box;
+}
+
+#container.noscroll {
+
 }
 
 #image-overlay {
@@ -56,20 +61,24 @@ img {
     width: 100%;
     max-width: 100vw;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    cursor: pointer;
+    cursor: zoom-in;
     transition: all 200ms ease-in-out;
 }
 
-.container img {
+#image-overlay img {
+    cursor: zoom-out;
+}
+
+#container img {
     width: 100%;
 }
 
-.container img:hover {
+#container img:hover {
     transform: scale(1.02);
 }
 
 @media (min-width: 640px) {
-    .container {
+    #container {
         max-width: 640px;
     }
 
