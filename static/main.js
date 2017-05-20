@@ -1,4 +1,6 @@
 window.addEventListener('load', function() {
+  // Disable JS zoom for now.
+  return;
 
   var imageOverlay = document.getElementById('image-overlay');
   var container = document.getElementById('container');
