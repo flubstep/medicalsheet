@@ -79,11 +79,17 @@ img {
 
 @media (min-width: 640px) {
     #container {
-        max-width: 640px;
+        max-width: 1280px;
+        display: flex;
     }
 
     img {
         margin: auto;
         width: auto;
+    }
+
+    .column {
+        width: 600px;
+        margin: 0 20px;
     }
 }
