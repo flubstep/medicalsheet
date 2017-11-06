@@ -65,6 +65,10 @@ img {
     transition: all 200ms ease-in-out;
 }
 
+.column {
+    position: relative;
+}
+
 #image-overlay img {
     cursor: zoom-out;
 }
@@ -86,6 +90,7 @@ img {
     img {
         margin: auto;
         width: auto;
+        max-width: 600px;
     }
 
     .column {
