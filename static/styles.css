@@ -81,6 +81,15 @@ img {
     transform: scale(1.02);
 }
 
+#heading {
+    display: flex;
+    align-items: center;
+}
+
+#heading img {
+    width: 45vw;
+}
+
 @media (min-width: 640px) {
     #container {
         max-width: 1280px;
