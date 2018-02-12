@@ -18,7 +18,7 @@ body {
 #image-overlay {
     position: fixed;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
     left: 0;
     top: 0;
@@ -83,7 +83,7 @@ img {
 
 #heading {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 
 #heading img {
