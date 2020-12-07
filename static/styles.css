@@ -61,16 +61,11 @@ img {
     width: 100%;
     max-width: 100vw;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    cursor: zoom-in;
     transition: all 200ms ease-in-out;
 }
 
 .column {
     position: relative;
-}
-
-#image-overlay img {
-    cursor: zoom-out;
 }
 
 #container img {
