@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summa Health — Phone Directory</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2e42;
+    --navy-light: #243d52;
+    --teal: #00b4a0;
+    --teal-dim: #009688;
+    --teal-glow: rgba(0,180,160,0.15);
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --text: #e8edf2;
+    --text-muted: #8fa3b3;
+    --text-dim: #5a7285;
+    --border: rgba(255,255,255,0.07);
+    --card-bg: rgba(255,255,255,0.04);
+    --card-hover: rgba(255,255,255,0.07);
+    --radius: 10px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --header-bg: rgba(13,27,42,0.95);
+    --grid-line: rgba(0,180,160,0.03);
+    --priority-bg: rgba(239,68,68,0.05);
+    --priority-border: rgba(239,68,68,0.15);
+    --priority-item-bg: rgba(255,255,255,0.03);
+    --priority-item-border: rgba(239,68,68,0.1);
+    --search-bg: rgba(255,255,255,0.06);
+    --search-border: rgba(255,255,255,0.1);
+  }
+
+  /* ── LIGHT MODE ── */
+  body.light {
+    --navy: #f0f4f8;
+    --navy-mid: #e2eaf2;
+    --navy-light: #d4e0ec;
+    --teal: #007a6e;
+    --teal-dim: #006b60;
+    --teal-glow: rgba(0,122,110,0.1);
+    --amber: #d97706;
+    --red: #dc2626;
+    --text: #0d1b2a;
+    --text-muted: #3d5a73;
+    --text-dim: #6b8ea8;
+    --border: rgba(0,0,0,0.08);
+    --card-bg: rgba(255,255,255,0.8);
+    --card-hover: rgba(255,255,255,1);
+    --header-bg: rgba(240,244,248,0.96);
+    --grid-line: rgba(0,122,110,0.04);
+    --priority-bg: rgba(220,38,38,0.04);
+    --priority-border: rgba(220,38,38,0.12);
+    --priority-item-bg: rgba(255,255,255,0.7);
+    --priority-item-border: rgba(220,38,38,0.08);
+    --search-bg: rgba(255,255,255,0.8);
+    --search-border: rgba(0,0,0,0.12);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* Background grid texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    transition: background-image 0.3s ease;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    transition: background 0.3s ease;
+  }
+
+  .header-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 64px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--teal);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .logo-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    flex: 1;
+    position: relative;
+    max-width: 560px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 8px;
+    padding: 10px 42px 10px 40px;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: all 0.2s;
+    caret-color: var(--teal);
+  }
+
+  #search::placeholder { color: var(--text-dim); }
+
+  #search:focus {
+    border-color: var(--teal);
+    background: rgba(0,180,160,0.06);
+    box-shadow: 0 0 0 3px rgba(0,180,160,0.1);
+  }
+
+  #search:focus ~ .search-icon { color: var(--teal); }
+
+  .search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 16px;
+    display: none;
+    padding: 2px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .search-clear:hover { color: var(--text); }
+
+  .kbd-hint {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
+  .header-stats {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .stat-num {
+    color: var(--teal);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .filter-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 48px;
+    white-space: nowrap;
+  }
+
+  .filter-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .filter-btn .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .filter-btn:hover {
+    border-color: rgba(255,255,255,0.2);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: var(--teal-glow);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+    margin: 0 4px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── RESULTS BAR ── */
+  .results-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .results-count {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .results-count strong { color: var(--text); font-weight: 500; }
+
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+  }
+
+  .no-results-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+  .no-results h3 { font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  .no-results p { font-size: 14px; }
+
+  /* ── SECTIONS / CARDS ── */
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .section-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .section-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  .section-card.hidden { display: none; }
+
+  .card-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-accent {
+    width: 3px;
+    height: 28px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .card-title-wrap { flex: 1; min-width: 0; }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .card-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .card-badge {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  /* Entry rows */
+  .entry {
+    display: flex;
+    align-items: center;
+    padding: 9px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.15s;
+    gap: 12px;
+  }
+
+  .entry:last-child { border-bottom: none; }
+
+  .entry:hover {
+    background: var(--card-hover);
+  }
+
+  .entry-name {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-muted);
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .entry-phone {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+
+  .entry-phone a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .entry-phone a:hover { color: var(--teal); }
+
+  .entry.highlighted {
+    background: rgba(0,180,160,0.06);
+  }
+
+  mark {
+    background: rgba(245,158,11,0.25);
+    color: var(--amber);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  /* ── PRIORITY ENTRIES ── */
+  .priority-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--priority-bg);
+    border: 1px solid var(--priority-border);
+    border-radius: var(--radius);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .priority-header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+
+  .priority-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .priority-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid var(--red);
+    animation: pulse 2s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(2); }
+  }
+
+  .priority-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    background: var(--priority-item-bg);
+    border: 1px solid var(--priority-item-border);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .priority-item:hover {
+    background: rgba(239,68,68,0.08);
+    border-color: rgba(239,68,68,0.25);
+  }
+
+  .priority-item-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+
+  .priority-item-phone {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .priority-item-loc {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+
+  /* ── SCROLLTOP BUTTON ── */
+  #scrollTop {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    background: var(--teal);
+    color: var(--navy);
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(0,180,160,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  #scrollTop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,180,160,0.4);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 11px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── DAY/NIGHT TOGGLE ── */
+  .theme-toggle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toggle-track {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  body.light .toggle-track {
+    background: #c7dff0;
+    border-color: #a8c8e0;
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: var(--teal);
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  body.light .toggle-thumb {
+    transform: translateX(24px);
+    background: #f59e0b;
+  }
+
+  .toggle-icon-moon { display: block; }
+  .toggle-icon-sun  { display: none; }
+  body.light .toggle-icon-moon { display: none; }
+  body.light .toggle-icon-sun  { display: block; }
+
+  .toggle-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    min-width: 30px;
+    transition: color 0.3s ease;
+  }
+
+  /* Light mode card shadow */
+  body.light .section-card {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  body.light .section-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+
+  body.light #search:focus {
+    border-color: var(--teal);
+    background: rgba(0,122,110,0.05);
+    box-shadow: 0 0 0 3px rgba(0,122,110,0.1);
+  }
+
+  body.light .filter-btn {
+    border-color: rgba(0,0,0,0.1);
+  }
+
+  body.light .filter-btn:hover {
+    border-color: rgba(0,0,0,0.2);
+  }
+
+  body.light .filter-btn.active {
+    background: rgba(0,122,110,0.08);
+    border-color: var(--teal);
+  }
+
+  body.light mark {
+    background: rgba(217,119,6,0.2);
+    color: #92400e;
+  }
+
+  body.light .logo-mark {
+    color: white;
+  }
+
+  @media (max-width: 640px) {
+    .header-inner { gap: 12px; }
+    .header-stats { display: none; }
+    .logo-sub { display: none; }
+    main { padding: 16px; }
+    .sections-grid { grid-template-columns: 1fr; }
+    .priority-strip { grid-template-columns: 1fr 1fr; }
+    .toggle-label { display: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">SH</div>
+      <div>
+        <div class="logo-text">Summa Health</div>
+        <div class="logo-sub">Phone Directory</div>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Search by name, department, number…" autocomplete="off" spellcheck="false">
+      <button class="search-clear" id="searchClear" title="Clear search">✕</button>
+      <span class="kbd-hint" id="kbdHint">/</span>
+    </div>
+
+    <div class="header-stats">
+      <span class="stat-num" id="totalEntries">0</span> entries across
+      <span class="stat-num" id="totalLocations">0</span> locations
+    </div>
+
+    <div class="theme-toggle">
+      <span class="toggle-label" id="toggleLabel">Night</span>
+      <div class="toggle-track" id="themeToggle" title="Toggle day/night mode" role="button" tabindex="0" aria-label="Toggle theme">
+        <div class="toggle-thumb">
+          <span class="toggle-icon-moon">🌙</span>
+          <span class="toggle-icon-sun">☀️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-inner" id="filterInner">
+    <span class="filter-label">Location</span>
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">
+      <span>All</span>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <!-- PRIORITY / QUICK DIAL -->
+  <div class="priority-strip" id="priorityStrip">
+    <div class="priority-header">
+      <div class="priority-pulse"></div>
+      Quick Dial — Emergency & High-Traffic Lines
+    </div>
+  </div>
+
+  <div class="results-bar">
+    <div class="results-count" id="resultsCount"></div>
+  </div>
+
+  <div id="noResults" class="no-results">
+    <div class="no-results-icon">🔍</div>
+    <h3>No results found</h3>
+    <p>Try a different name, department, or phone number</p>
+  </div>
+
+  <div class="sections-grid" id="sectionsGrid"></div>
+</main>
+
+<footer>
+  Summa Health System — Internal Directory &nbsp;·&nbsp; Last updated May 1, 2023 &nbsp;·&nbsp; For emergencies dial 911
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const LOCATIONS = {
+  "Akron City":   { color: "#00b4a0", short: "AKR" },
+  "Barberton":    { color: "#ef4444", short: "BAR" },
+  "West Reserve": { color: "#a78bfa", short: "WRH" },
+  "Saint Thomas": { color: "#f59e0b", short: "STH" },
+  "Wadsworth":    { color: "#38bdf8", short: "WAD" },
+  "Green":        { color: "#4ade80", short: "GRN" },
+  "Medina":       { color: "#fb923c", short: "MED" },
+  "CCOC":         { color: "#e879f9", short: "CCO" },
+  "Summa Rehab":  { color: "#fbbf24", short: "RHB" },
+  "Satellite":    { color: "#94a3b8", short: "SAT" },
+  "Misc":         { color: "#64748b", short: "MSC" },
+};
+
+const PRIORITY = [
+  { name: "Akron City ED",       phone: "53361",        location: "Akron City" },
+  { name: "Barberton ED",        phone: "330-615-4500", location: "Barberton" },
+  { name: "Green ED",            phone: "330-899-2400", location: "Green" },
+  { name: "Lake Medina ED",      phone: "330-721-1111", location: "Medina" },
+  { name: "Wadsworth ED",        phone: "330-331-1103", location: "Wadsworth" },
+  { name: "Western Reserve ED",  phone: "330-971-7436", location: "West Reserve" },
+  { name: "On-Call Trauma Surg", phone: "234-417-2660", location: "Akron City" },
+  { name: "Regional Call Center",phone: "54166",        location: "Misc" },
+  { name: "Central Scheduling",  phone: "996-8881",     location: "Misc" },
+  { name: "Code Blue",           phone: "757",          location: "Akron City" },
+];
+
+const SECTIONS = [
+  // ── AKRON CITY ───────────────────────────────────────────────────────────
+  { title: "Summa Akron — Reading Areas", location: "Akron City", entries: [
+    ["Angio 1","53180"],["Angio 2","53140"],["Angio 3","56657"],
+    ["CORE 1","57164"],["CORE 2","57165"],["CORE 3 (ED reader)","54055"],
+    ["CORE 4 (WRH reader)","57162"],["Inpatient Fluoro","57163"],
+    ["Mammo Diagnostic Techs","56271"],["MRI/COE","57623"],["Nuclear Medicine","54827"],
+  ]},
+  { title: "Summa Akron — Technical Areas", location: "Akron City", entries: [
+    ["Angio Nursing/Coord. Office","57814"],["CT Tech – ground floor","53013 / 57933"],
+    ["CT ER Tech","51690 / 59678"],["Ultrasound Tech Inpatient","57728"],
+    ["Ultrasound Room 6 (Biopsy)","57648"],["US Tech Pager","24-4460"],
+    ["MRI Techs","57835"],["MRI/COE Techs","57609"],["MRI H Tower","53542"],
+    ["COE US Techs","54990"],["Same Day Surgery","57978"],["T1 (HLU)","54814"],
+    ["ICU T2","55323"],["ICU T3","57330"],
+  ]},
+  { title: "Summa Akron — Patient Floors", location: "Akron City", entries: [
+    ["ED","53361"],["Trauma Surg","234-417-2660"],["Code Blue","757"],
+    ["HLU","54814"],["SCVICU","53554"],["ICU T-2","53935"],["ICU T-3","57330"],
+    ["2 East","54270"],["2 North","54280"],["2 West","53525"],
+    ["3 West Select","54390"],["3 Rehab","53500"],
+    ["4 East Stepdn (H6)","54470"],["4 East Vasc (H6)","57470"],
+    ["4 West","54490"],["4 North Stroke","54480"],
+    ["5 East","54747"],["5 North","54580"],["5 West","54590"],
+    ["6 East","54670"],["6 West (now H5)","54290"],
+    ["7 East Onc","54470"],["7 East Rad OP","51722"],["7 West","54790"],
+    ["L&D H2","53525"],["CDU","59686"],
+  ]},
+  { title: "Summa Akron — ARI Staff", location: "Akron City", entries: [
+    ["Hargenrader, Melissa","53771"],["Joanne Hasley","53043"],
+    ["Nord, Peg","53167"],["Rogers, Angie","54028"],
+    ["Managers Group Pager","24-4450"],["RIS Support Center","53634"],
+  ]},
+  { title: "Summa Akron — IR Nurses", location: "Akron City", entries: [
+    ["Angio 1","53143"],["Angio 2","53189"],
+    ["Barberton IR Control Room","43618"],["Barberton (Kristin)","43037"],
+  ]},
+  { title: "Summa Akron — Support", location: "Akron City", entries: [
+    ["IT","234-312-2222"],["CT in ED","51690 or 59878"],["Xray in ED","59043 or 51380"],
+    ["MRI","57835"],["MRI COE","57609"],["CT COE","53034 or 53035"],
+    ["US Tech Pager","24-4460"],["NM Tech Pager","24-4480"],
+    ["MRI Tech Pager","24-3475"],["Mammo Techs","56272"],
+    ["Summa Call Center","330-319-9453"],
+  ]},
+
+  // ── BARBERTON ────────────────────────────────────────────────────────────
+  { title: "Barberton — Radiology", location: "Barberton", entries: [
+    ["Diagnostic Radiologist","330-615-3327"],["Interventional Radiologist","330-615-3341"],
+    ["Mammo Radiologist","330-615-3351"],["CT Tech","330-615-3336"],
+    ["MRI Tech","330-615-3342"],["Nuclear Medicine","330-615-3328"],
+    ["Ultrasound","330-615-3346"],["Radiology Tech","330-615-4537"],
+  ]},
+  { title: "Barberton — Patient Floors", location: "Barberton", entries: [
+    ["ED","330-615-4500"],["1 East","3400"],["2 East","3480"],
+    ["3 Central","3550"],["4 North","3656"],["4 South","3698"],
+    ["5 South","3808"],["5 Central","3717"],["6 South","3866"],
+    ["CCU","3590"],["ICU","3565"],["Mamm Tech","6257"],
+    ["CT","3336"],["MRI","3342"],["US","3346"],["X-ray","4537 or 6433"],
+  ]},
+
+  // ── WESTERN RESERVE ──────────────────────────────────────────────────────
+  { title: "Western Reserve — Radiology", location: "West Reserve", entries: [
+    ["CT Tech","330-971-7326 / 7319"],["Main Rad Tech Area","971-7372"],
+    ["MRI Tech","971-7674 option 2"],["WRH – Hudson MR","650-0330"],
+    ["Nuclear Medicine","971-7432"],["Scott (nurse)","971-7699"],
+    ["Reading area #1 (window)","971-7477"],["Reading area #2 (door)","971-7167"],
+    ["Ultrasound","971-7474"],
+  ]},
+  { title: "Western Reserve — Floors & Staff", location: "West Reserve", entries: [
+    ["ED","7436"],["ICU","7248"],["2 West","7259"],["3 West","7283"],
+    ["Outpatient Surg","7442"],["ICU Step Down","6520"],["Rob Kent","7974"],
+    ["Med Ed","7225/7207"],["Path","7235"],["Med Staff Off","7415"],
+    ["Pain Mgmt","7246"],["Stow Urgent","330-688-7900"],["Nealie – Educ","7684"],
+    ["X-ray","7372"],["CT","7326 or 7319"],["MRI","6674 or 7674"],
+    ["US","7474"],["Jeff Edgell","7472"],["Tiffany","7972"],
+    ["PACS Support","330-255-3030"],["IT Support","330-971-7600"],
+    ["Back Office Fax","7617"],["CT Fax","7362"],
+    ["Desk – office 1","7477"],["Desk – door","7167"],
+    ["Desk – middle","7193"],["Desk – office 2","7144"],
+  ]},
+
+  // ── SAINT THOMAS ─────────────────────────────────────────────────────────
+  { title: "Saint Thomas Hospital", location: "Saint Thomas", entries: [
+    ["Reading Room","330-379-5855 / 5233"],["Diagnostic Tech","330-379-5182"],
+    ["CT Tech","330-379-5192"],["MRI Tech","330-379-5748"],
+    ["Reception","330-379-5180"],["Ultrasound Tech","330-379-5198"],
+    ["CCOC Tech","330-379-9420"],
+  ]},
+
+  // ── WADSWORTH ────────────────────────────────────────────────────────────
+  { title: "Wadsworth", location: "Wadsworth", entries: [
+    ["ED","330-331-1103"],["CT","1597"],["MRI","1608"],
+    ["X-ray in ED","1599"],["Mammo","1603"],["NM","1613"],["US","1604"],
+    ["Wadsworth CT (direct)","330-331-1597"],["Wadsworth MRI (direct)","330-331-1608"],
+    ["Wadsworth US Tech","330-331-1605"],["Wadsworth X-ray","330-331-1599"],
+  ]},
+
+  // ── GREEN ────────────────────────────────────────────────────────────────
+  { title: "Green", location: "Green", entries: [
+    ["ED","330-899-2400"],["Green Radiologist","899-5560"],
+    ["Green US Tech (Heritage)","899-2450"],["Green ER Tech","899-2468"],
+    ["Green Main Number","899-5555"],
+  ]},
+
+  // ── MEDINA ───────────────────────────────────────────────────────────────
+  { title: "Medina / Lake Medina", location: "Medina", entries: [
+    ["Lake Medina ED","330-721-1111"],["Medina Techs","5349 or 5398"],
+  ]},
+
+  // ── CCOC ─────────────────────────────────────────────────────────────────
+  { title: "CCOC", location: "CCOC", entries: [
+    ["IT Help Desk","330-670-6140"],["Techs","330-379-9420"],
+    ["Tech Pager","24-4156"],["Fax Stat Reports To","95391 Speed dial #5"],
+  ]},
+
+  // ── SUMMA REHAB ──────────────────────────────────────────────────────────
+  { title: "Summa Rehab", location: "Summa Rehab", entries: [
+    ["Summa Rehab","330-572-7301"],["Techs","330-572-7228"],
+    ["MRI Summa Pager","330-971-3475"],["MRI Barberton Pager","330-971-4847"],
+  ]},
+
+  // ── SATELLITE OFFICES ────────────────────────────────────────────────────
+  { title: "Satellite Offices", location: "Satellite", entries: [
+    ["State Road","922-4648"],["Hudson (main)","650-6710"],
+    ["Hudson (radiologist)","650-6721"],["Medina Lake (Techs)","330-723-5349"],
+    ["Medina Lake (radiologist)","330-723-5429"],
+    ["White Pond (main)","873-1518"],["White Pond (radiologist)","873-2610"],
+  ]},
+
+  // ── STROKE NEUROLOGISTS ──────────────────────────────────────────────────
+  { title: "Stroke Neurologists", location: "Misc", entries: [
+    ["Dr. Aashish Anand","423-946-6977"],["Dr. Susana Bowling","330-715-5599"],
+    ["Dr. Nikita Dodhia","508-369-7465"],["Dr. Madihah Hepburn","216-294-6060"],
+    ["Dr. Harinoor Mann","412-760-4328"],["Venizelos","216-470-9000"],
+  ]},
+
+  // ── MISCELLANEOUS ────────────────────────────────────────────────────────
+  { title: "Miscellaneous", location: "Misc", entries: [
+    ["Hawaii Phone","330-294-0114"],["Hawaii Fax","330-294-4327"],
+    ["Lab Care","330-835-4860"],["Pharmacy","57904"],
+    ["Vascular Lab","53692"],["IT Support Akron City","52222"],
+    ["NNA","330-835-0132"],
+    ["Vocera (call & say name)","57111"],
+  ]},
+];
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+let currentFilter = "all";
+let currentQuery  = "";
+
+function escapeHTML(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function highlight(text, query) {
+  if (!query) return escapeHTML(text);
+  const safe = escapeHTML(text);
+  const re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return safe.replace(re, '<mark>$1</mark>');
+}
+
+// Build filter buttons
+function buildFilters() {
+  const inner = document.getElementById('filterInner');
+  Object.entries(LOCATIONS).forEach(([name, meta]) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.filter = name;
+    btn.innerHTML = `<span class="dot" style="background:${meta.color}"></span><span>${name}</span>`;
+    btn.onclick = () => setFilter(name, btn);
+    inner.appendChild(btn);
+  });
+}
+
+function setFilter(val, btn) {
+  currentFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSections();
+}
+
+// Build priority strip
+function buildPriority() {
+  const strip = document.getElementById('priorityStrip');
+  PRIORITY.forEach(p => {
+    const meta = LOCATIONS[p.location];
+    const div = document.createElement('div');
+    div.className = 'priority-item';
+    div.title = `Call ${p.name}`;
+    div.innerHTML = `
+      <div class="priority-item-name">${escapeHTML(p.name)}</div>
+      <div class="priority-item-phone"><a href="tel:${p.phone}">${escapeHTML(p.phone)}</a></div>
+      <div class="priority-item-loc" style="color:${meta.color}">${escapeHTML(p.location)}</div>
+    `;
+    strip.appendChild(div);
+  });
+}
+
+// Render section cards
+function renderSections() {
+  const grid = document.getElementById('sectionsGrid');
+  grid.innerHTML = '';
+  const q = currentQuery.toLowerCase().trim();
+  let visibleCards = 0;
+  let visibleEntries = 0;
+
+  SECTIONS.forEach(sec => {
+    const locMatch = currentFilter === 'all' || sec.location === currentFilter;
+
+    // Filter entries by query
+    const entries = sec.entries.filter(([name, phone]) => {
+      if (!q) return true;
+      return name.toLowerCase().includes(q) || phone.toLowerCase().includes(q);
+    });
+
+    if (!locMatch || (q && entries.length === 0)) return;
+
+    const meta = LOCATIONS[sec.location] || { color: '#64748b', short: '???' };
+    const card = document.createElement('div');
+    card.className = 'section-card';
+
+    const entriesHTML = entries.map(([name, phone]) => {
+      const isMatch = q && (name.toLowerCase().includes(q) || phone.toLowerCase().includes(q));
+      return `<div class="entry${isMatch?' highlighted':''}">
+        <span class="entry-name">${highlight(name, q)}</span>
+        <span class="entry-phone"><a href="tel:${phone}">${highlight(phone, q)}</a></span>
+      </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-accent" style="background:${meta.color}"></div>
+        <div class="card-title-wrap">
+          <div class="card-title">${highlight(sec.title, q)}</div>
+          <div class="card-subtitle" style="color:${meta.color}">${escapeHTML(sec.location)}</div>
+        </div>
+        <div class="card-badge" style="background:${meta.color}20;color:${meta.color}">${entries.length}</div>
+      </div>
+      ${entriesHTML}
+    `;
+
+    grid.appendChild(card);
+    visibleCards++;
+    visibleEntries += entries.length;
+  });
+
+  // No results
+  const noRes = document.getElementById('noResults');
+  noRes.style.display = visibleCards === 0 ? 'block' : 'none';
+
+  // Results count
+  const rc = document.getElementById('resultsCount');
+  if (q) {
+    rc.innerHTML = `<strong>${visibleEntries}</strong> result${visibleEntries!==1?'s':''} for "<strong>${escapeHTML(currentQuery)}</strong>" across <strong>${visibleCards}</strong> section${visibleCards!==1?'s':''}`;
+  } else if (currentFilter !== 'all') {
+    rc.innerHTML = `Showing <strong>${visibleEntries}</strong> entries in <strong>${escapeHTML(currentFilter)}</strong>`;
+  } else {
+    rc.innerHTML = '';
+  }
+}
+
+// Count totals
+function countTotals() {
+  let entries = 0;
+  SECTIONS.forEach(s => entries += s.entries.length);
+  document.getElementById('totalEntries').textContent = entries + PRIORITY.length;
+  document.getElementById('totalLocations').textContent = Object.keys(LOCATIONS).length;
+}
+
+// Search
+const searchEl = document.getElementById('search');
+const clearBtn  = document.getElementById('searchClear');
+const kbdHint   = document.getElementById('kbdHint');
+
+searchEl.addEventListener('input', () => {
+  currentQuery = searchEl.value;
+  clearBtn.style.display = currentQuery ? 'block' : 'none';
+  kbdHint.style.display  = currentQuery ? 'none' : 'block';
+  renderSections();
+});
+
+clearBtn.addEventListener('click', () => {
+  searchEl.value = '';
+  currentQuery = '';
+  clearBtn.style.display = 'none';
+  kbdHint.style.display = 'block';
+  searchEl.focus();
+  renderSections();
+});
+
+// Keyboard shortcut: / focuses search
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchEl) {
+    e.preventDefault();
+    searchEl.focus();
+    searchEl.select();
+  }
+  if (e.key === 'Escape' && document.activeElement === searchEl) {
+    searchEl.blur();
+  }
+});
+
+// Scroll-to-top button
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollTop').style.display =
+    window.scrollY > 400 ? 'flex' : 'none';
+});
+
+// ── THEME TOGGLE ──────────────────────────────────────────────────────────
+const themeToggle = document.getElementById('themeToggle');
+const toggleLabel = document.getElementById('toggleLabel');
+
+function applyTheme(isLight) {
+  document.body.classList.toggle('light', isLight);
+  toggleLabel.textContent = isLight ? 'Day' : 'Night';
+  localStorage.setItem('summa-theme', isLight ? 'light' : 'dark');
+}
+
+// Load saved preference, default to dark
+const saved = localStorage.getItem('summa-theme');
+applyTheme(saved === 'light');
+
+themeToggle.addEventListener('click', () => {
+  applyTheme(!document.body.classList.contains('light'));
+});
+
+themeToggle.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    applyTheme(!document.body.classList.contains('light'));
+  }
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+buildFilters();
+buildPriority();
+countTotals();
+renderSections();
+</script>
+</body>
+</html>
