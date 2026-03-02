@@ -771,12 +771,9 @@ const LOCATIONS = {
   "Akron City":   { color: "#00b4a0", short: "AKR" },
   "Barberton":    { color: "#ef4444", short: "BAR" },
   "West Reserve": { color: "#a78bfa", short: "WRH" },
-  "Saint Thomas": { color: "#f59e0b", short: "STH" },
   "Wadsworth":    { color: "#38bdf8", short: "WAD" },
   "Green":        { color: "#4ade80", short: "GRN" },
   "Medina":       { color: "#fb923c", short: "MED" },
-  "CCOC":         { color: "#e879f9", short: "CCO" },
-  "Summa Rehab":  { color: "#fbbf24", short: "RHB" },
   "Satellite":    { color: "#94a3b8", short: "SAT" },
   "Misc":         { color: "#64748b", short: "MSC" },
 };
@@ -790,49 +787,48 @@ const PRIORITY = [
   { name: "Western Reserve ED",  phone: "330-971-7436", location: "West Reserve" },
   { name: "On-Call Trauma Surg", phone: "234-417-2660", location: "Akron City" },
   { name: "Central Scheduling",  phone: "996-8881",     location: "Misc" },
-  { name: "Code Blue",           phone: "757",          location: "Akron City" },
 ];
 
 const SECTIONS = [
   // ── AKRON CITY ───────────────────────────────────────────────────────────
   { title: "Summa Akron — Reading Areas", location: "Akron City", entries: [
-    ["Angio 1","53180"],["Angio 2","53140"],["Angio 3","56657"],
-    ["CORE 1","57164"],["CORE 2","57165"],["CORE 3 (ED reader)","54055"],
-    ["CORE 4 (WRH reader)","57162"],["Inpatient Fluoro","57163"],
-    ["Mammo Diagnostic Techs","56271"],["MRI/COE","57623"],["Nuclear Medicine","54827"],
+    ["Angio 1","330-375-3180"],["Angio 2","330-375-3140"],["Angio 3","330-375-6657"],
+    ["CORE 1","330-375-7164"],["CORE 2","330-375-7165"],["CORE 3 (ED reader)","330-375-4055"],
+    ["CORE 4 (WRH reader)","330-375-7162"],["Inpatient Fluoro","330-375-7163"],
+    ["Mammo Diagnostic Techs","330-375-6271"],["MRI/COE","330-375-7623"],["Nuclear Medicine","330-375-4827"],
   ]},
   { title: "Summa Akron — Technical Areas", location: "Akron City", entries: [
-    ["Angio Nursing/Coord. Office","57814"],["CT Tech – ground floor","53013 / 57933"],
-    ["CT ER Tech","51690 / 59678"],["Ultrasound Tech Inpatient","57728"],
-    ["Ultrasound Room 6 (Biopsy)","57648"],["US Tech Pager","24-4460"],
-    ["MRI Techs","57835"],["MRI/COE Techs","57609"],["MRI H Tower","53542"],
-    ["COE US Techs","54990"],["Same Day Surgery","57978"],["T1 (HLU)","54814"],
-    ["ICU T2","55323"],["ICU T3","57330"],
+    ["Angio Nursing/Coord. Office","330-375-7814"],["CT Tech – ground floor","330-375-3013 / 330-375-7933"],
+    ["CT ER Tech","330-375-1690 / 330-375-9678"],["Ultrasound Tech Inpatient","330-375-7728"],
+    ["Ultrasound Room 6 (Biopsy)","330-375-7648"],["US Tech Pager","24-4460"],
+    ["MRI Techs","330-375-7835"],["MRI/COE Techs","330-375-7609"],["MRI H Tower","330-375-3542"],
+    ["COE US Techs","330-375-4990"],["Same Day Surgery","330-375-7978"],["T1 (HLU)","330-375-4814"],
+    ["ICU T2","330-375-5323"],["ICU T3","330-375-7330"],
   ]},
   { title: "Summa Akron — Patient Floors", location: "Akron City", entries: [
-    ["ED","330-375-3337"],["Trauma Surg","234-417-2660"],["Code Blue","757"],
-    ["HLU","54814"],["SCVICU","53554"],["ICU T-2","53935"],["ICU T-3","57330"],
-    ["2 East","54270"],["2 North","54280"],["2 West","53525"],
-    ["3 West Select","54390"],["3 Rehab","53500"],
-    ["4 East Stepdn (H6)","54470"],["4 East Vasc (H6)","57470"],
-    ["4 West","54490"],["4 North Stroke","54480"],
-    ["5 East","54747"],["5 North","54580"],["5 West","54590"],
-    ["6 East","54670"],["6 West (now H5)","54290"],
-    ["7 East Onc","54470"],["7 East Rad OP","51722"],["7 West","54790"],
-    ["L&D H2","53525"],["CDU","59686"],
+    ["ED","330-375-3337"],["Trauma Surg","234-417-2660"],
+    ["HLU","330-375-4814"],["SCVICU","330-375-3554"],["ICU T-2","330-375-3935"],["ICU T-3","330-375-7330"],
+    ["2 East","330-375-4270"],["2 North","330-375-4280"],["2 West","330-375-3525"],
+    ["3 West Select","330-375-4390"],["3 Rehab","330-375-3500"],
+    ["4 East Stepdn (H6)","330-375-4470"],["4 East Vasc (H6)","330-375-7470"],
+    ["4 West","330-375-4490"],["4 North Stroke","330-375-4480"],
+    ["5 East","330-375-4747"],["5 North","330-375-4580"],["5 West","330-375-4590"],
+    ["6 East","330-375-4670"],["6 West (now H5)","330-375-4290"],
+    ["7 East Onc","330-375-4470"],["7 East Rad OP","330-375-1722"],["7 West","330-375-4790"],
+    ["L&D H2","330-375-3525"],["CDU","330-375-9686"],
   ]},
   { title: "Summa Akron — ARI Staff", location: "Akron City", entries: [
-    ["RIS Support Center","53634"],
+    ["RIS Support Center","330-375-3634"],
   ]},
   { title: "Summa Akron — IR Nurses", location: "Akron City", entries: [
-    ["Angio 1","53143"],["Angio 2","53189"],
+    ["Angio 1","330-375-3143"],["Angio 2","330-375-3189"],
     ["Barberton IR Control Room","43618"],["Barberton (Kristin)","43037"],
   ]},
   { title: "Summa Akron — Support", location: "Akron City", entries: [
-    ["IT","234-312-2222"],["CT in ED","51690 or 59878"],["Xray in ED","59043 or 51380"],
-    ["MRI","57835"],["MRI COE","57609"],["CT COE","53034 or 53035"],
+    ["IT","234-312-2222"],["CT in ED","330-375-1690 or 330-375-9878"],["Xray in ED","330-375-9043 or 330-375-1380"],
+    ["MRI","330-375-7835"],["MRI COE","330-375-7609"],["CT COE","330-375-3034 or 330-375-3035"],
     ["US Tech Pager","24-4460"],["NM Tech Pager","24-4480"],
-    ["MRI Tech Pager","24-3475"],["Mammo Techs","56272"],
+    ["MRI Tech Pager","24-3475"],["Mammo Techs","330-375-6272"],
     ["Summa Call Center","330-319-9453"],
   ]},
 
@@ -844,24 +840,24 @@ const SECTIONS = [
     ["Ultrasound","330-615-3346"],["Radiology Tech","330-615-4537"],
   ]},
   { title: "Barberton — Patient Floors", location: "Barberton", entries: [
-    ["ED","330-615-4500"],["1 East","3400"],["2 East","3480"],
-    ["3 Central","3550"],["4 North","3656"],["4 South","3698"],
-    ["5 South","3808"],["5 Central","3717"],["6 South","3866"],
-    ["CCU","3590"],["ICU","3565"],["Mamm Tech","6257"],
-    ["CT","3336"],["MRI","3342"],["US","3346"],["X-ray","4537 or 6433"],
+    ["ED","330-615-4500"],["1 East","330-615-3400"],["2 East","330-615-3480"],
+    ["3 Central","330-615-3550"],["4 North","330-615-3656"],["4 South","330-615-3698"],
+    ["5 South","330-615-3808"],["5 Central","330-615-3717"],["6 South","330-615-3866"],
+    ["CCU","330-615-3590"],["ICU","330-615-3565"],["Mamm Tech","330-615-6257"],
+    ["CT","330-615-3336"],["MRI","330-615-3342"],["US","330-615-3346"],["X-ray","330-615-4537 or 330-615-6433"],
   ]},
 
   // ── WESTERN RESERVE ──────────────────────────────────────────────────────
   { title: "Western Reserve — Radiology", location: "West Reserve", entries: [
     ["CT Tech","330-971-7326 / 7319"],["Main Rad Tech Area","330-971-7372"],
-    ["MRI Tech","971-7674 option 2"],
-    ["Nuclear Medicine","971-7432"],["Nursing office","330-971-7699"],
+    ["MRI Tech","330-971-7674 option 2"],
+    ["Nuclear Medicine","330-971-7432"],["Nursing office","330-971-7699"],
     ["Reading area #1 (window)","330-971-7477"],["Reading area #2 (door)","330-971-7167"],
     ["Ultrasound","330-971-7474"],
   ]},
   { title: "Western Reserve — Floors & Staff", location: "West Reserve", entries: [
     ["ED","7436"],["ICU","7248"],["2 West","7259"],["3 West","7283"],
-    ["Outpatient Surg","7442"],["ICU Step Down","6520"],["Rob Kent","7974"],
+    ["Outpatient Surg","7442"],["ICU Step Down","330-615-6520"],["Rob Kent","7974"],
     ["Med Ed","7225/7207"],["Path","7235"],["Med Staff Off","7415"],
     ["Pain Mgmt","7246"],["Stow Urgent","330-688-7900"],["Nealie – Educ","7684"],
     ["X-ray","7372"],["CT","7326 or 7319"],["MRI","6674 or 7674"],
@@ -872,45 +868,30 @@ const SECTIONS = [
     ["Desk – middle","7193"],["Desk – office 2","7144"],
   ]},
 
-  // ── SAINT THOMAS ─────────────────────────────────────────────────────────
-  { title: "Saint Thomas Hospital", location: "Saint Thomas", entries: [
-    ["Reading Room","330-379-5855 / 5233"],["Diagnostic Tech","330-379-5182"],
-    ["CT Tech","330-379-5192"],["MRI Tech","330-379-5748"],
-    ["Reception","330-379-5180"],["Ultrasound Tech","330-379-5198"],
-    ["CCOC Tech","330-379-9420"],
-  ]},
+  // ── SAINT THOMAS ─────────────────────────────────────────────────────────,
 
   // ── WADSWORTH ────────────────────────────────────────────────────────────
   { title: "Wadsworth", location: "Wadsworth", entries: [
-    ["ED","330-331-1103"],["CT","1597"],["MRI","1608"],
-    ["X-ray in ED","1599"],["Mammo","1603"],["NM","1613"],
+    ["ED","330-331-1103"],
+    
     ["Wadsworth CT (direct)","330-331-1597"],["Wadsworth MRI (direct)","330-331-1608"],
     ["Wadsworth US Tech","330-331-1605"],["Wadsworth X-ray","330-331-1599"],
   ]},
 
   // ── GREEN ────────────────────────────────────────────────────────────────
   { title: "Green", location: "Green", entries: [
-    ["ED","330-899-2400"],["Green Radiologist","899-5560"],
-    ["Green US Tech (Heritage)","899-2450"],["Green ER Tech","899-2468"],
-    ["Green Main Number","899-5555"],
+    ["ED","330-899-2400"],["Green Radiologist","330-899-5560"],
+    ["Green US Tech (Heritage)","330-899-2450"],["Green ER Tech","330-899-2468"],
+    ["Green Main Number","330-899-5555"],
   ]},
 
   // ── MEDINA ───────────────────────────────────────────────────────────────
   { title: "Medina / Lake Medina", location: "Medina", entries: [
-    ["Lake Medina ED","330-721-1111"],["Medina Techs","5349 or 5398"],
+    ["Lake Medina ED","330-721-1111"],["Medina Techs","330-615-5349 or 330-615-5398"],
   ]},
+,
 
-  // ── CCOC ─────────────────────────────────────────────────────────────────
-  { title: "CCOC", location: "CCOC", entries: [
-    ["IT Help Desk","330-670-6140"],["Techs","330-379-9420"],
-    ["Tech Pager","24-4156"],["Fax Stat Reports To","95391 Speed dial #5"],
-  ]},
-
-  // ── SUMMA REHAB ──────────────────────────────────────────────────────────
-  { title: "Summa Rehab", location: "Summa Rehab", entries: [
-    ["Summa Rehab","330-572-7301"],["Techs","330-572-7228"],
-    ["MRI Summa Pager","330-971-3475"],["MRI Barberton Pager","330-971-4847"],
-  ]},
+  // ── SUMMA REHAB ──────────────────────────────────────────────────────────,
 
   // ── SATELLITE OFFICES ────────────────────────────────────────────────────
   { title: "Satellite Offices", location: "Satellite", entries: [
@@ -930,10 +911,10 @@ const SECTIONS = [
   // ── MISCELLANEOUS ────────────────────────────────────────────────────────
   { title: "Miscellaneous", location: "Misc", entries: [
     ["Hawaii Phone","330-294-0114"],["Hawaii Fax","330-294-4327"],
-    ["Lab Care","330-835-4860"],["Pharmacy","57904"],
-    ["Vascular Lab","53692"],["IT Support Akron City","52222"],
+    ["Lab Care","330-835-4860"],["Pharmacy","330-375-7904"],
+    ["Vascular Lab","330-375-3692"],["IT Support Akron City","330-375-2222"],
     ["NNA","330-835-0132"],
-    ["Vocera (call & say name)","57111"],
+    ["Vocera (call & say name)","330-375-7111"],
   ]},
 ];
 
