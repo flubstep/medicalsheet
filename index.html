@@ -1,332 +1,910 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="/static/styles.css" />
-    <title>Rad Guidelines</title>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
-    <script type="text/javascript" src="/static/main.js?1"></script>
-  </head>
-  <body bgcolor="#000000" text="#d3d3d3" link="#add8e6" vlink="#add8e6" alink="#add8e6">
-    <div id="heading">
-      <img src="/static/ARI title logo.png" style="box-shadow: none; max-height:100px; width:auto;" align="left" />
-      <a href="/static/summa_telephone_directory.html">
-        <img src="/static/directory icon complete.png" style="box-shadow: none; max-height:125px; width:auto;" align="right" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🩻 ARI Rad Guidelines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fdf6ee;
+      --surface: #fffaf4;
+      --surface2: #fceedd;
+      --border: #e8d5bc;
+      --accent: #e8622a;
+      --accent2: #3a9e6f;
+      --accent3: #d63030;
+      --accent4: #7b5ea7;
+      --accent5: #2a7fbf;
+      --text: #4a3728;
+      --text-muted: #9a8070;
+      --text-bright: #2a1a0e;
+      --new: #e8622a;
+      --card-shadow: 3px 3px 0px #e8d5bc;
+      --card-shadow-hover: 5px 5px 0px #d4b898;
+      --header-bg: #e8622a;
+    }
+
+    :root.dark {
+      --bg: #0a0705;
+      --surface: #120e09;
+      --surface2: #1a1410;
+      --border: #2e2218;
+      --accent: #f0854a;
+      --accent2: #4dbf87;
+      --accent3: #e05555;
+      --accent4: #a07fd4;
+      --accent5: #5aaae0;
+      --text: #e0cdb8;
+      --text-muted: #7a6858;
+      --text-bright: #f5ece0;
+      --new: #f0854a;
+      --card-shadow: 3px 3px 0px #2e2218;
+      --card-shadow-hover: 5px 5px 0px #3a2a1e;
+      --header-bg: #0a0705;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: radial-gradient(circle at 20% 50%, rgba(232,98,42,0.04) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(58,158,111,0.04) 0%, transparent 50%);
+    }
+
+    /* HEADER */
+    header {
+      background: var(--header-bg);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+    }
+
+    :root.dark header { border-bottom: 2px solid var(--border); }
+
+    .logo-area { display: flex; align-items: center; gap: 10px; }
+
+    .logo-xray {
+      font-size: 28px;
+      animation: float 3s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-4px) rotate(3deg); }
+    }
+
+    .logo-text {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      font-style: italic;
+    }
+
+    :root.dark .logo-text { color: var(--text-bright); }
+    :root.dark .logo-sub  { color: var(--text-muted); }
+
+    /* SEARCH */
+    .search-wrap {
+      flex: 1;
+      max-width: 420px;
+      margin-left: auto;
+      position: relative;
+    }
+
+    #search {
+      width: 100%;
+      background: rgba(255,255,255,0.22);
+      border: 2px solid rgba(255,255,255,0.4);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 12px 8px 36px;
+      border-radius: 20px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    #search:focus { background: rgba(255,255,255,0.32); border-color: rgba(255,255,255,0.85); }
+    #search::placeholder { color: rgba(255,255,255,0.65); }
+
+    :root.dark #search { background: var(--surface2); border-color: var(--border); color: var(--text-bright); }
+    :root.dark #search::placeholder { color: var(--text-muted); }
+    :root.dark #search:focus { border-color: var(--accent); }
+
+    .search-icon {
+      position: absolute; left: 10px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px; pointer-events: none;
+    }
+
+    #clear-search {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer; font-size: 14px; display: none; padding: 2px 4px;
+    }
+    #clear-search:hover { color: #fff; }
+    :root.dark #clear-search { color: var(--text-muted); }
+    :root.dark #clear-search:hover { color: var(--text-bright); }
+
+    /* THEME TOGGLE */
+    #theme-toggle {
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    #theme-toggle:hover { background: rgba(255,255,255,0.35); transform: rotate(20deg) scale(1.1); }
+    :root.dark #theme-toggle { background: var(--surface2); border-color: var(--border); }
+
+    /* QUICK ACCESS BAR */
+    .quick-bar {
+      background: var(--surface2);
+      border-bottom: 2px dashed var(--border);
+      padding: 10px 16px;
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    }
+
+    .quick-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-muted); flex-shrink: 0;
+    }
+
+    .quick-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      color: var(--text);
+      font-size: 12px; font-weight: 600;
+      font-family: 'Nunito', sans-serif;
+      padding: 4px 12px;
+      text-decoration: none;
+      transition: all 0.15s;
+      box-shadow: 2px 2px 0 var(--border);
+    }
+    .quick-link:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--border);
+      border-color: var(--accent2); color: var(--accent2);
+    }
+    .quick-link.urgent {
+      border-color: var(--accent3); color: var(--accent3);
+      background: #fff5f5;
+      box-shadow: 2px 2px 0 #fcc;
+      animation: pulse-border 2s ease-in-out infinite;
+    }
+    :root.dark .quick-link.urgent { background: rgba(224,85,85,0.1); }
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--accent3); }
+      50% { border-color: #ff9090; }
+    }
+    .quick-link.urgent:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 #fcc; }
+
+    /* TABS */
+    .tabs {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      display: flex; gap: 4px;
+      padding: 8px 12px 0;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 14px; font-weight: 500;
+      padding: 7px 16px;
+      white-space: nowrap;
+      transition: all 0.15s;
+      position: relative; bottom: -2px;
+    }
+    .tab:hover { color: var(--text); background: var(--bg); }
+    .tab.active {
+      background: var(--bg);
+      color: var(--text-bright);
+      border-color: var(--border);
+      border-bottom-color: var(--bg);
+      font-weight: 600;
+    }
+    .tab[data-cat="best-practice"].active { color: var(--accent); }
+    .tab[data-cat="diagnostic"].active    { color: var(--accent5); }
+    .tab[data-cat="interventional"].active{ color: var(--accent4); }
+    .tab[data-cat="protocols"].active     { color: var(--accent2); }
+    .tab[data-cat="links"].active         { color: #c0952a; }
+
+    /* MAIN */
+    main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+
+    .section { display: none; }
+    .section.visible { display: block; }
+
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 20px; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1; height: 2px;
+      background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 6px, transparent 6px, transparent 12px);
+      margin-left: 8px;
+    }
+
+    /* CARDS / LIST */
+    .card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 10px;
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none;
+      box-shadow: none;
+      transition: all 0.12s;
+      animation: slideUp 0.3s ease both;
+    }
+    .card:hover {
+      background: var(--surface2);
+      transform: translateX(4px);
+      box-shadow: none;
+      border-color: transparent;
+    }
+    .card.new-item {
+      border: none;
+      background: transparent;
+    }
+    .card.new-item:hover { background: var(--surface2); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card:nth-child(1)  { animation-delay: 0.03s; }
+    .card:nth-child(2)  { animation-delay: 0.06s; }
+    .card:nth-child(3)  { animation-delay: 0.09s; }
+    .card:nth-child(4)  { animation-delay: 0.12s; }
+    .card:nth-child(5)  { animation-delay: 0.15s; }
+    .card:nth-child(6)  { animation-delay: 0.18s; }
+    .card:nth-child(7)  { animation-delay: 0.21s; }
+    .card:nth-child(8)  { animation-delay: 0.24s; }
+    .card:nth-child(9)  { animation-delay: 0.27s; }
+    .card:nth-child(10) { animation-delay: 0.30s; }
+    .card:nth-child(11) { animation-delay: 0.33s; }
+    .card:nth-child(12) { animation-delay: 0.36s; }
+
+    .card-icon {
+      font-size: 16px; flex-shrink: 0;
+      transition: transform 0.2s;
+      width: 22px; text-align: center;
+    }
+    .card:hover .card-icon { transform: scale(1.2) rotate(-5deg); }
+
+    .card-body { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+
+    .card-title {
+      color: var(--accent5);
+      font-size: 14px; font-weight: 600; line-height: 1.4;
+    }
+    .card-title:hover { text-decoration: underline; }
+    .card:hover .card-title { color: var(--accent); }
+    .card.new-item .card-title { color: var(--new); }
+
+    .card-sub {
+      color: var(--text-muted);
+      font-size: 11px; font-style: italic;
+    }
+
+    .badge-new {
+      display: inline-block;
+      background: var(--new); color: #fff;
+      font-size: 9px; font-weight: 700;
+      padding: 1px 5px; border-radius: 8px;
+      margin-left: 5px; vertical-align: middle;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      animation: wobble 2s ease-in-out infinite;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    .sub-links { display: inline-flex; gap: 6px; flex-wrap: wrap; margin-left: 4px; }
+
+    .sub-link {
+      font-size: 11px; font-weight: 600;
+      color: var(--accent5);
+      text-decoration: none;
+      background: rgba(42,127,191,0.08);
+      padding: 1px 7px; border-radius: 8px;
+      border: 1px solid rgba(42,127,191,0.2);
+      transition: all 0.15s;
+    }
+    .sub-link:hover { background: rgba(42,127,191,0.18); }
+
+    /* SEARCH RESULTS */
+    #search-results-section { display: none; }
+    #search-results-section.visible { display: block; }
+
+    .search-results-heading {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 18px; color: var(--text-muted); margin-bottom: 16px;
+    }
+
+    #no-results {
+      display: none; text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-family: 'Fredoka', sans-serif; font-size: 18px;
+    }
+    #no-results::before { content: '🔍'; display: block; font-size: 40px; margin-bottom: 12px; }
+
+    .cat-badge {
+      display: inline-block;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 1px 6px; border-radius: 8px;
+      margin-left: 5px; vertical-align: middle;
+    }
+    .cat-bp    { background: rgba(232,98,42,0.12);  color: var(--accent); }
+    .cat-dx    { background: rgba(42,127,191,0.12); color: var(--accent5); }
+    .cat-ir    { background: rgba(123,94,167,0.12); color: var(--accent4); }
+    .cat-proto { background: rgba(58,158,111,0.12); color: var(--accent2); }
+    .cat-link  { background: rgba(192,149,42,0.12); color: #c0952a; }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 20px;
+      color: var(--text-muted); font-size: 13px; font-style: italic;
+      border-top: 2px dashed var(--border);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .logo-sub { display: none; }
+      .card-grid { grid-template-columns: 1fr; }
+      header { padding: 10px 12px; }
+      main { padding: 16px 10px 40px; }
+      .quick-bar { padding: 8px 10px; }
+      .tab { font-size: 13px; padding: 6px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <span class="logo-xray">🩻</span>
+    <div>
+      <div class="logo-text">ARI Guidelines</div>
+      <div class="logo-sub">your friendly rad reference ✨</div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔎</span>
+    <input id="search" type="search" placeholder="search the goods…" autocomplete="off" />
+    <button id="clear-search" title="Clear">✕</button>
+  </div>
+  <button id="theme-toggle" title="Toggle light/dark mode">🌙</button>
+</header>
+
+<div class="quick-bar">
+  <span class="quick-label">⚡ Quick Access:</span>
+  <a class="quick-link urgent" href="/static/Contrast Reaction - ACR.pdf">🚨 Contrast Reaction</a>
+  <a class="quick-link" href="/static/summa_telephone_directory.html">📖 Phone Directory</a>
+  <a class="quick-link" href="/static/PhonedirectoryforTechareas.pdf">📞 Tech Area Phones</a>
+  <a class="quick-link" href="static/PIT phone numbers.png">📋 Core Wall Numbers</a>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-cat="best-practice">⭐ Best Practice</button>
+  <button class="tab" data-cat="diagnostic">🔬 Diagnostic</button>
+  <button class="tab" data-cat="interventional">🩸 Interventional</button>
+  <button class="tab" data-cat="protocols">📋 Protocols</button>
+  <button class="tab" data-cat="links">🔗 Links &amp; Info</button>
+</nav>
+
+<main>
+
+  <div id="search-results-section">
+    <div class="search-results-heading">Search results ✨</div>
+    <div class="card-grid" id="search-results-grid"></div>
+    <div id="no-results">Nothing found! Try different words?</div>
+  </div>
+
+  <!-- BEST PRACTICE -->
+  <section class="section visible" data-cat="best-practice">
+    <div class="section-title">⭐ Best Practice Recommendations</div>
+    <div class="card-grid">
+      <a class="card" href="/static/CTR guidelines.pdf">
+        <span class="card-icon">📋</span>
+        <div class="card-body"><div class="card-title">CTR Guidelines</div></div>
+      </a>
+      <a class="card" href="/static/MIPS 2024.pdf">
+        <span class="card-icon">📊</span>
+        <div class="card-body"><div class="card-title">MIPS Requirements 2024</div></div>
+      </a>
+      <a class="card" href="/static/TIRADS chart.png">
+        <span class="card-icon">🦋</span>
+        <div class="card-body">
+          <div class="card-title">TI-RADS Thyroid Nodule Classification</div>
+          <div class="sub-links">
+            <a class="sub-link" href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/TI-RADS">ACR page ↗</a>
+            <a class="sub-link" href="/static/ACR TI-RADS Atlas.pdf">Atlas PDF</a>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="/static/2017 Fleishner guidelines reversed.jpg">
+        <span class="card-icon">🫁</span>
+        <div class="card-body">
+          <div class="card-title">2017 Fleischner Guidelines — Pulmonary Nodules</div>
+          <div class="sub-links">
+            <a class="sub-link" href="/static/2017 - Updated Fleischner Society Guidelines for Management of Pulmonary Nodules.pdf">Full PDF</a>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="/static/articles/Lung-RADS 2022.pdf">
+        <span class="card-icon">🫁</span>
+        <div class="card-body">
+          <div class="card-title">2022 LUNG-RADS Screening Guidelines</div>
+          <div class="sub-links">
+            <a class="sub-link" href="/static/articles/LungRADS 1-1 updates.pdf">PPT</a>
+            <a class="sub-link" href="/static/articles/Lung-RADS 2022 summary of changes.pdf">2022 Changes</a>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="/static/RECIST.jpg">
+        <span class="card-icon">📏</span>
+        <div class="card-body">
+          <div class="card-title">RECIST Guidelines — Oncology Measurements</div>
+          <div class="sub-links">
+            <a class="sub-link" href="/static/articles/RECIST.pdf">Full PDF</a>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="static/ASPECTS scoring.jpg">
+        <span class="card-icon">🧠</span>
+        <div class="card-body">
+          <div class="card-title">ASPECTS Stroke Scoring</div>
+          <div class="sub-links">
+            <a class="sub-link" href="static/ASPECT scoring AJNR.pdf">AJNR PDF</a>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="static/COVID reporting language.pdf">
+        <span class="card-icon">🦠</span>
+        <div class="card-body"><div class="card-title">COVID Reporting Language Recommendations</div></div>
+      </a>
+      <a class="card new-item" href="static/renal mass flowchart.pdf">
+        <span class="card-icon">🫘</span>
+        <div class="card-body">
+          <div class="card-title">Incidental Renal Hypodensity Flowchart <span class="badge-new">New!</span></div>
+          <div class="card-sub">Updated 12-22-2020</div>
+          <div class="sub-links">
+            <a class="sub-link" href="static/articles/Bosniak Pictorial.pdf">Bosniak Pictorial</a>
+            <a class="sub-link" href="static/articles/ACR Incidental Renal Mass.pdf">ACR White Paper</a>
+          </div>
+        </div>
+      </a>
+      <a class="card new-item" href="static/Implementation for PE RVLV ratios.pdf">
+        <span class="card-icon">❤️</span>
+        <div class="card-body">
+          <div class="card-title">RV/LV Ratios for Positive PE CTAs <span class="badge-new">New!</span></div>
+          <div class="sub-links">
+            <a class="sub-link" href="static/articles/AJR RVLV ratio.pdf">AJR PDF</a>
+          </div>
+        </div>
+      </a>
+      <a class="card new-item" href="static/articles/prostate.pdf">
+        <span class="card-icon">📖</span>
+        <div class="card-body">
+          <div class="card-title">Nick Fulton's Guide to Prostate MRI <span class="badge-new">New!</span></div>
+        </div>
+      </a>
+      <a class="card new-item" href="static/Managing Incidental Findings on Thoracic CT.pdf">
+        <span class="card-icon">🫁</span>
+        <div class="card-body">
+          <div class="card-title">Managing Incidental Findings on Thoracic CT <span class="badge-new">New!</span></div>
+        </div>
+      </a>
+      <a class="card new-item" href="static/ACR Thyroid Guidelines.pdf">
+        <span class="card-icon">🦋</span>
+        <div class="card-body">
+          <div class="card-title">Managing Incidental Thyroid Nodules on CT <span class="badge-new">New!</span></div>
+          <div class="sub-links">
+            <a class="sub-link" href="static/Incidental Thyroid Nodule Follow up.pdf">ACR PDF</a>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="static/Peer Learning.pdf">
+        <span class="card-icon">🤝</span>
+        <div class="card-body"><div class="card-title">How to Submit Peer Learning Cases</div></div>
+      </a>
+      <a class="card" href="static/Radiology QA via Perfect Serve.pdf">
+        <span class="card-icon">✅</span>
+        <div class="card-body"><div class="card-title">Radiology QA via PerfectServe</div></div>
       </a>
     </div>
-    <div id="container">
-        <div class="column left">
-          <p style="font-size:25px; margin: 0;">
-            <img src="/static/BPR icon.png" style="box-shadow: none; max-height:65px; width:auto; height:auto;" /> 
-          Best Practice Recs
-          </p>
-        <p>
-          <a href="/static/CTR guidelines.pdf" style="color:orange"; />CTR Guidelines</a>
-        </p>
-        <p>
-          <a href="/static/MIPS 2024.pdf" style="color:orange"; />MIPS Requirements 2024</a>
-        </p>
-        <!--  
-        <p>
-          <a href="/static/MIPS requirements.pdf" style="color:orange"; />2023 MIPS requirements</a>
-        </p>
-        -->  
-        <p>
-        <a href="/static/TIRADS chart.png">
-          TI-RADS Thyroid nodule classification and recommendations
-        </a>
-        <a href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/TI-RADS" />
-          <sub>[ACR official page]</sub>
-        </a>
-        </p>
-    
-        <p>
-          <a href="/static/ACR TI-RADS Atlas.pdf">ACR TI-RADS Atlas</a>
-        </p>
-    
-        <p>
-        <a href="/static/2017 Fleishner guidelines reversed.jpg">
-          2017 Fleishner guidelines for incidentally discovered pulmonary nodules
-        </a>
-        <a href="/static/2017 - Updated Fleischner Society Guidelines for Management of Pulmonary Nodules.pdf" />
-          <sub>[complete pdf here]</sub>
-        </a>
-        </p>
+  </section>
 
-        <p>
-        <a href="/static/articles/Lung-RADS 2022.pdf">2022 LUNG-RADS screening guidelines</a>
-        <a href="/static/articles/LungRADS 1-1 updates.pdf" /><sub>[complete powerpoint]</sub></a>
-        <a href="/static/articles/Lung-RADS 2022 summary of changes.pdf" />2022 Summary of Changes</a>
-        </p>
-
-        <p>
-          <a href="/static/RECIST.jpg" />RECIST guidelines for Oncology measurements</a>
-          <a href="/static/articles/RECIST.pdf" /><sub>[complete pdf here]</sub></a>
-
-        <p>
-        <a href="static/ASPECTS scoring.jpg">
-           ASPECT stroke scoring
-        </a>
-        <a href="static/ASPECT scoring AJNR.pdf" />
-          <sub>[complete pdf here]</sub>
-        </a>
-        </p>
-        <p>
-        <a href = "static/COVID reporting language.pdf" />NEW COVID reporting language recommendations </a>
-        </p>
-        <p>
-          <a href = "static/renal mass flowchart.pdf" style="color:yellow"; />NEW Incidental Renal Hypodensity Flowchart (12-22-2020)</a>
-          <a href = "static/articles/Bosniak Pictorial.pdf" style="color:yellow"; /><sub>[Bosniak Pictorial]</sub></a>
-          <a href = "static/articles/ACR Incidental Renal Mass.pdf" style="color:yellow"; /><sub>[ACR Incidental Mass White Paper]</sub></a>
-        </p>
-        <p>
-          <a href = "static/Peer Learning.pdf" style = "color:yellow"; />How to submit peer learning cases</a>
-        </p>
-        <p>
-          <a href = "static/Radiology QA via Perfect Serve.pdf" style = "color:yellow"; />How to submit Radiology QA via PerfectServe</a>
-        </p>
-        
-        </p>
-        <p>
-          <a href = "static/Implementation for PE RVLV ratios.pdf" style="color:yellow"; />NEW Calculation of RVLV ratios for postive PE CTAs </a>
-          <a href = "static/articles/AJR RVLV ratio.pdf" style="color:yellow"; /><sub>[AJR pdf here]</sub></a>
-        </p>
-        <p>
-          <a href = "static/articles/prostate.pdf" style="color:yellow"; />NEW Nick Fulton's Guide to Prostate MRI</a>
-        </p>
-        <p>
-          <a href = "static/Managing Incidental Findings on Thoracic CT.pdf" style="color:yellow"; />NEW Managing Incidental Findings on Thoracic CT </a>
-        </p>        <p>
-          <a href = "static/ACR Thyroid Guidelines.pdf" style="color:yellow"; />NEW Managing Incidental Thyroid nodules on CT </a>
-          <a href = "static/Incidental Thyroid Nodule Follow up.pdf" style="color:yellow"; /><sub>[ACR pdf here]</sub></a>
-        </p>
-
-          <p style="font-size:25px; margin: 0;">
-            <img src="/static/diagnostic icon.png" style="box-shadow: none; max-height:65px; width:auto; height:auto;" /> 
-          Diagnostic
-        </p>
-
-        <p>
-        <a href="/static/non small cell lung cancer staging.jpg">
-          Non-small cell Lung Cancer Staging
-        </a>
-        </p>
-        <p>
-          <a href="/static/ACR - Incidental Adnexal Findings on CT and MRI.pdf" />ACR Incidental Adnexal Findings on CT and MRI (2020)</a>
-        </p>
-        <p>
-          <a href="/static/ACR - Incidental Mediastinal and Cardiovascular Findings.pdf" />ACR Incidental Mediastinal and Cardiovascular Findings (2018)(</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2018 - Incidental Pituitary Findings.pdf" />ACR Incidental Pituitary Findings (2018)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2017 - Incidental Pancreatic Cysts.pdf" />ACR Incidental Pancreatic Cysts (2017)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2017 Incidental Adrenal Masses.pdf" />ACR Incidental Adrenal Masses (2017)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2018 Incidental Renal Mass.pdf" />ACR Incidental Renal Mass (2018)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2017 - Incidental Liver Lesions.pdf" />ACR Incidental Liver Lesion (2017)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2015 Incidental Thyroid Findings.pdf" />ACR Incidental Thyroid Findings (2015)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2013 Incidental Vascular Findings.pdf" />ACR Incidental Vascular Findings (2013)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2013 Incidental Splenic and Nodal Findings.pdf" />ACR Incidental Splenic and Nodal Findings (2013)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2013 - Incidental Gallbladder and Biliary Findings.pdf" />ACR Incidental Gallbladder and Biliary Findings (2013)</a>
-        </p>
-        <p>
-          <a href="/static/ACR 2010 - Incidental Abdominal Findings.pdf" />ACR Incidental Abdominal Findings (2010)</a>
-        </p>
-        <!--
-        <p>
-          <a href="/static/Incidental pancreatic cystic mass.jpg" />ACR Incidental Pancreatic Cystic Mass</a>
-          <a href="/static/ACR Incidental Pancreatic cysts.pdf" /><sub>[complete pdf here]</sub></a>
-        </p>
-        <p>
-          <a href="/static/Incidental Renal Mass on CT.pdf" />ACR 2018 Guidelines Incidental Renal Mass on CT</a>
-          <a href="/static/ACR Incidental Renal Mass on CT.pdf" /><sub>[complete pdf here]</sub></a>
-        </p>
-        <p>
-          <a href="/static/ACR incidental Adrenal mass.jpg" />ACR Incidental Adrenal Mass</a>
-          <a href="/static/ACR Incidental Adrenal Mass.pdf" /><sub>[complete pdf here]</sub></a>
-        </p>
-        <p>
-          <a href="/static/Incidental Adnexal Cystic Mass.jpg" />ACR Incidental Adnexal Cystic Mass</a>
-          <a href="/static/ACR Incidental Adnexal Cystic Mass.pdf" /><sub>[complete pdf here]</sub></a>
-        </p>
-        <p>
-        -->
-          <a href="static/Cervical Lymph Node Levels.jpg" />Cervical Lymph Node Levels</a>
-        </p>
-        <p>
-          <a href="static/ILD chart.jpg" />Interstital Lung Disease classification chart</a>
-        </p>
-
-        <p>
-          <a href="/static/GGO Classification Table.pdf" />GGO Classification Table</a>
-        </p>
-        <p>
-          <a href="/static/2022 Ultrasound Soft Tissue Masses.pdf" style = "color:yellow"; />NEW US Soft Tissue Masses - SRU concensus paper</a>
-        </p>
-      </div>
-      <div class="column center">
-        <p style="font-size: 25px; margin: 0;">
-          <img src="/static/interventional icon 3.png" style="box-shadow: none; max-height:65px; width:auto; height:auto" />
-          Interventional
-        </p>
-        <p>
-        <a href="/static/ARI 2019 Anticoagulation guidelines.pdf">
-          2019 ARI anticoagulation guidelines for interventional procedures
-        </a>
-        </p>
-        <p>
-          <a href="/static/ARI 2019 Antiplatelet Guidelines.pdf" />2019 ARI Anticoagulation drugs for IR procedures</a>
-          <a href="/static/SIR 2019 Anticoagulation guidelines.pdf" /><sub>[complete pdf here]</sub></a>
-        </p>
-        <p>
-        <a href="static/SIR antibiotic guidelines.jpg">
-           SIR Antibiotic guidelines for Interventional Radiology procedures
-        </a>
-        </p>
-        <p>
-          <a href="/static/Splenic injury grading combined.jpg" />
-            AAST Splenic trauma grading
-          </a>
-        </p>
-        <p>
-          <a href="/static/Liver injury grading AAST.jpg">
-            AAST Liver trauma grading
-          </a>
-        </p>
-        <p>
-          <a href="static/Kidney injury grading AAST.jpg" />
-            AAST Kidney trauma grading
-          </a>
-        </p>
-        <p>
-          <a href="/static/InjuryScoringTables.pdf" />AAST Complete Trauma grading tables pdf</a>
-        </p>
-        <p>
-          <a href="static/TIPS ultrasound.jpg" />
-            TIPS Ultrasound
-          </a>
-        </p>
-        <p>
-          <a href="static/Stroke activation flowchart.jpg" style="color:yellow;">Stroke Activation Flowchart</a>
-        </p>
-        <p>
-          <a href="static/Stroke recanalization grading system.jpg" />Stroke Recanalization grading system (TIMI/TICI)</a>
-        </p>
-        <p>
-          <a href="static/arthrogram approaches.pdf" />Neil's paper on arthrogram technique</a>
-        </p>
-        <p>
-          <a href="static/articles/AJNR - Evaluation of penumbra on CT perfusion.pdf" />AJNR Evaluation of penumbra on CT perfusion</a>
-        </p>
-        <p>
-          <a href="static/articles/uptodate_stroke.pdf" />UpToDate Mechanical thrombectomy for acute stroke</a>
-        </p>
-        <p>
-          <a href="static/normal cranial angio dsa.jpg" />Cerebral artery anatomy on Angio</a>
-        </p>
-        <p>
-          <a href="static/Anatomic approach to MSK biopsy.pdf" />Anatomic Approach to MSK biopsies (Radiographics)</a>
-        </p>
-      </div>
-      <div class="column right">
-          <p style="font-size: 25px; margin: 0;">
-            <img src="/static/helpful links.png" style="box-shadow: none; max-height:65px; width:auto; height:auto" />
-            Helpful Links
-          </p>
-          <p>
-            <a href = "sugano.html"> Sugano's Tech Tips</a>
-          </p>
-          <p>
-            <a href = "/static/PhonedirectoryforTechareas.pdf" style="color:yellow;"> NEW Phone Directory for Tech areas</a>
-          </p>
-          <p>
-            <a href="/static/Contrast Reaction - ACR.pdf" style="color:red;"> ACR CONTRAST REACTION Protocol</a>
-          </p>
-        
-          <p text="#ffff99" link="#ffff99" vlink="#ffff99" alink="#ffff99">
-            <a href="static/PIT phone numbers.png" />Phone numbers on the wall in the Core</a>
-          </p>
-          <p>
-            <a href="https://careone.westernreservehospital.org/vpn/index.html" />
-              CareOne signoff for orders at WRH
-            </a>
-            If you are signing orders off site then you will not be able to use your ID badge. At the step where you normally flash
-            your badge click on the "help me log in" link. After you answer your two authentication questions, you will be allowed to sign off 
-          </p>
-
-          <p style="font-size: 25px; margin: 0;">
-            <img src="/static/protocol icon complete.png" style="box-shadow: none; max-height:65px; width:auto; height:auto" />
-            Protocols
-          </p>
-          <p>
-            <a href="static/protocol 2022b.pdf" />Protocol update 5-31-2022</a>
-          </p>
-          <p>
-            <a href="static/Protocols CT ARI 2022b.pdf" />CT Protocols (updated 5-31-2022)</a>
-          </p>
-          <p>
-            <a href="static/Protocols MRI ARI 2022c.pdf" />MRI Protocols (updated 12-7-2022)</a>
-          </p>
-          <p>
-            <a href="static/Protocols - CT recommendations.pdf" />CT study recommendations (updated 9-4-2019)</a>
-          </p>
-          <p>
-            <a href="static/Protocols - MRI Recommendations.pdf" />MRI study recommendations (updated 9-4-2019)</a>
-          </p>
-          <p>
-            <a href="static/Hydration protocol - ARI.pdf" />Hydration protocol (updated 9-4-2019)</a>
-          </p>
-          <p>
-            <a href="static/Gadolinium Advisory Statement ARI 2018.pdf" />Gadolinium Advisory Statement</a>
-          <p>
-            <a href="static/Protocols Radiography ARI 2020.pdf" />Radiography Protcols (updated 8-24-2020)</a>
-          </p>
-          <p>
-            <a href="static/Protocols Ultrasound ARI 2022b.pdf" />Ultrasound Protocols (updated 5-31-2022)</a>
-          </p>
-          <p>
-            <a href="static/NucMed Emergency On-Call Policy.pdf" />Nuc Med Emergency On-Call Procedure</a>
-          </p>
-          <p>
-            <a href="static/MRI Emergency On-Call Policy.pdf" />MRI Emergency On-Call Procedure</a>
-          </p>
-          <p>
-            <a href="static/Neurologist phone numbers.pdf" />Phone numbers for Neurologists</a>
-          </p>
-          <p>
-            <a href="articles.html" style="color:yellow;">Reference Articles</a>
-          </p>
-        <h1>Updates and notifications</h1>
-          <p>
-            <a href="Flap CTA.html" />
-              Dr. Unger update on CTA Abdominal Wall for Flaps (DIEP)
-            </a>
-          </p>
-          <!--<p>
-            <a href="./inari.html" style="color:yellow"; />Pulmonary Embolus reference materials</a>
-          </p>
-          -->
-      </div>
+  <!-- DIAGNOSTIC -->
+  <section class="section" data-cat="diagnostic">
+    <div class="section-title">🔬 Diagnostic References</div>
+    <div class="card-grid">
+      <a class="card" href="/static/non small cell lung cancer staging.jpg">
+        <span class="card-icon">🫁</span>
+        <div class="card-body"><div class="card-title">Non-Small Cell Lung Cancer Staging</div></div>
+      </a>
+      <a class="card" href="/static/ACR - Incidental Adnexal Findings on CT and MRI.pdf">
+        <span class="card-icon">🔍</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Adnexal Findings on CT/MRI</div><div class="card-sub">2020</div></div>
+      </a>
+      <a class="card" href="/static/ACR - Incidental Mediastinal and Cardiovascular Findings.pdf">
+        <span class="card-icon">❤️</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Mediastinal &amp; Cardiovascular Findings</div><div class="card-sub">2018</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2018 - Incidental Pituitary Findings.pdf">
+        <span class="card-icon">🧠</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Pituitary Findings</div><div class="card-sub">2018</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2017 - Incidental Pancreatic Cysts.pdf">
+        <span class="card-icon">🫀</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Pancreatic Cysts</div><div class="card-sub">2017</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2017 Incidental Adrenal Masses.pdf">
+        <span class="card-icon">🔍</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Adrenal Masses</div><div class="card-sub">2017</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2018 Incidental Renal Mass.pdf">
+        <span class="card-icon">🫘</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Renal Mass</div><div class="card-sub">2018</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2017 - Incidental Liver Lesions.pdf">
+        <span class="card-icon">🫀</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Liver Lesion</div><div class="card-sub">2017</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2015 Incidental Thyroid Findings.pdf">
+        <span class="card-icon">🦋</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Thyroid Findings</div><div class="card-sub">2015</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2013 Incidental Vascular Findings.pdf">
+        <span class="card-icon">🩸</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Vascular Findings</div><div class="card-sub">2013</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2013 Incidental Splenic and Nodal Findings.pdf">
+        <span class="card-icon">🔍</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Splenic &amp; Nodal Findings</div><div class="card-sub">2013</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2013 - Incidental Gallbladder and Biliary Findings.pdf">
+        <span class="card-icon">🫐</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Gallbladder &amp; Biliary Findings</div><div class="card-sub">2013</div></div>
+      </a>
+      <a class="card" href="/static/ACR 2010 - Incidental Abdominal Findings.pdf">
+        <span class="card-icon">🔍</span>
+        <div class="card-body"><div class="card-title">ACR Incidental Abdominal Findings</div><div class="card-sub">2010</div></div>
+      </a>
+      <a class="card" href="static/Cervical Lymph Node Levels.jpg">
+        <span class="card-icon">🗺️</span>
+        <div class="card-body"><div class="card-title">Cervical Lymph Node Levels</div></div>
+      </a>
+      <a class="card" href="static/ILD chart.jpg">
+        <span class="card-icon">🫁</span>
+        <div class="card-body"><div class="card-title">Interstitial Lung Disease Classification Chart</div></div>
+      </a>
+      <a class="card" href="/static/GGO Classification Table.pdf">
+        <span class="card-icon">☁️</span>
+        <div class="card-body"><div class="card-title">GGO Classification Table</div></div>
+      </a>
+      <a class="card new-item" href="/static/2022 Ultrasound Soft Tissue Masses.pdf">
+        <span class="card-icon">🔊</span>
+        <div class="card-body">
+          <div class="card-title">US Soft Tissue Masses — SRU Consensus <span class="badge-new">New!</span></div>
+          <div class="card-sub">2022</div>
+        </div>
+      </a>
     </div>
-    <center>
-      <p>Questions? Comments? Stuff doesn't work? Contact Rob Sheu.</p>
-    </center>
-  </body>
+  </section>
+
+  <!-- INTERVENTIONAL -->
+  <section class="section" data-cat="interventional">
+    <div class="section-title">🩸 Interventional Radiology</div>
+    <div class="card-grid">
+      <a class="card" href="/static/ARI 2019 Anticoagulation guidelines.pdf">
+        <span class="card-icon">💊</span>
+        <div class="card-body"><div class="card-title">2019 ARI Anticoagulation Guidelines for IR</div></div>
+      </a>
+      <a class="card" href="/static/ARI 2019 Antiplatelet Guidelines.pdf">
+        <span class="card-icon">💊</span>
+        <div class="card-body">
+          <div class="card-title">2019 ARI Antiplatelet Guidelines for IR</div>
+          <div class="sub-links"><a class="sub-link" href="/static/SIR 2019 Anticoagulation guidelines.pdf">SIR PDF</a></div>
+        </div>
+      </a>
+      <a class="card" href="static/SIR antibiotic guidelines.jpg">
+        <span class="card-icon">💉</span>
+        <div class="card-body"><div class="card-title">SIR Antibiotic Guidelines for IR</div></div>
+      </a>
+      <a class="card" href="/static/Splenic injury grading combined.jpg">
+        <span class="card-icon">🩸</span>
+        <div class="card-body"><div class="card-title">AAST Splenic Trauma Grading</div></div>
+      </a>
+      <a class="card" href="/static/Liver injury grading AAST.jpg">
+        <span class="card-icon">🩸</span>
+        <div class="card-body"><div class="card-title">AAST Liver Trauma Grading</div></div>
+      </a>
+      <a class="card" href="static/Kidney injury grading AAST.jpg">
+        <span class="card-icon">🩸</span>
+        <div class="card-body"><div class="card-title">AAST Kidney Trauma Grading</div></div>
+      </a>
+      <a class="card" href="/static/InjuryScoringTables.pdf">
+        <span class="card-icon">📋</span>
+        <div class="card-body"><div class="card-title">AAST Complete Trauma Grading Tables</div></div>
+      </a>
+      <a class="card" href="static/TIPS ultrasound.jpg">
+        <span class="card-icon">🔊</span>
+        <div class="card-body"><div class="card-title">TIPS Ultrasound</div></div>
+      </a>
+      <a class="card" href="static/Stroke activation flowchart.jpg">
+        <span class="card-icon">⚡</span>
+        <div class="card-body"><div class="card-title">Stroke Activation Flowchart</div></div>
+      </a>
+      <a class="card" href="static/Stroke recanalization grading system.jpg">
+        <span class="card-icon">🧠</span>
+        <div class="card-body"><div class="card-title">Stroke Recanalization Grading (TIMI/TICI)</div></div>
+      </a>
+      <a class="card" href="static/arthrogram approaches.pdf">
+        <span class="card-icon">🦴</span>
+        <div class="card-body"><div class="card-title">Neil's Paper on Arthrogram Technique</div></div>
+      </a>
+      <a class="card" href="static/articles/AJNR - Evaluation of penumbra on CT perfusion.pdf">
+        <span class="card-icon">🧠</span>
+        <div class="card-body"><div class="card-title">AJNR — Penumbra Evaluation on CT Perfusion</div></div>
+      </a>
+      <a class="card" href="static/articles/uptodate_stroke.pdf">
+        <span class="card-icon">📄</span>
+        <div class="card-body"><div class="card-title">UpToDate — Mechanical Thrombectomy for Acute Stroke</div></div>
+      </a>
+      <a class="card" href="static/normal cranial angio dsa.jpg">
+        <span class="card-icon">🕸️</span>
+        <div class="card-body"><div class="card-title">Cerebral Artery Anatomy on Angio</div></div>
+      </a>
+      <a class="card" href="static/Anatomic approach to MSK biopsy.pdf">
+        <span class="card-icon">🦴</span>
+        <div class="card-body"><div class="card-title">Anatomic Approach to MSK Biopsies (Radiographics)</div></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- PROTOCOLS -->
+  <section class="section" data-cat="protocols">
+    <div class="section-title">📋 Protocols</div>
+    <div class="card-grid">
+      <a class="card" href="static/protocol 2022b.pdf">
+        <span class="card-icon">📋</span>
+        <div class="card-body"><div class="card-title">Protocol Update</div><div class="card-sub">5-31-2022</div></div>
+      </a>
+      <a class="card" href="static/Protocols CT ARI 2022b.pdf">
+        <span class="card-icon">🖥️</span>
+        <div class="card-body"><div class="card-title">CT Protocols</div><div class="card-sub">Updated 5-31-2022</div></div>
+      </a>
+      <a class="card" href="static/Protocols MRI ARI 2022c.pdf">
+        <span class="card-icon">🧲</span>
+        <div class="card-body"><div class="card-title">MRI Protocols</div><div class="card-sub">Updated 12-7-2022</div></div>
+      </a>
+      <a class="card" href="static/Protocols - CT recommendations.pdf">
+        <span class="card-icon">🖥️</span>
+        <div class="card-body"><div class="card-title">CT Study Recommendations</div><div class="card-sub">Updated 9-4-2019</div></div>
+      </a>
+      <a class="card" href="static/Protocols - MRI Recommendations.pdf">
+        <span class="card-icon">🧲</span>
+        <div class="card-body"><div class="card-title">MRI Study Recommendations</div><div class="card-sub">Updated 9-4-2019</div></div>
+      </a>
+      <a class="card" href="static/Hydration protocol - ARI.pdf">
+        <span class="card-icon">💧</span>
+        <div class="card-body"><div class="card-title">Hydration Protocol</div><div class="card-sub">Updated 9-4-2019</div></div>
+      </a>
+      <a class="card" href="static/Gadolinium Advisory Statement ARI 2018.pdf">
+        <span class="card-icon">⚠️</span>
+        <div class="card-body"><div class="card-title">Gadolinium Advisory Statement</div></div>
+      </a>
+      <a class="card" href="static/Protocols Radiography ARI 2020.pdf">
+        <span class="card-icon">📷</span>
+        <div class="card-body"><div class="card-title">Radiography Protocols</div><div class="card-sub">Updated 8-24-2020</div></div>
+      </a>
+      <a class="card" href="static/Protocols Ultrasound ARI 2022b.pdf">
+        <span class="card-icon">🔊</span>
+        <div class="card-body"><div class="card-title">Ultrasound Protocols</div><div class="card-sub">Updated 5-31-2022</div></div>
+      </a>
+      <a class="card" href="static/NucMed Emergency On-Call Policy.pdf">
+        <span class="card-icon">☢️</span>
+        <div class="card-body"><div class="card-title">Nuc Med Emergency On-Call Procedure</div></div>
+      </a>
+      <a class="card" href="static/MRI Emergency On-Call Policy.pdf">
+        <span class="card-icon">🧲</span>
+        <div class="card-body"><div class="card-title">MRI Emergency On-Call Procedure</div></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- LINKS & INFO -->
+  <section class="section" data-cat="links">
+    <div class="section-title">🔗 Helpful Links &amp; Info</div>
+    <div class="card-grid">
+      <a class="card" href="/static/Contrast Reaction - ACR.pdf">
+        <span class="card-icon">🚨</span>
+        <div class="card-body">
+          <div class="card-title" style="color: var(--accent3);">ACR Contrast Reaction Protocol</div>
+          <div class="card-sub">Emergency reference</div>
+        </div>
+      </a>
+      <a class="card" href="sugano.html">
+        <span class="card-icon">💡</span>
+        <div class="card-body"><div class="card-title">Sugano's Tech Tips</div></div>
+      </a>
+      <a class="card new-item" href="/static/PhonedirectoryforTechareas.pdf">
+        <span class="card-icon">📞</span>
+        <div class="card-body"><div class="card-title">Phone Directory for Tech Areas <span class="badge-new">New!</span></div></div>
+      </a>
+      <a class="card" href="static/PIT phone numbers.png">
+        <span class="card-icon">📞</span>
+        <div class="card-body"><div class="card-title">Phone Numbers — Core Wall</div></div>
+      </a>
+      <a class="card" href="static/Neurologist phone numbers.pdf">
+        <span class="card-icon">🧠</span>
+        <div class="card-body"><div class="card-title">Phone Numbers for Neurologists</div></div>
+      </a>
+      <a class="card" href="articles.html">
+        <span class="card-icon">📚</span>
+        <div class="card-body"><div class="card-title">Reference Articles</div></div>
+      </a>
+      <a class="card" href="/static/summa_telephone_directory.html">
+        <span class="card-icon">📖</span>
+        <div class="card-body"><div class="card-title">Summa Telephone Directory</div></div>
+      </a>
+      <a class="card" href="https://careone.westernreservehospital.org/vpn/index.html">
+        <span class="card-icon">🔐</span>
+        <div class="card-body">
+          <div class="card-title">CareOne Sign-off — WRH (Off-site)</div>
+          <div class="card-sub">Use "Help me log in" if badge not available</div>
+        </div>
+      </a>
+      <a class="card" href="Flap CTA.html">
+        <span class="card-icon">📢</span>
+        <div class="card-body"><div class="card-title">Dr. Unger — CTA Abdominal Wall for Flaps (DIEP)</div></div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>🩻 Questions? Comments? Something broken? Holler at Rob Sheu.</footer>
+
+<script>
+  const allCards = Array.from(document.querySelectorAll('section .card')).map(el => {
+    const section = el.closest('section');
+    return { el, cat: section ? section.dataset.cat : null, text: el.textContent.toLowerCase() };
+  });
+
+  const catLabels = {
+    'best-practice': ['cat-bp', 'Best Practice'],
+    'diagnostic':    ['cat-dx', 'Diagnostic'],
+    'interventional':['cat-ir', 'Interventional'],
+    'protocols':     ['cat-proto', 'Protocols'],
+    'links':         ['cat-link', 'Links'],
+  };
+
+  const tabs = document.querySelectorAll('.tab');
+  const sections = document.querySelectorAll('section.section');
+  const resultsSection = document.getElementById('search-results-section');
+  const resultsGrid = document.getElementById('search-results-grid');
+  const noResults = document.getElementById('no-results');
+  const searchInput = document.getElementById('search');
+  const clearBtn = document.getElementById('clear-search');
+
+  function showCat(cat) {
+    sections.forEach(s => s.classList.toggle('visible', s.dataset.cat === cat));
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+    resultsSection.classList.remove('visible');
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      searchInput.value = '';
+      clearBtn.style.display = 'none';
+      showCat(tab.dataset.cat);
+    });
+  });
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    clearBtn.style.display = q ? 'block' : 'none';
+    if (!q) {
+      resultsSection.classList.remove('visible');
+      sections.forEach(s => s.classList.remove('visible'));
+      const activeTab = document.querySelector('.tab.active');
+      if (activeTab) showCat(activeTab.dataset.cat);
+      return;
+    }
+    sections.forEach(s => s.classList.remove('visible'));
+    resultsSection.classList.add('visible');
+    resultsGrid.innerHTML = '';
+    const matches = allCards.filter(c => c.text.includes(q));
+    matches.forEach(({ el, cat }) => {
+      const clone = el.cloneNode(true);
+      if (cat && catLabels[cat]) {
+        const badge = document.createElement('span');
+        badge.className = 'cat-badge ' + catLabels[cat][0];
+        badge.textContent = catLabels[cat][1];
+        clone.querySelector('.card-title').appendChild(badge);
+      }
+      resultsGrid.appendChild(clone);
+    });
+    noResults.style.display = matches.length === 0 ? 'block' : 'none';
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    resultsSection.classList.remove('visible');
+    sections.forEach(s => s.classList.remove('visible'));
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) showCat(activeTab.dataset.cat);
+  });
+
+  // Theme toggle
+  const themeBtn = document.getElementById('theme-toggle');
+  if (localStorage.getItem('ari-theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+    themeBtn.textContent = '☀️';
+  }
+  themeBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    themeBtn.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('ari-theme', isDark ? 'dark' : 'light');
+  });
+</script>
+</body>
 </html>
