@@ -759,7 +759,7 @@
 </main>
 
 <footer>
-  Summa Health System — Internal Directory &nbsp;·&nbsp; Last updated May 1, 2023 &nbsp;·&nbsp; For emergencies dial 911
+  Summa Health System — Internal Directory &nbsp;·&nbsp; Last updated May 1, 2023 &nbsp;·&nbsp; For emergencies dial 911 &nbsp;·&nbsp; * No official after-hours number
 </footer>
 
 <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -767,14 +767,15 @@
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────
 const LOCATIONS = {
-  "Akron City":   { color: "#00b4a0", short: "AKR" },
-  "Barberton":    { color: "#ef4444", short: "BAR" },
-  "West Reserve": { color: "#a78bfa", short: "WRH" },
-  "Wadsworth":    { color: "#38bdf8", short: "WAD" },
-  "Green":        { color: "#4ade80", short: "GRN" },
-  "Medina":       { color: "#fb923c", short: "MED" },
-  "Satellite":    { color: "#94a3b8", short: "SAT" },
-  "Misc":         { color: "#64748b", short: "MSC" },
+  "Akron City":     { color: "#00b4a0", short: "AKR" },
+  "Barberton":      { color: "#ef4444", short: "BAR" },
+  "Western Reserve": { color: "#a78bfa", short: "WRH" },
+  "Wadsworth":      { color: "#38bdf8", short: "WAD" },
+  "Green":          { color: "#4ade80", short: "GRN" },
+  "Medina":         { color: "#fb923c", short: "MED" },
+  "ARI Tech Areas": { color: "#f59e0b", short: "ARI" },
+  "Satellite":      { color: "#94a3b8", short: "SAT" },
+  "Misc":           { color: "#64748b", short: "MSC" },
 };
 
 const PRIORITY = [
@@ -783,12 +784,46 @@ const PRIORITY = [
   { name: "Green ED",            phone: "330-899-2400", location: "Green" },
   { name: "Lake Medina ED",      phone: "330-721-1111", location: "Medina" },
   { name: "Wadsworth ED",        phone: "330-331-1103", location: "Wadsworth" },
-  { name: "Western Reserve ED",  phone: "330-971-7436", location: "West Reserve" },
+  { name: "Western Reserve ED",  phone: "330-971-7436", location: "Western Reserve" },
   { name: "On-Call Trauma Surg", phone: "234-417-2660", location: "Akron City" },
   { name: "Central Scheduling",  phone: "996-8881",     location: "Misc" },
 ];
 
 const SECTIONS = [
+  // ── ARI TECH AREAS ───────────────────────────────────────────────────────
+  { title: "Akron — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-375-3496"],
+    ["CT", "330-375-1690"],
+    ["Ultrasound", "330-375-7728"],
+    ["US Tech Pager", "330-971-4460"],
+  ]},
+  { title: "Barberton — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-615-3331"],
+    ["CT", "330-615-3336"],
+    ["Ultrasound", "330-615-3346"],
+  ]},
+  { title: "Green — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["ED", "330-899-2468"],
+  ]},
+  { title: "Hudson — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-650-6710 *"],
+  ]},
+  { title: "Medina — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-723-5349"],
+    ["Ultrasound", "330-723-9590"],
+  ]},
+  { title: "State Road — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-922-4648 *"],
+  ]},
+  { title: "Wadsworth — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-331-1621"],
+    ["Ultrasound", "330-331-1605"],
+    ["CT", "330-331-1597"],
+  ]},
+  { title: "White Pond — Tech Areas", location: "ARI Tech Areas", entries: [
+    ["Main Rad Area", "330-873-1518 *"],
+  ]},
+
   // ── AKRON CITY ───────────────────────────────────────────────────────────
   { title: "Summa Akron — Reading Areas", location: "Akron City", entries: [
     ["Angio 1","330-375-3180"],["Angio 2","330-375-3140"],["Angio 3","330-375-6657"],
@@ -847,14 +882,14 @@ const SECTIONS = [
   ]},
 
   // ── WESTERN RESERVE ──────────────────────────────────────────────────────
-  { title: "Western Reserve — Radiology", location: "West Reserve", entries: [
+  { title: "Western Reserve — Radiology", location: "Western Reserve", entries: [
     ["CT Tech","330-971-7326 / 7319"],["Main Rad Tech Area","330-971-7372"],
     ["MRI Tech","330-971-7674 option 2"],
     ["Nuclear Medicine","330-971-7432"],["Nursing office","330-971-7699"],
     ["Reading area #1 (window)","330-971-7477"],["Reading area #2 (door)","330-971-7167"],
     ["Ultrasound","330-971-7474"],
   ]},
-  { title: "Western Reserve — Floors & Staff", location: "West Reserve", entries: [
+  { title: "Western Reserve — Floors & Staff", location: "Western Reserve", entries: [
     ["ED","330-971-7436"],["ICU","330-971-7248"],["2 West","330-971-7259"],["3 West","330-971-7283"],
     ["Outpatient Surg","330-971-7442"],["ICU Step Down","330-615-6520"],["Rob Kent","330-971-7974"],
     ["Med Ed","7225/7207"],["Path","330-971-7235"],["Med Staff Off","330-971-7415"],
