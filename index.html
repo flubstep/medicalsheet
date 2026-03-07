@@ -249,7 +249,7 @@
     .tab[data-cat="links"].active         { color: #c0952a; }
 
     /* MAIN */
-    main { max-width: 720px; margin: 0 auto; padding: 16px 32px 60px; }
+    main { max-width: 100%; margin: 0; padding: 16px 48px 60px; }
 
     .section { display: none; }
     .section.visible { display: block; }
@@ -270,28 +270,26 @@
 
     /* CARDS / LIST */
     .card-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
+      columns: 2;
+      column-gap: 32px;
       margin-bottom: 32px;
     }
 
     .card {
+      break-inside: avoid;
+      display: block;
       background: transparent;
       border: none;
       border-radius: 8px;
-      padding: 6px 10px;
-      display: flex; align-items: flex-start; gap: 8px;
+      padding: 5px 10px;
       text-decoration: none;
-      box-shadow: none;
       transition: all 0.12s;
       animation: slideUp 0.3s ease both;
+      margin-bottom: 2px;
     }
     .card:hover {
       background: var(--surface2);
       transform: translateX(4px);
-      box-shadow: none;
-      border-color: transparent;
     }
     .card.new-item { border: none; background: transparent; }
     .card.new-item:hover { background: var(--surface2); }
@@ -389,10 +387,13 @@
     }
 
     /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .card-grid { columns: 1; }
+      main { padding: 16px 20px 40px; }
+    }
     @media (max-width: 600px) {
       .logo-sub { display: none; }
       header { padding: 10px 12px; }
-      main { padding: 16px 10px 40px; }
       .quick-bar { padding: 8px 10px; }
       .tab { font-size: 13px; padding: 6px 12px; }
     }
