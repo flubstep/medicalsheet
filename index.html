@@ -249,7 +249,7 @@
     .tab[data-cat="links"].active         { color: #c0952a; }
 
     /* MAIN */
-    main { max-width: 1400px; margin: 0 auto; padding: 16px 32px 60px; }
+    main { max-width: 720px; margin: 0 auto; padding: 16px 32px 60px; }
 
     .section { display: none; }
     .section.visible { display: block; }
@@ -270,8 +270,8 @@
 
     /* CARDS / LIST */
     .card-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 0;
       margin-bottom: 32px;
     }
@@ -389,9 +389,6 @@
     }
 
     /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .card-grid { grid-template-columns: 1fr; }
-    }
     @media (max-width: 600px) {
       .logo-sub { display: none; }
       header { padding: 10px 12px; }
