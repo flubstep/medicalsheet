@@ -1387,37 +1387,46 @@ function submitFeedback() {
   }
   document.getElementById('fb-message').style.borderColor = '';
 
-  const name    = document.getElementById('fb-name').value.trim() || 'Anonymous';
-  const type    = document.getElementById('fb-type').value;
-  const subject = encodeURIComponent('Summa Phone Directory — ' + type);
-  const body    = encodeURIComponent(
-    'Feedback type: ' + type + '\n' +
-    'From: ' + name + '\n\n' +
-    message
-  );
+  const name = document.getElementById('fb-name').value.trim() || 'Anonymous';
+  const type = document.getElementById('fb-type').value;
+  const btn  = document.getElementById('feedbackSubmit');
 
-  const btn = document.getElementById('feedbackSubmit');
   btn.disabled = true;
-  btn.textContent = 'Opening email…';
+  btn.textContent = 'Sending…';
 
-  window.location.href = 'mailto:rob.sheu@gmail.com?subject=' + subject + '&body=' + body;
-
-  // Show success state after a short delay
-  setTimeout(() => {
-    document.getElementById('feedbackForm').style.display = 'none';
-    document.getElementById('feedbackSuccess').style.display = 'block';
-    // Reset form for next use
-    setTimeout(() => {
-      document.getElementById('feedbackForm').style.display = 'block';
-      document.getElementById('feedbackSuccess').style.display = 'none';
-      document.getElementById('fb-name').value = '';
-      document.getElementById('fb-message').value = '';
-      document.getElementById('fb-type').selectedIndex = 0;
-      btn.disabled = false;
-      btn.textContent = 'Send Feedback';
-      closeFeedback();
-    }, 4000);
-  }, 800);
+  fetch('https://formspree.io/f/mdavzvzr', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: name,
+      feedbackType: type,
+      message: message,
+      _subject: 'Summa Phone Directory — ' + type
+    })
+  })
+  .then(res => {
+    if (res.ok) {
+      document.getElementById('feedbackForm').style.display = 'none';
+      document.getElementById('feedbackSuccess').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('feedbackForm').style.display = 'block';
+        document.getElementById('feedbackSuccess').style.display = 'none';
+        document.getElementById('fb-name').value = '';
+        document.getElementById('fb-message').value = '';
+        document.getElementById('fb-type').selectedIndex = 0;
+        btn.disabled = false;
+        btn.textContent = 'Send Feedback';
+        closeFeedback();
+      }, 4000);
+    } else {
+      throw new Error('Server error');
+    }
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.textContent = 'Send Feedback';
+    alert('Something went wrong — please try again.');
+  });
 }
 </script>
 </body>
