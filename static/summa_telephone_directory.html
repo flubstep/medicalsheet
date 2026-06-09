@@ -686,6 +686,176 @@
     .toggle-label { display: none; }
   }
 
+  /* ── FEEDBACK BUTTON ── */
+  #feedbackBtn {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    background: #f59e0b;
+    border: none;
+    color: #1a1200;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 11px 18px;
+    border-radius: 24px;
+    cursor: pointer;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 4px 18px rgba(245,158,11,0.45);
+    letter-spacing: 0.01em;
+  }
+  #feedbackBtn:hover {
+    background: #fbbf24;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(245,158,11,0.6);
+  }
+  #feedbackBtn:active {
+    transform: translateY(0);
+  }
+
+  /* ── FEEDBACK MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 300;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal-panel {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 560px;
+    padding: 28px 28px 32px;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+    animation: slideUp 0.25s cubic-bezier(.34,1.4,.64,1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.2s;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .modal-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .form-row { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    caret-color: var(--teal);
+  }
+
+  .form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238fa3b3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  .form-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(0,180,160,0.1);
+  }
+
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-submit {
+    width: 100%;
+    background: var(--teal);
+    color: var(--navy);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .form-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+  .form-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0 8px;
+    color: var(--teal);
+    font-size: 14px;
+  }
+  .form-success-icon { font-size: 36px; margin-bottom: 10px; }
+  .form-success p { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
+
+  body.light .modal-panel { box-shadow: 0 -8px 40px rgba(0,0,0,0.15); }
+  body.light .form-select { background-color: var(--search-bg); }
+
 </style>
 </head>
 <body>
@@ -763,6 +933,51 @@
 </footer>
 
 <button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- FEEDBACK BUTTON -->
+<button id="feedbackBtn" onclick="openFeedback()">
+  ✏️ Suggest a correction
+</button>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedbackModal" onclick="closeFeedbackOnOverlay(event)">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Suggest a Correction or Addition</span>
+      <button class="modal-close" onclick="closeFeedback()" aria-label="Close">✕</button>
+    </div>
+    <p class="modal-desc">Found an error, outdated number, or missing entry? Describe it below and your note will be emailed directly to the directory administrator.</p>
+
+    <div id="feedbackForm">
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label" for="fb-name">Your name <span style="color:var(--text-dim)">(optional)</span></label>
+          <input class="form-input" type="text" id="fb-name" placeholder="e.g. Jane Smith" autocomplete="name">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label" for="fb-type">Type of feedback</label>
+          <select class="form-select" id="fb-type">
+            <option value="Error / wrong number">Error / wrong number</option>
+            <option value="New entry to add">New entry to add</option>
+            <option value="Entry to remove">Entry to remove</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:14px">
+        <label class="form-label" for="fb-message">Details <span style="color:var(--red)">*</span></label>
+        <textarea class="form-textarea" id="fb-message" placeholder="e.g. Barberton ED number should be 330-615-4501, not 330-615-4500"></textarea>
+      </div>
+      <button class="form-submit" id="feedbackSubmit" onclick="submitFeedback()">Send Feedback</button>
+    </div>
+
+    <div class="form-success" id="feedbackSuccess">
+      <div class="form-success-icon">✅</div>
+      <strong>Thank you!</strong>
+      <p>Your note has been sent. The directory will be reviewed shortly.</p>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────
@@ -1144,6 +1359,66 @@ buildFilters();
 buildPriority();
 countTotals();
 renderSections();
+
+// ── FEEDBACK MODAL ────────────────────────────────────────────────────────
+function openFeedback() {
+  document.getElementById('feedbackModal').classList.add('open');
+  document.getElementById('fb-message').focus();
+}
+
+function closeFeedback() {
+  document.getElementById('feedbackModal').classList.remove('open');
+}
+
+function closeFeedbackOnOverlay(e) {
+  if (e.target === document.getElementById('feedbackModal')) closeFeedback();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeFeedback();
+});
+
+function submitFeedback() {
+  const message = document.getElementById('fb-message').value.trim();
+  if (!message) {
+    document.getElementById('fb-message').focus();
+    document.getElementById('fb-message').style.borderColor = 'var(--red)';
+    return;
+  }
+  document.getElementById('fb-message').style.borderColor = '';
+
+  const name    = document.getElementById('fb-name').value.trim() || 'Anonymous';
+  const type    = document.getElementById('fb-type').value;
+  const subject = encodeURIComponent('Summa Phone Directory — ' + type);
+  const body    = encodeURIComponent(
+    'Feedback type: ' + type + '\n' +
+    'From: ' + name + '\n\n' +
+    message
+  );
+
+  const btn = document.getElementById('feedbackSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Opening email…';
+
+  window.location.href = 'mailto:rob.sheu@gmail.com?subject=' + subject + '&body=' + body;
+
+  // Show success state after a short delay
+  setTimeout(() => {
+    document.getElementById('feedbackForm').style.display = 'none';
+    document.getElementById('feedbackSuccess').style.display = 'block';
+    // Reset form for next use
+    setTimeout(() => {
+      document.getElementById('feedbackForm').style.display = 'block';
+      document.getElementById('feedbackSuccess').style.display = 'none';
+      document.getElementById('fb-name').value = '';
+      document.getElementById('fb-message').value = '';
+      document.getElementById('fb-type').selectedIndex = 0;
+      btn.disabled = false;
+      btn.textContent = 'Send Feedback';
+      closeFeedback();
+    }, 4000);
+  }, 800);
+}
 </script>
 </body>
 </html>
