@@ -20,228 +20,109 @@
       --text: #4a3728;
       --text-muted: #9a8070;
       --text-bright: #2a1a0e;
-      --new: #e8622a;
       --card-shadow: 3px 3px 0px #e8d5bc;
-      --card-shadow-hover: 5px 5px 0px #d4b898;
       --header-bg: #e8622a;
     }
-
     :root.dark {
-      --bg: #0a0705;
-      --surface: #120e09;
-      --surface2: #1a1410;
-      --border: #2e2218;
-      --accent: #f0854a;
-      --accent2: #4dbf87;
-      --accent3: #e05555;
-      --accent4: #a07fd4;
-      --accent5: #5aaae0;
-      --text: #e0cdb8;
-      --text-muted: #7a6858;
-      --text-bright: #f5ece0;
-      --new: #f0854a;
-      --card-shadow: 3px 3px 0px #2e2218;
-      --card-shadow-hover: 5px 5px 0px #3a2a1e;
-      --header-bg: #0a0705;
+      --bg: #0a0705; --surface: #120e09; --surface2: #1a1410;
+      --border: #2e2218; --accent: #f0854a; --accent2: #4dbf87;
+      --accent3: #e05555; --accent4: #a07fd4; --accent5: #5aaae0;
+      --text: #e0cdb8; --text-muted: #7a6858; --text-bright: #f5ece0;
+      --card-shadow: 3px 3px 0px #2e2218; --header-bg: #0a0705;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
-      min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito', sans-serif; font-size: 14px;
+      line-height: 1.6; min-height: 100vh;
       background-image: radial-gradient(circle at 20% 50%, rgba(232,98,42,0.04) 0%, transparent 50%),
                         radial-gradient(circle at 80% 20%, rgba(58,158,111,0.04) 0%, transparent 50%);
     }
-
-    /* HEADER */
     header {
-      background: var(--header-bg);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--header-bg); padding: 12px 20px;
+      display: flex; align-items: center; gap: 14px;
+      position: sticky; top: 0; z-index: 100;
       box-shadow: 0 3px 0 rgba(0,0,0,0.15);
     }
-
     :root.dark header { border-bottom: 2px solid var(--border); }
-
     .logo-area { display: flex; align-items: center; gap: 10px; }
-
-    .logo-xray {
-      font-size: 28px;
-      animation: float 3s ease-in-out infinite;
-      display: inline-block;
-    }
-
+    .logo-xray { font-size: 28px; animation: float 3s ease-in-out infinite; display: inline-block; }
     @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(-3deg); }
-      50% { transform: translateY(-4px) rotate(3deg); }
+      0%,100% { transform: translateY(0px) rotate(-3deg); }
+      50%      { transform: translateY(-4px) rotate(3deg); }
     }
-
-    .logo-text {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: #fff;
-      line-height: 1.1;
-    }
-
-    .logo-sub {
-      font-size: 11px;
-      color: rgba(255,255,255,0.75);
-      font-style: italic;
-    }
-
+    .logo-text { font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600; color: #fff; line-height: 1.1; }
+    .logo-sub  { font-size: 11px; color: rgba(255,255,255,0.75); font-style: italic; }
     :root.dark .logo-text { color: var(--text-bright); }
     :root.dark .logo-sub  { color: var(--text-muted); }
-
-    /* SEARCH */
-    .search-wrap {
-      flex: 1;
-      max-width: 420px;
-      margin-left: auto;
-      position: relative;
-    }
-
+    .search-wrap { flex: 1; max-width: 420px; margin-left: auto; position: relative; }
     #search {
-      width: 100%;
-      background: rgba(255,255,255,0.22);
-      border: 2px solid rgba(255,255,255,0.4);
-      color: #fff;
-      font-family: 'Nunito', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 8px 12px 8px 36px;
-      border-radius: 20px;
-      outline: none;
-      transition: all 0.2s;
+      width: 100%; background: rgba(255,255,255,0.22);
+      border: 2px solid rgba(255,255,255,0.4); color: #fff;
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 500;
+      padding: 8px 12px 8px 36px; border-radius: 20px; outline: none; transition: all 0.2s;
     }
     #search:focus { background: rgba(255,255,255,0.32); border-color: rgba(255,255,255,0.85); }
     #search::placeholder { color: rgba(255,255,255,0.65); }
-
     :root.dark #search { background: var(--surface2); border-color: var(--border); color: var(--text-bright); }
     :root.dark #search::placeholder { color: var(--text-muted); }
     :root.dark #search:focus { border-color: var(--accent); }
-
-    .search-icon {
-      position: absolute; left: 10px; top: 50%;
-      transform: translateY(-50%);
-      font-size: 15px; pointer-events: none;
-    }
-
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
     #clear-search {
-      position: absolute; right: 10px; top: 50%;
-      transform: translateY(-50%);
-      background: none; border: none;
-      color: rgba(255,255,255,0.7);
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: rgba(255,255,255,0.7);
       cursor: pointer; font-size: 14px; display: none; padding: 2px 4px;
     }
     #clear-search:hover { color: #fff; }
     :root.dark #clear-search { color: var(--text-muted); }
     :root.dark #clear-search:hover { color: var(--text-bright); }
-
-    /* THEME TOGGLE */
     #theme-toggle {
-      background: rgba(255,255,255,0.2);
-      border: 2px solid rgba(255,255,255,0.35);
-      border-radius: 50%;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
+      background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%; color: #fff; cursor: pointer; font-size: 16px;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s;
     }
     #theme-toggle:hover { background: rgba(255,255,255,0.35); transform: rotate(20deg) scale(1.1); }
     :root.dark #theme-toggle { background: var(--surface2); border-color: var(--border); }
 
-    /* QUICK ACCESS BAR */
+    /* QUICK BAR */
     .quick-bar {
-      background: var(--surface2);
-      border-bottom: 2px dashed var(--border);
-      padding: 10px 16px;
-      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+      background: var(--surface2); border-bottom: 2px dashed var(--border);
+      padding: 10px 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
     }
-
-    .quick-label {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 13px; font-weight: 500;
-      color: var(--text-muted); flex-shrink: 0;
-    }
-
+    .quick-label { font-family: 'Fredoka', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-muted); flex-shrink: 0; }
     .quick-link {
       display: inline-flex; align-items: center; gap: 5px;
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: 20px;
-      color: var(--text);
-      font-size: 12px; font-weight: 600;
-      font-family: 'Nunito', sans-serif;
-      padding: 4px 12px;
-      text-decoration: none;
-      transition: all 0.15s;
-      box-shadow: 2px 2px 0 var(--border);
+      background: var(--surface); border: 2px solid var(--border); border-radius: 20px;
+      color: var(--text); font-size: 12px; font-weight: 600; font-family: 'Nunito', sans-serif;
+      padding: 4px 12px; text-decoration: none; transition: all 0.15s;
+      box-shadow: 2px 2px 0 var(--border); cursor: pointer;
     }
-    .quick-link:hover {
-      transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 var(--border);
-      border-color: var(--accent2); color: var(--accent2);
-    }
+    .quick-link:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--border); border-color: var(--accent2); color: var(--accent2); }
     .quick-link.urgent {
-      border-color: var(--accent3); color: var(--accent3);
-      background: #fff5f5;
-      box-shadow: 2px 2px 0 #fcc;
-      animation: pulse-border 2s ease-in-out infinite;
+      border-color: var(--accent3); color: var(--accent3); background: #fff5f5;
+      box-shadow: 2px 2px 0 #fcc; animation: pulse-border 2s ease-in-out infinite;
     }
     :root.dark .quick-link.urgent { background: rgba(224,85,85,0.1); }
-    @keyframes pulse-border {
-      0%, 100% { border-color: var(--accent3); }
-      50% { border-color: #ff9090; }
-    }
-    .quick-link.urgent:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 #fcc; }
+    @keyframes pulse-border { 0%,100% { border-color: var(--accent3); } 50% { border-color: #ff9090; } }
+    .quick-link.urgent:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #fcc; }
 
     /* TABS */
     .tabs {
-      background: var(--surface);
-      border-bottom: 2px solid var(--border);
-      display: flex; gap: 4px;
-      padding: 8px 12px 0;
-      overflow-x: auto; -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      background: var(--surface); border-bottom: 2px solid var(--border);
+      display: flex; gap: 4px; padding: 8px 12px 0;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
     }
     .tabs::-webkit-scrollbar { display: none; }
-
     .tab {
-      background: var(--surface2);
-      border: 2px solid var(--border);
-      border-bottom: none;
-      border-radius: 12px 12px 0 0;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-family: 'Fredoka', sans-serif;
-      font-size: 14px; font-weight: 500;
-      padding: 7px 16px;
-      white-space: nowrap;
-      transition: all 0.15s;
-      position: relative; bottom: -2px;
+      background: var(--surface2); border: 2px solid var(--border);
+      border-bottom: none; border-radius: 12px 12px 0 0;
+      color: var(--text-muted); cursor: pointer; font-family: 'Fredoka', sans-serif;
+      font-size: 14px; font-weight: 500; padding: 7px 16px; white-space: nowrap;
+      transition: all 0.15s; position: relative; bottom: -2px;
     }
     .tab:hover { color: var(--text); background: var(--bg); }
-    .tab.active {
-      background: var(--bg);
-      color: var(--text-bright);
-      border-color: var(--border);
-      border-bottom-color: var(--bg);
-      font-weight: 600;
-    }
+    .tab.active { background: var(--bg); color: var(--text-bright); border-color: var(--border); border-bottom-color: var(--bg); font-weight: 600; }
     .tab[data-cat="best-practice"].active { color: var(--accent); }
     .tab[data-cat="diagnostic"].active    { color: var(--accent5); }
     .tab[data-cat="interventional"].active{ color: var(--accent4); }
@@ -250,128 +131,72 @@
 
     /* MAIN */
     main { max-width: 100%; margin: 0; padding: 16px 48px 60px; }
-
     .section { display: none; }
     .section.visible { display: block; }
-
     .section-title {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 20px; font-weight: 600;
-      color: var(--text-bright);
-      margin-bottom: 16px;
+      font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600;
+      color: var(--text-bright); margin-bottom: 16px;
       display: flex; align-items: center; gap: 8px;
     }
     .section-title::after {
-      content: '';
-      flex: 1; height: 2px;
+      content: ''; flex: 1; height: 2px;
       background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 6px, transparent 6px, transparent 12px);
       margin-left: 8px;
     }
-
-    /* CARDS / LIST */
-    .card-grid {
-      columns: 2;
-      column-gap: 32px;
-      margin-bottom: 32px;
+    .sub-section { margin-bottom: 28px; }
+    .sub-section-title {
+      font-family: 'Fredoka', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--text-muted); padding: 2px 6px 6px;
+      border-bottom: 1px dashed var(--border); margin-bottom: 6px;
+      display: flex; align-items: center; gap: 6px;
     }
-
+    .card-grid { columns: 2; column-gap: 32px; margin-bottom: 8px; }
     .card {
-      break-inside: avoid;
-      display: block;
-      background: transparent;
-      border: none;
-      border-radius: 8px;
-      padding: 5px 10px;
-      text-decoration: none;
-      transition: all 0.12s;
-      animation: slideUp 0.3s ease both;
-      margin-bottom: 2px;
+      break-inside: avoid; display: block; background: transparent; border: none;
+      border-radius: 8px; padding: 5px 10px; text-decoration: none;
+      transition: all 0.12s; animation: slideUp 0.3s ease both; margin-bottom: 2px; cursor: pointer;
     }
-    .card:hover {
-      background: var(--surface2);
-      transform: translateX(4px);
-    }
+    .card:hover { background: var(--surface2); transform: translateX(4px); }
     .card.new-item { border: none; background: transparent; }
     .card.new-item:hover { background: var(--surface2); }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .card:nth-child(1)  { animation-delay: 0.03s; }
-    .card:nth-child(2)  { animation-delay: 0.06s; }
-    .card:nth-child(3)  { animation-delay: 0.09s; }
-    .card:nth-child(4)  { animation-delay: 0.12s; }
-    .card:nth-child(5)  { animation-delay: 0.15s; }
-    .card:nth-child(6)  { animation-delay: 0.18s; }
-    .card:nth-child(7)  { animation-delay: 0.21s; }
-    .card:nth-child(8)  { animation-delay: 0.24s; }
-    .card:nth-child(9)  { animation-delay: 0.27s; }
-    .card:nth-child(10) { animation-delay: 0.30s; }
-    .card:nth-child(11) { animation-delay: 0.33s; }
-    .card:nth-child(12) { animation-delay: 0.36s; }
-
+    @keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    .card:nth-child(1)  { animation-delay:.03s; } .card:nth-child(2)  { animation-delay:.06s; }
+    .card:nth-child(3)  { animation-delay:.09s; } .card:nth-child(4)  { animation-delay:.12s; }
+    .card:nth-child(5)  { animation-delay:.15s; } .card:nth-child(6)  { animation-delay:.18s; }
+    .card:nth-child(7)  { animation-delay:.21s; } .card:nth-child(8)  { animation-delay:.24s; }
+    .card:nth-child(9)  { animation-delay:.27s; } .card:nth-child(10) { animation-delay:.30s; }
+    .card:nth-child(11) { animation-delay:.33s; } .card:nth-child(12) { animation-delay:.36s; }
     .card-icon { display: none; }
-
     .card-body { break-inside: avoid; display: block; }
-
-    .card-title {
-      color: var(--accent5);
-      font-size: 13px; font-weight: 600; line-height: 1.4;
-    }
+    .card-title { color: var(--accent5); font-size: 13px; font-weight: 600; line-height: 1.4; }
     .card:hover .card-title { color: var(--accent); }
-    .card.new-item .card-title { color: var(--accent5); }
-
     .badge-new { display: none; }
-
-    .card.new-item {
-      border: none; background: transparent;
-    }
-
-    .card-sub {
-      color: var(--text-muted);
-      font-size: 11px; font-style: italic; flex-shrink: 0;
-    }
-
-
-
-
+    .card-sub { color: var(--text-muted); font-size: 11px; font-style: italic; flex-shrink: 0; }
     .sub-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
-
     .sub-link {
-      font-size: 11px; font-weight: 600;
-      color: var(--accent5);
-      text-decoration: none;
-      background: rgba(42,127,191,0.08);
-      padding: 1px 7px; border-radius: 8px;
-      border: 1px solid rgba(42,127,191,0.2);
-      transition: all 0.15s;
+      font-size: 11px; font-weight: 600; color: var(--accent5); text-decoration: none;
+      background: rgba(42,127,191,0.08); padding: 1px 7px; border-radius: 8px;
+      border: 1px solid rgba(42,127,191,0.2); transition: all 0.15s; cursor: pointer;
     }
     .sub-link:hover { background: rgba(42,127,191,0.18); }
+
+    /* INLINE badge on cards that have embedded content */
+    .card[data-panel-id] .card-title::before {
+      content: '⚡';
+      font-size: 10px;
+      margin-right: 4px;
+      opacity: 0.6;
+    }
 
     /* SEARCH RESULTS */
     #search-results-section { display: none; }
     #search-results-section.visible { display: block; }
-
-    .search-results-heading {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 18px; color: var(--text-muted); margin-bottom: 16px;
-    }
-
-    #no-results {
-      display: none; text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-      font-family: 'Fredoka', sans-serif; font-size: 18px;
-    }
+    .search-results-heading { font-family: 'Fredoka', sans-serif; font-size: 18px; color: var(--text-muted); margin-bottom: 16px; }
+    #no-results { display: none; text-align: center; padding: 60px 20px; color: var(--text-muted); font-family: 'Fredoka', sans-serif; font-size: 18px; }
     #no-results::before { content: '🔍'; display: block; font-size: 40px; margin-bottom: 12px; }
-
     .cat-badge {
-      display: inline-block;
-      font-size: 9px; font-weight: 700;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      padding: 1px 6px; border-radius: 8px;
-      margin-left: 5px; vertical-align: middle;
+      display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 1px 6px; border-radius: 8px; margin-left: 5px; vertical-align: middle;
     }
     .cat-bp    { background: rgba(232,98,42,0.12);  color: var(--accent); }
     .cat-dx    { background: rgba(42,127,191,0.12); color: var(--accent5); }
@@ -379,24 +204,96 @@
     .cat-proto { background: rgba(58,158,111,0.12); color: var(--accent2); }
     .cat-link  { background: rgba(192,149,42,0.12); color: #c0952a; }
 
-    /* FOOTER */
-    footer {
-      text-align: center; padding: 20px;
-      color: var(--text-muted); font-size: 13px; font-style: italic;
-      border-top: 2px dashed var(--border);
-    }
+    footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; font-style: italic; border-top: 2px dashed var(--border); }
 
-    /* RESPONSIVE */
-    @media (max-width: 800px) {
-      .card-grid { columns: 1; }
-      main { padding: 16px 20px 40px; }
+    @media (max-width: 800px) { .card-grid { columns: 1; } main { padding: 16px 20px 40px; } }
+    @media (max-width: 600px) { .logo-sub { display: none; } header { padding: 10px 12px; } .quick-bar { padding: 8px 10px; } .tab { font-size: 13px; padding: 6px 12px; } }
+
+    /* ── PANEL ── */
+    #panel-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.38); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+    #panel-backdrop.open { opacity: 1; pointer-events: auto; }
+    #panel {
+      position: fixed; top: 0; right: 0;
+      width: 58%; max-width: 1000px; height: 100dvh;
+      background: var(--surface); border-left: 2px solid var(--border);
+      box-shadow: -8px 0 32px rgba(0,0,0,0.22); z-index: 301;
+      display: flex; flex-direction: column;
+      transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
     }
-    @media (max-width: 600px) {
-      .logo-sub { display: none; }
-      header { padding: 10px 12px; }
-      .quick-bar { padding: 8px 10px; }
-      .tab { font-size: 13px; padding: 6px 12px; }
+    #panel.open { transform: translateX(0); }
+    .panel-header {
+      background: var(--surface2); border-bottom: 2px solid var(--border);
+      padding: 10px 14px; display: flex; align-items: center; gap: 8px; flex-shrink: 0;
     }
+    #panel-title { font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-bright); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .panel-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--surface); border: 2px solid var(--border); border-radius: 14px;
+      color: var(--text); font-size: 12px; font-weight: 600; font-family: 'Nunito', sans-serif;
+      padding: 4px 11px; text-decoration: none; cursor: pointer; flex-shrink: 0;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .panel-btn:hover { border-color: var(--accent); color: var(--accent); }
+    #panel-body { flex: 1; overflow-y: auto; position: relative; display: flex; flex-direction: column; }
+    #panel-body iframe { width: 100%; flex: 1; border: none; min-height: 0; height: calc(100dvh - 49px); }
+    #panel-body img { max-width: 100%; height: auto; display: block; margin: 0 auto; padding: 20px; }
+
+    /* ── GUIDELINE PANEL STYLES ── */
+    .guideline-panel { padding: 20px 24px; font-size: 13px; overflow-x: auto; }
+    .gp-header {
+      background: var(--surface2); border: 2px solid var(--border); border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 18px;
+    }
+    .gp-title { font-family: 'Fredoka', sans-serif; font-size: 19px; font-weight: 600; color: var(--text-bright); margin-bottom: 3px; }
+    .gp-meta { font-size: 11px; color: var(--text-muted); }
+    .gp-section { margin-bottom: 20px; }
+    .gp-section-title {
+      font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 600;
+      color: var(--accent5); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border);
+    }
+    .gp-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 4px; }
+    .gp-table th {
+      background: var(--surface2); border: 1px solid var(--border); padding: 6px 10px;
+      text-align: left; font-weight: 700; font-family: 'Fredoka', sans-serif; font-size: 12px; color: var(--text-bright);
+    }
+    .gp-table td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: top; line-height: 1.5; }
+    .gp-table tbody tr:hover td { background: var(--surface2); }
+    .gp-note { font-size: 11px; color: var(--text-muted); font-style: italic; padding: 6px 2px; line-height: 1.5; }
+    .gp-indication { font-size: 12px; color: var(--text); padding: 6px 2px 2px; }
+    .proto-label { width: 36%; font-weight: 600; background: var(--surface2); color: var(--text-bright); }
+    .proto-filter-bar { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 0 6px; }
+    .proto-pill {
+      padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 2px solid var(--border); background: var(--surface); color: var(--text);
+      cursor: pointer; transition: all 0.15s; font-family: 'Nunito', sans-serif;
+    }
+    .proto-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .proto-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .proto-sub-hidden { display: none; }
+    .proto-seq-group { margin-bottom: 10px; }
+    .proto-seq-phase {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+      color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 3px; margin-bottom: 4px;
+    }
+    .proto-seq-list { list-style: none; padding: 0; margin: 0; }
+    .proto-seq-list li {
+      padding: 3px 0 3px 16px; font-size: 12px; line-height: 1.5;
+      border-bottom: 1px solid var(--surface2); position: relative;
+    }
+    .proto-seq-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 9px; top: 5px; }
+    .gp-tag {
+      display: inline-block; padding: 1px 8px; border-radius: 10px;
+      font-size: 11px; font-weight: 700; white-space: nowrap;
+    }
+    .gp-green  { background: rgba(58,158,111,0.15);  color: var(--accent2); }
+    .gp-yellow { background: rgba(192,149,42,0.15);  color: #b08020; }
+    .gp-orange { background: rgba(232,98,42,0.15);   color: var(--accent); }
+    .gp-red    { background: rgba(214,48,48,0.15);   color: var(--accent3); }
+    .gp-purple { background: rgba(123,94,167,0.15);  color: var(--accent4); }
+    .gp-blue   { background: rgba(42,127,191,0.15);  color: var(--accent5); }
+    .gp-ul { padding-left: 18px; line-height: 2; }
+
+    @media (max-width: 900px) { #panel { width: 100%; max-width: 100%; } }
   </style>
 </head>
 <body>
@@ -434,7 +331,6 @@
 </nav>
 
 <main>
-
   <div id="search-results-section">
     <div class="search-results-heading">Search results ✨</div>
     <div class="card-grid" id="search-results-grid"></div>
@@ -444,314 +340,869 @@
   <!-- BEST PRACTICE -->
   <section class="section visible" data-cat="best-practice">
     <div class="section-title">⭐ Best Practice Recommendations</div>
-    <div class="card-grid">
-      <a class="card" href="/static/CTR guidelines.pdf">
-        <span class="card-icon">📋</span>
-        <div class="card-body"><div class="card-title">CTR Guidelines</div></div>
-      </a>
-      <a class="card" href="/static/MIPS 2024.pdf">
-        <span class="card-icon">📊</span>
-        <div class="card-body"><div class="card-title">MIPS Requirements 2024</div></div>
-      </a>
-      <a class="card" href="/static/TIRADS chart.png">
-        <span class="card-icon">🦋</span>
-        <div class="card-body">
-          <div class="card-title">TI-RADS Thyroid Nodule Classification</div>
-          <div class="sub-links">
-            <a class="sub-link" href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/TI-RADS">ACR page ↗</a>
-            <a class="sub-link" href="/static/ACR TI-RADS Atlas.pdf">Atlas PDF</a>
+
+    <div class="sub-section">
+      <div class="sub-section-title">🏷️ Reporting &amp; Scoring Systems</div>
+      <div class="card-grid">
+        <a class="card" data-panel-id="ti-rads" href="/static/ACR TI-RADS Atlas.pdf">
+          <div class="card-body">
+            <div class="card-title">TI-RADS Thyroid Nodule Classification</div>
+            <div class="sub-links">
+              <a class="sub-link" href="https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/TI-RADS">ACR page ↗</a>
+              <a class="sub-link" href="/static/ACR TI-RADS Atlas.pdf">Atlas PDF</a>
+            </div>
           </div>
-        </div>
-      </a>
-      <a class="card" href="/static/2017 Fleishner guidelines reversed.jpg">
-        <span class="card-icon">🫁</span>
-        <div class="card-body">
-          <div class="card-title">2017 Fleischner Guidelines — Pulmonary Nodules</div>
-          <div class="sub-links">
-            <a class="sub-link" href="/static/2017 - Updated Fleischner Society Guidelines for Management of Pulmonary Nodules.pdf">Full PDF</a>
+        </a>
+        <a class="card" data-panel-id="lung-rads" href="/static/articles/Lung-RADS 2022.pdf">
+          <div class="card-body">
+            <div class="card-title">2022 LUNG-RADS Screening Guidelines</div>
+            <div class="sub-links">
+              <a class="sub-link" href="/static/articles/LungRADS 1-1 updates.pdf">PPT</a>
+              <a class="sub-link" href="/static/articles/Lung-RADS 2022 summary of changes.pdf">2022 Changes</a>
+            </div>
           </div>
-        </div>
-      </a>
-      <a class="card" href="/static/articles/Lung-RADS 2022.pdf">
-        <span class="card-icon">🫁</span>
-        <div class="card-body">
-          <div class="card-title">2022 LUNG-RADS Screening Guidelines</div>
-          <div class="sub-links">
-            <a class="sub-link" href="/static/articles/LungRADS 1-1 updates.pdf">PPT</a>
-            <a class="sub-link" href="/static/articles/Lung-RADS 2022 summary of changes.pdf">2022 Changes</a>
+        </a>
+        <a class="card" data-panel-id="fleischner" href="/static/2017 - Updated Fleischner Society Guidelines for Management of Pulmonary Nodules.pdf">
+          <div class="card-body">
+            <div class="card-title">2017 Fleischner Guidelines — Pulmonary Nodules</div>
+            <div class="sub-links">
+              <a class="sub-link" href="/static/2017 - Updated Fleischner Society Guidelines for Management of Pulmonary Nodules.pdf">Full PDF</a>
+            </div>
           </div>
-        </div>
-      </a>
-      <a class="card" href="/static/RECIST.jpg">
-        <span class="card-icon">📏</span>
-        <div class="card-body">
-          <div class="card-title">RECIST Guidelines — Oncology Measurements</div>
-          <div class="sub-links">
-            <a class="sub-link" href="/static/articles/RECIST.pdf">Full PDF</a>
+        </a>
+        <a class="card" data-panel-id="recist" href="/static/articles/RECIST.pdf">
+          <div class="card-body">
+            <div class="card-title">RECIST 1.1 — Oncology Measurements</div>
+            <div class="sub-links">
+              <a class="sub-link" href="/static/articles/RECIST.pdf">Full PDF</a>
+            </div>
           </div>
-        </div>
-      </a>
-      <a class="card" href="static/ASPECTS scoring.jpg">
-        <span class="card-icon">🧠</span>
-        <div class="card-body">
-          <div class="card-title">ASPECTS Stroke Scoring</div>
-          <div class="sub-links">
-            <a class="sub-link" href="static/ASPECT scoring AJNR.pdf">AJNR PDF</a>
+        </a>
+        <a class="card" data-panel-id="aspects" href="static/ASPECTS scoring.jpg">
+          <div class="card-body">
+            <div class="card-title">ASPECTS Stroke Scoring</div>
+            <div class="sub-links">
+              <a class="sub-link" href="static/ASPECT scoring AJNR.pdf">AJNR PDF</a>
+            </div>
           </div>
-        </div>
-      </a>
-      <a class="card" href="static/COVID reporting language.pdf">
-        <span class="card-icon">🦠</span>
-        <div class="card-body"><div class="card-title">COVID Reporting Language Recommendations</div></div>
-      </a>
-      <a class="card new-item" href="static/renal mass flowchart.pdf">
-        <span class="card-icon">🫘</span>
-        <div class="card-body">
-          <div class="card-title">Incidental Renal Hypodensity Flowchart <span class="badge-new">New!</span></div>
-          <div class="card-sub">Updated 12-22-2020</div>
-          <div class="sub-links">
-            <a class="sub-link" href="static/articles/Bosniak Pictorial.pdf">Bosniak Pictorial</a>
-            <a class="sub-link" href="static/articles/ACR Incidental Renal Mass.pdf">ACR White Paper</a>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">📋 Institutional / Quality</div>
+      <div class="card-grid">
+        <a class="card" href="/static/CTR guidelines.pdf">
+          <div class="card-body"><div class="card-title">CTR Guidelines</div></div>
+        </a>
+        <a class="card" href="/static/MIPS 2024.pdf">
+          <div class="card-body"><div class="card-title">MIPS Requirements 2024</div></div>
+        </a>
+        <a class="card" href="static/Peer Learning.pdf">
+          <div class="card-body"><div class="card-title">How to Submit Peer Learning Cases</div></div>
+        </a>
+        <a class="card" href="static/Radiology QA via Perfect Serve.pdf">
+          <div class="card-body"><div class="card-title">Radiology QA via PerfectServe</div></div>
+        </a>
+        <a class="card" href="static/COVID reporting language.pdf">
+          <div class="card-body"><div class="card-title">COVID Reporting Language Recommendations</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">🔎 Incidental Findings Guidance</div>
+      <div class="card-grid">
+        <a class="card new-item" href="static/renal mass flowchart.pdf">
+          <div class="card-body">
+            <div class="card-title">Incidental Renal Hypodensity Flowchart</div>
+            <div class="card-sub">Updated 12-22-2020</div>
+            <div class="sub-links">
+              <a class="sub-link" href="static/articles/Bosniak Pictorial.pdf">Bosniak Pictorial</a>
+              <a class="sub-link" href="static/articles/ACR Incidental Renal Mass.pdf">ACR White Paper</a>
+            </div>
           </div>
-        </div>
-      </a>
-      <a class="card new-item" href="static/Implementation for PE RVLV ratios.pdf">
-        <span class="card-icon">❤️</span>
-        <div class="card-body">
-          <div class="card-title">RV/LV Ratios for Positive PE CTAs <span class="badge-new">New!</span></div>
-          <div class="sub-links">
-            <a class="sub-link" href="static/articles/AJR RVLV ratio.pdf">AJR PDF</a>
+        </a>
+        <a class="card new-item" href="static/Managing Incidental Findings on Thoracic CT.pdf">
+          <div class="card-body"><div class="card-title">Managing Incidental Findings on Thoracic CT</div></div>
+        </a>
+        <a class="card new-item" href="static/ACR Thyroid Guidelines.pdf">
+          <div class="card-body">
+            <div class="card-title">Managing Incidental Thyroid Nodules on CT</div>
+            <div class="sub-links"><a class="sub-link" href="static/Incidental Thyroid Nodule Follow up.pdf">ACR PDF</a></div>
           </div>
-        </div>
-      </a>
-      <a class="card new-item" href="static/articles/prostate.pdf">
-        <span class="card-icon">📖</span>
-        <div class="card-body">
-          <div class="card-title">Nick Fulton's Guide to Prostate MRI <span class="badge-new">New!</span></div>
-        </div>
-      </a>
-      <a class="card new-item" href="static/Managing Incidental Findings on Thoracic CT.pdf">
-        <span class="card-icon">🫁</span>
-        <div class="card-body">
-          <div class="card-title">Managing Incidental Findings on Thoracic CT <span class="badge-new">New!</span></div>
-        </div>
-      </a>
-      <a class="card new-item" href="static/ACR Thyroid Guidelines.pdf">
-        <span class="card-icon">🦋</span>
-        <div class="card-body">
-          <div class="card-title">Managing Incidental Thyroid Nodules on CT <span class="badge-new">New!</span></div>
-          <div class="sub-links">
-            <a class="sub-link" href="static/Incidental Thyroid Nodule Follow up.pdf">ACR PDF</a>
+        </a>
+        <a class="card new-item" href="static/Implementation for PE RVLV ratios.pdf">
+          <div class="card-body">
+            <div class="card-title">RV/LV Ratios for Positive PE CTAs</div>
+            <div class="sub-links"><a class="sub-link" href="static/articles/AJR RVLV ratio.pdf">AJR PDF</a></div>
           </div>
-        </div>
-      </a>
-      <a class="card" href="static/Peer Learning.pdf">
-        <span class="card-icon">🤝</span>
-        <div class="card-body"><div class="card-title">How to Submit Peer Learning Cases</div></div>
-      </a>
-      <a class="card" href="static/Radiology QA via Perfect Serve.pdf">
-        <span class="card-icon">✅</span>
-        <div class="card-body"><div class="card-title">Radiology QA via PerfectServe</div></div>
-      </a>
+        </a>
+        <a class="card new-item" href="static/articles/prostate.pdf">
+          <div class="card-body"><div class="card-title">Nick Fulton's Guide to Prostate MRI</div></div>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- DIAGNOSTIC -->
   <section class="section" data-cat="diagnostic">
     <div class="section-title">🔬 Diagnostic References</div>
-    <div class="card-grid">
-      <a class="card" href="/static/non small cell lung cancer staging.jpg">
-        <span class="card-icon">🫁</span>
-        <div class="card-body"><div class="card-title">Non-Small Cell Lung Cancer Staging</div></div>
-      </a>
-      <a class="card" href="/static/ACR - Incidental Adnexal Findings on CT and MRI.pdf">
-        <span class="card-icon">🔍</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Adnexal Findings on CT/MRI</div><div class="card-sub">2020</div></div>
-      </a>
-      <a class="card" href="/static/ACR - Incidental Mediastinal and Cardiovascular Findings.pdf">
-        <span class="card-icon">❤️</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Mediastinal &amp; Cardiovascular Findings</div><div class="card-sub">2018</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2018 - Incidental Pituitary Findings.pdf">
-        <span class="card-icon">🧠</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Pituitary Findings</div><div class="card-sub">2018</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2017 - Incidental Pancreatic Cysts.pdf">
-        <span class="card-icon">🫀</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Pancreatic Cysts</div><div class="card-sub">2017</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2017 Incidental Adrenal Masses.pdf">
-        <span class="card-icon">🔍</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Adrenal Masses</div><div class="card-sub">2017</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2018 Incidental Renal Mass.pdf">
-        <span class="card-icon">🫘</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Renal Mass</div><div class="card-sub">2018</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2017 - Incidental Liver Lesions.pdf">
-        <span class="card-icon">🫀</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Liver Lesion</div><div class="card-sub">2017</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2015 Incidental Thyroid Findings.pdf">
-        <span class="card-icon">🦋</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Thyroid Findings</div><div class="card-sub">2015</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2013 Incidental Vascular Findings.pdf">
-        <span class="card-icon">🩸</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Vascular Findings</div><div class="card-sub">2013</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2013 Incidental Splenic and Nodal Findings.pdf">
-        <span class="card-icon">🔍</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Splenic &amp; Nodal Findings</div><div class="card-sub">2013</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2013 - Incidental Gallbladder and Biliary Findings.pdf">
-        <span class="card-icon">🫐</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Gallbladder &amp; Biliary Findings</div><div class="card-sub">2013</div></div>
-      </a>
-      <a class="card" href="/static/ACR 2010 - Incidental Abdominal Findings.pdf">
-        <span class="card-icon">🔍</span>
-        <div class="card-body"><div class="card-title">ACR Incidental Abdominal Findings</div><div class="card-sub">2010</div></div>
-      </a>
-      <a class="card" href="static/Cervical Lymph Node Levels.jpg">
-        <span class="card-icon">🗺️</span>
-        <div class="card-body"><div class="card-title">Cervical Lymph Node Levels</div></div>
-      </a>
-      <a class="card" href="static/ILD chart.jpg">
-        <span class="card-icon">🫁</span>
-        <div class="card-body"><div class="card-title">Interstitial Lung Disease Classification Chart</div></div>
-      </a>
-      <a class="card" href="/static/GGO Classification Table.pdf">
-        <span class="card-icon">☁️</span>
-        <div class="card-body"><div class="card-title">GGO Classification Table</div></div>
-      </a>
-      <a class="card new-item" href="/static/2022 Ultrasound Soft Tissue Masses.pdf">
-        <span class="card-icon">🔊</span>
-        <div class="card-body">
-          <div class="card-title">US Soft Tissue Masses — SRU Consensus <span class="badge-new">New!</span></div>
-          <div class="card-sub">2022</div>
-        </div>
-      </a>
+
+    <div class="sub-section">
+      <div class="sub-section-title">📂 ACR Incidental Findings White Papers</div>
+      <div class="card-grid">
+        <a class="card" href="/static/ACR - Incidental Adnexal Findings on CT and MRI.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Adnexal Findings on CT/MRI</div><div class="card-sub">2020</div></div>
+        </a>
+        <a class="card" href="/static/ACR - Incidental Mediastinal and Cardiovascular Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Mediastinal &amp; Cardiovascular Findings</div><div class="card-sub">2018</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2018 - Incidental Pituitary Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Pituitary Findings</div><div class="card-sub">2018</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2017 - Incidental Pancreatic Cysts.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Pancreatic Cysts</div><div class="card-sub">2017</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2017 Incidental Adrenal Masses.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Adrenal Masses</div><div class="card-sub">2017</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2018 Incidental Renal Mass.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Renal Mass</div><div class="card-sub">2018</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2017 - Incidental Liver Lesions.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Liver Lesion</div><div class="card-sub">2017</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2015 Incidental Thyroid Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Thyroid Findings</div><div class="card-sub">2015</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2013 Incidental Vascular Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Vascular Findings</div><div class="card-sub">2013</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2013 Incidental Splenic and Nodal Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Splenic &amp; Nodal Findings</div><div class="card-sub">2013</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2013 - Incidental Gallbladder and Biliary Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Gallbladder &amp; Biliary Findings</div><div class="card-sub">2013</div></div>
+        </a>
+        <a class="card" href="/static/ACR 2010 - Incidental Abdominal Findings.pdf">
+          <div class="card-body"><div class="card-title">ACR Incidental Abdominal Findings</div><div class="card-sub">2010</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">🗂️ Staging, Classification &amp; Anatomy</div>
+      <div class="card-grid">
+        <a class="card" href="/static/non small cell lung cancer staging.jpg">
+          <div class="card-body"><div class="card-title">Non-Small Cell Lung Cancer Staging</div></div>
+        </a>
+        <a class="card" href="static/ILD chart.jpg">
+          <div class="card-body"><div class="card-title">Interstitial Lung Disease Classification Chart</div></div>
+        </a>
+        <a class="card" href="/static/GGO Classification Table.pdf">
+          <div class="card-body"><div class="card-title">GGO Classification Table</div></div>
+        </a>
+        <a class="card" href="static/Cervical Lymph Node Levels.jpg">
+          <div class="card-body"><div class="card-title">Cervical Lymph Node Levels</div></div>
+        </a>
+        <a class="card new-item" href="/static/2022 Ultrasound Soft Tissue Masses.pdf">
+          <div class="card-body">
+            <div class="card-title">US Soft Tissue Masses — SRU Consensus</div>
+            <div class="card-sub">2022</div>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- INTERVENTIONAL -->
   <section class="section" data-cat="interventional">
     <div class="section-title">🩸 Interventional Radiology</div>
-    <div class="card-grid">
-      <a class="card" href="/static/ARI 2019 Anticoagulation guidelines.pdf">
-        <span class="card-icon">💊</span>
-        <div class="card-body"><div class="card-title">2019 ARI Anticoagulation Guidelines for IR</div></div>
-      </a>
-      <a class="card" href="/static/ARI 2019 Antiplatelet Guidelines.pdf">
-        <span class="card-icon">💊</span>
-        <div class="card-body">
-          <div class="card-title">2019 ARI Antiplatelet Guidelines for IR</div>
-          <div class="sub-links"><a class="sub-link" href="/static/SIR 2019 Anticoagulation guidelines.pdf">SIR PDF</a></div>
-        </div>
-      </a>
-      <a class="card" href="static/SIR antibiotic guidelines.jpg">
-        <span class="card-icon">💉</span>
-        <div class="card-body"><div class="card-title">SIR Antibiotic Guidelines for IR</div></div>
-      </a>
-      <a class="card" href="/static/Splenic injury grading combined.jpg">
-        <span class="card-icon">🩸</span>
-        <div class="card-body"><div class="card-title">AAST Splenic Trauma Grading</div></div>
-      </a>
-      <a class="card" href="/static/Liver injury grading AAST.jpg">
-        <span class="card-icon">🩸</span>
-        <div class="card-body"><div class="card-title">AAST Liver Trauma Grading</div></div>
-      </a>
-      <a class="card" href="static/Kidney injury grading AAST.jpg">
-        <span class="card-icon">🩸</span>
-        <div class="card-body"><div class="card-title">AAST Kidney Trauma Grading</div></div>
-      </a>
-      <a class="card" href="/static/InjuryScoringTables.pdf">
-        <span class="card-icon">📋</span>
-        <div class="card-body"><div class="card-title">AAST Complete Trauma Grading Tables</div></div>
-      </a>
-      <a class="card" href="static/TIPS ultrasound.jpg">
-        <span class="card-icon">🔊</span>
-        <div class="card-body"><div class="card-title">TIPS Ultrasound</div></div>
-      </a>
-      <a class="card" href="static/Stroke activation flowchart.jpg">
-        <span class="card-icon">⚡</span>
-        <div class="card-body"><div class="card-title">Stroke Activation Flowchart</div></div>
-      </a>
-      <a class="card" href="static/Stroke recanalization grading system.jpg">
-        <span class="card-icon">🧠</span>
-        <div class="card-body"><div class="card-title">Stroke Recanalization Grading (TIMI/TICI)</div></div>
-      </a>
-      <a class="card" href="static/arthrogram approaches.pdf">
-        <span class="card-icon">🦴</span>
-        <div class="card-body"><div class="card-title">Neil's Paper on Arthrogram Technique</div></div>
-      </a>
-      <a class="card" href="static/articles/AJNR - Evaluation of penumbra on CT perfusion.pdf">
-        <span class="card-icon">🧠</span>
-        <div class="card-body"><div class="card-title">AJNR — Penumbra Evaluation on CT Perfusion</div></div>
-      </a>
-      <a class="card" href="static/articles/uptodate_stroke.pdf">
-        <span class="card-icon">📄</span>
-        <div class="card-body"><div class="card-title">UpToDate — Mechanical Thrombectomy for Acute Stroke</div></div>
-      </a>
-      <a class="card" href="static/normal cranial angio dsa.jpg">
-        <span class="card-icon">🕸️</span>
-        <div class="card-body"><div class="card-title">Cerebral Artery Anatomy on Angio</div></div>
-      </a>
-      <a class="card" href="static/Anatomic approach to MSK biopsy.pdf">
-        <span class="card-icon">🦴</span>
-        <div class="card-body"><div class="card-title">Anatomic Approach to MSK Biopsies (Radiographics)</div></div>
-      </a>
+
+    <div class="sub-section">
+      <div class="sub-section-title">💊 Medications &amp; Prep</div>
+      <div class="card-grid">
+        <a class="card" href="/static/ARI 2019 Anticoagulation guidelines.pdf">
+          <div class="card-body"><div class="card-title">2019 ARI Anticoagulation Guidelines for IR</div></div>
+        </a>
+        <a class="card" href="/static/ARI 2019 Antiplatelet Guidelines.pdf">
+          <div class="card-body">
+            <div class="card-title">2019 ARI Antiplatelet Guidelines for IR</div>
+            <div class="sub-links"><a class="sub-link" href="/static/SIR 2019 Anticoagulation guidelines.pdf">SIR PDF</a></div>
+          </div>
+        </a>
+        <a class="card" href="static/SIR antibiotic guidelines.jpg">
+          <div class="card-body"><div class="card-title">SIR Antibiotic Guidelines for IR</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">🩸 Trauma Grading (AAST)</div>
+      <div class="card-grid">
+        <a class="card" data-panel-id="aast-spleen" href="/static/Splenic injury grading combined.jpg">
+          <div class="card-body"><div class="card-title">AAST Splenic Trauma Grading</div></div>
+        </a>
+        <a class="card" data-panel-id="aast-liver" href="/static/Liver injury grading AAST.jpg">
+          <div class="card-body"><div class="card-title">AAST Liver Trauma Grading</div></div>
+        </a>
+        <a class="card" data-panel-id="aast-kidney" href="static/Kidney injury grading AAST.jpg">
+          <div class="card-body"><div class="card-title">AAST Kidney Trauma Grading</div></div>
+        </a>
+        <a class="card" data-panel-id="aast-all" href="/static/InjuryScoringTables.pdf">
+          <div class="card-body"><div class="card-title">AAST Complete Trauma Grading Tables</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">🧠 Stroke &amp; Neurointerventional</div>
+      <div class="card-grid">
+        <a class="card" href="static/Stroke activation flowchart.jpg">
+          <div class="card-body"><div class="card-title">Stroke Activation Flowchart</div></div>
+        </a>
+        <a class="card" href="static/Stroke recanalization grading system.jpg">
+          <div class="card-body"><div class="card-title">Stroke Recanalization Grading (TIMI/TICI)</div></div>
+        </a>
+        <a class="card" href="static/TIPS ultrasound.jpg">
+          <div class="card-body"><div class="card-title">TIPS Ultrasound</div></div>
+        </a>
+        <a class="card" href="static/normal cranial angio dsa.jpg">
+          <div class="card-body"><div class="card-title">Cerebral Artery Anatomy on Angio</div></div>
+        </a>
+        <a class="card" href="static/articles/AJNR - Evaluation of penumbra on CT perfusion.pdf">
+          <div class="card-body"><div class="card-title">AJNR — Penumbra Evaluation on CT Perfusion</div></div>
+        </a>
+        <a class="card" href="static/articles/uptodate_stroke.pdf">
+          <div class="card-body"><div class="card-title">UpToDate — Mechanical Thrombectomy for Acute Stroke</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">🦴 MSK &amp; Other Procedures</div>
+      <div class="card-grid">
+        <a class="card" href="static/arthrogram approaches.pdf">
+          <div class="card-body"><div class="card-title">Neil's Paper on Arthrogram Technique</div></div>
+        </a>
+        <a class="card" href="static/Anatomic approach to MSK biopsy.pdf">
+          <div class="card-body"><div class="card-title">Anatomic Approach to MSK Biopsies (Radiographics)</div></div>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- PROTOCOLS -->
   <section class="section" data-cat="protocols">
     <div class="section-title">📋 Protocols</div>
-    <div class="card-grid">
-      <a class="card" href="static/protocol 2022b.pdf">
-        <span class="card-icon">📋</span>
-        <div class="card-body"><div class="card-title">Protocol Update</div><div class="card-sub">5-31-2022</div></div>
-      </a>
-      <a class="card" href="static/Protocols CT ARI 2022b.pdf">
-        <span class="card-icon">🖥️</span>
-        <div class="card-body"><div class="card-title">CT Protocols</div><div class="card-sub">Updated 5-31-2022</div></div>
-      </a>
-      <a class="card" href="static/Protocols MRI ARI 2022c.pdf">
-        <span class="card-icon">🧲</span>
-        <div class="card-body"><div class="card-title">MRI Protocols</div><div class="card-sub">Updated 12-7-2022</div></div>
-      </a>
-      <a class="card" href="static/Protocols - CT recommendations.pdf">
-        <span class="card-icon">🖥️</span>
-        <div class="card-body"><div class="card-title">CT Study Recommendations</div><div class="card-sub">Updated 9-4-2019</div></div>
-      </a>
-      <a class="card" href="static/Protocols - MRI Recommendations.pdf">
-        <span class="card-icon">🧲</span>
-        <div class="card-body"><div class="card-title">MRI Study Recommendations</div><div class="card-sub">Updated 9-4-2019</div></div>
-      </a>
-      <a class="card" href="static/Hydration protocol - ARI.pdf">
-        <span class="card-icon">💧</span>
-        <div class="card-body"><div class="card-title">Hydration Protocol</div><div class="card-sub">Updated 9-4-2019</div></div>
-      </a>
-      <a class="card" href="static/Gadolinium Advisory Statement ARI 2018.pdf">
-        <span class="card-icon">⚠️</span>
-        <div class="card-body"><div class="card-title">Gadolinium Advisory Statement</div></div>
-      </a>
-      <a class="card" href="static/Protocols Radiography ARI 2020.pdf">
-        <span class="card-icon">📷</span>
-        <div class="card-body"><div class="card-title">Radiography Protocols</div><div class="card-sub">Updated 8-24-2020</div></div>
-      </a>
-      <a class="card" href="static/Protocols Ultrasound ARI 2022b.pdf">
-        <span class="card-icon">🔊</span>
-        <div class="card-body"><div class="card-title">Ultrasound Protocols</div><div class="card-sub">Updated 5-31-2022</div></div>
-      </a>
-      <a class="card" href="static/NucMed Emergency On-Call Policy.pdf">
-        <span class="card-icon">☢️</span>
-        <div class="card-body"><div class="card-title">Nuc Med Emergency On-Call Procedure</div></div>
-      </a>
-      <a class="card" href="static/MRI Emergency On-Call Policy.pdf">
-        <span class="card-icon">🧲</span>
-        <div class="card-body"><div class="card-title">MRI Emergency On-Call Procedure</div></div>
-      </a>
+
+    <div class="proto-filter-bar">
+      <button class="proto-pill active" data-filter="all">All</button>
+      <button class="proto-pill" data-filter="ct-head-neck">CT 🧠 Head/Neck</button>
+      <button class="proto-pill" data-filter="ct-chest">CT 🫁 Chest</button>
+      <button class="proto-pill" data-filter="ct-abd">CT 🫄 Abd/Pelvis</button>
+      <button class="proto-pill" data-filter="ct-spine">CT 🦴 Spine</button>
+      <button class="proto-pill" data-filter="ct-ext">CT 🦵 Extremities</button>
+      <button class="proto-pill" data-filter="mri-neuro">MRI 🧠 Neuro</button>
+      <button class="proto-pill" data-filter="mri-msk">MRI 🦵 MSK</button>
+      <button class="proto-pill" data-filter="mri-abd">MRI 🫄 Abdomen</button>
+      <button class="proto-pill" data-filter="mri-mra">MRI 🩸 MRA</button>
+      <button class="proto-pill" data-filter="mri-breast">MRI 🎀 Breast</button>
+      <button class="proto-pill" data-filter="other">📄 Other</button>
+    </div>
+
+    <!-- CT HEAD / NECK -->
+    <div class="sub-section" data-proto-section="ct-head-neck">
+      <div class="sub-section-title">🧠 CT &mdash; Head &amp; Neck</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-head-wo">
+          <div class="card-body"><div class="card-title">Head Without Contrast</div><div class="card-sub">CT Brain</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-head-ww">
+          <div class="card-body"><div class="card-title">Head Without/With Contrast</div><div class="card-sub">CT Brain with contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-iac">
+          <div class="card-body"><div class="card-title">IAC / Temporal Bones</div><div class="card-sub">High-res bone</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sinus-ax">
+          <div class="card-body"><div class="card-title">Sinuses &mdash; Axial</div><div class="card-sub">Paranasal sinuses</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sinus-cor">
+          <div class="card-body"><div class="card-title">Sinuses &mdash; Coronal</div><div class="card-sub">Paranasal sinuses</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sinus-medtronic">
+          <div class="card-body"><div class="card-title">Sinuses Image Guided (Medtronic)</div><div class="card-sub">WRH surgical nav</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sinus-brainlab">
+          <div class="card-body"><div class="card-title">Sinuses Image Guided (BrainLab)</div><div class="card-sub">Summa surgical nav</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-maxface-c">
+          <div class="card-body"><div class="card-title">Maxillofacial With Contrast</div><div class="card-sub">Mass or inflammation</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-maxface-wo">
+          <div class="card-body"><div class="card-title">Maxillofacial Without Contrast</div><div class="card-sub">Trauma</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-orbits-c">
+          <div class="card-body"><div class="card-title">Orbits With Contrast</div><div class="card-sub">Soft tissues</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-orbits-wo">
+          <div class="card-body"><div class="card-title">Orbits Without Contrast</div><div class="card-sub">Trauma / bones</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-neck-c">
+          <div class="card-body"><div class="card-title">Neck With IV Contrast</div><div class="card-sub">Soft tissue neck</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-neck-wo">
+          <div class="card-body"><div class="card-title">Neck Without IV Contrast</div><div class="card-sub">Soft tissue neck</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-neck-para">
+          <div class="card-body"><div class="card-title">Neck &mdash; Parathyroid</div><div class="card-sub">3-phase, parathyroid tumor</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-head">
+          <div class="card-body"><div class="card-title">CTA Head</div><div class="card-sub">Intracranial vessels</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-headneck">
+          <div class="card-body"><div class="card-title">CTA Head &amp; Neck</div><div class="card-sub">Arch to vertex</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-neck">
+          <div class="card-body"><div class="card-title">CTA Neck</div><div class="card-sub">Carotid / vertebral arteries</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ctveno-head">
+          <div class="card-body"><div class="card-title">CT Venogram Head</div><div class="card-sub">Dural venous sinuses</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- CT CHEST -->
+    <div class="sub-section" data-proto-section="ct-chest">
+      <div class="sub-section-title">🫁 CT &mdash; Chest</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-chest-c">
+          <div class="card-body"><div class="card-title">Chest With Contrast</div><div class="card-sub">Portal venous phase</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-chest-wo">
+          <div class="card-body"><div class="card-title">Chest Without Contrast</div><div class="card-sub">Routine non-contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-chest-enb">
+          <div class="card-body"><div class="card-title">Chest ENB</div><div class="card-sub">Electromagnetic navigation bronchoscopy</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-hrct">
+          <div class="card-body"><div class="card-title">High Resolution Chest (HRCT)</div><div class="card-sub">Pulmonary fibrosis; insp + exp + prone</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-hrct-ebv">
+          <div class="card-body"><div class="card-title">HRCT &mdash; Endobronchial Valve</div><div class="card-sub">Emphysema valve placement</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-chest-ldscr">
+          <div class="card-body"><div class="card-title">Chest Low Dose Screening</div><div class="card-sub">Lung cancer screening; Lung-RADS required</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-chest-lddx">
+          <div class="card-body"><div class="card-title">Chest Low Dose Diagnostic</div><div class="card-sub">Nodule follow-up</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-chest">
+          <div class="card-body"><div class="card-title">CTA Chest (PE Protocol)</div><div class="card-sub">Pulmonary embolus, chest pain</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-chest-ao">
+          <div class="card-body"><div class="card-title">CTA Chest &mdash; Attention Aorta</div><div class="card-sub">Aortic dissection / injury</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-chest-ekg">
+          <div class="card-body"><div class="card-title">CTA Chest &mdash; EKG Gated</div><div class="card-sub">Coronary, triple rule-out, aorta</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-esoph">
+          <div class="card-body"><div class="card-title">CT Esophagography</div><div class="card-sub">Esophageal perforation</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- CT ABDOMEN / PELVIS -->
+    <div class="sub-section" data-proto-section="ct-abd">
+      <div class="sub-section-title">🫄 CT &mdash; Abdomen &amp; Pelvis</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ap-c">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis With Contrast</div><div class="card-sub">Routine oral &amp; IV; portal venous</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ap-wo">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis Without Contrast</div><div class="card-sub">Renal colic, flank pain</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ap-ld">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis Without &mdash; Low Dose</div><div class="card-sub">Known renal calculi; DLP &lt;650</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ap-dual">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis Dual Phase</div><div class="card-sub">Hypervascular liver lesion</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ap-tri">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis Triphasic</div><div class="card-sub">Hypervascular liver lesion (triphasic)</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ap-panc">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis Pancreas Protocol</div><div class="card-sub">Suspected or known pancreatic mass</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-hema">
+          <div class="card-body"><div class="card-title">Hemangioma Protocol</div><div class="card-sub">Known liver lesion; 5-phase</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-adrenal">
+          <div class="card-body"><div class="card-title">Adrenal Washout</div><div class="card-sub">Known adrenal lesion; 3-phase</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-split">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis Split Bolus</div><div class="card-sub">Hematuria, renal mass</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-urog">
+          <div class="card-body"><div class="card-title">CT Urogram</div><div class="card-sub">Hematuria, renal mass; 3-phase</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cystog">
+          <div class="card-body"><div class="card-title">CT Cystogram</div><div class="card-sub">Bladder mass, hematuria; Foley required</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-colon">
+          <div class="card-body"><div class="card-title">CT Colonography</div><div class="card-sub">Supine + prone; bowel prep required</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sbe">
+          <div class="card-body"><div class="card-title">CT Small Bowel Enterography</div><div class="card-sub">Volumen oral contrast; NPO 6–8 hrs</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-gibleed">
+          <div class="card-body"><div class="card-title">CTA GI Bleed</div><div class="card-sub">3-phase; arterial + delayed</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-ao">
+          <div class="card-body"><div class="card-title">CTA Abdominal Aorta</div><div class="card-sub">AAA, renal/mesenteric arteries</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-ao-stent">
+          <div class="card-body"><div class="card-title">CTA Aorta &mdash; Post Stent Graft</div><div class="card-sub">Endoleak surveillance</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-cta-runoff">
+          <div class="card-body"><div class="card-title">CTA Aorta With Bilateral Run-Off</div><div class="card-sub">Arch or above-renal to feet</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-diep">
+          <div class="card-body"><div class="card-title">CTA DIEP</div><div class="card-sub">Deep inferior epigastric perforators; breast reconstruction planning</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- CT SPINE -->
+    <div class="sub-section" data-proto-section="ct-spine">
+      <div class="sub-section-title">🦴 CT &mdash; Spine</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-c-spine">
+          <div class="card-body"><div class="card-title">CT Cervical Spine</div><div class="card-sub">EAM through T2</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-t-spine">
+          <div class="card-body"><div class="card-title">CT Thoracic Spine</div><div class="card-sub">T1 through L1</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-l-spine">
+          <div class="card-body"><div class="card-title">CT Lumbar Spine</div><div class="card-sub">T11 through S1</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- CT EXTREMITIES -->
+    <div class="sub-section" data-proto-section="ct-ext">
+      <div class="sub-section-title">🦵 CT &mdash; Extremities</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-shoulder">
+          <div class="card-body"><div class="card-title">CT Shoulder</div><div class="card-sub">Without contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-elbow">
+          <div class="card-body"><div class="card-title">CT Elbow</div><div class="card-sub">Without contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-wrist">
+          <div class="card-body"><div class="card-title">CT Wrist</div><div class="card-sub">Without contrast; scaphoid note included</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-hand">
+          <div class="card-body"><div class="card-title">CT Hand</div><div class="card-sub">Without contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-pelvis">
+          <div class="card-body"><div class="card-title">CT Pelvis (Bones)</div><div class="card-sub">Without contrast; iliac crests to trochanters</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-hip">
+          <div class="card-body"><div class="card-title">CT Hip</div><div class="card-sub">Without contrast; acetabulum to trochanter</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-knee">
+          <div class="card-body"><div class="card-title">CT Knee</div><div class="card-sub">Without contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ankle">
+          <div class="card-body"><div class="card-title">CT Ankle</div><div class="card-sub">Without contrast; 64-MDCT &amp; 16-MDCT params</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-foot">
+          <div class="card-body"><div class="card-title">CT Foot</div><div class="card-sub">Without contrast; 64-MDCT &amp; 16-MDCT params</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sternum">
+          <div class="card-body"><div class="card-title">CT Sternum</div><div class="card-sub">Without contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-sc-joint">
+          <div class="card-body"><div class="card-title">CT Sternoclavicular Joints</div><div class="card-sub">Without contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols CT ARI 2022b.pdf" data-panel-id="proto-ext-c">
+          <div class="card-body"><div class="card-title">Extremities With IV Contrast</div><div class="card-sub">Infection, abscess, or mass</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- MRI NEURO -->
+    <div class="sub-section" data-proto-section="mri-neuro">
+      <div class="sub-section-title">🧠 MRI &mdash; Neurologic</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-rtn">
+          <div class="card-body"><div class="card-title">Brain &mdash; Routine</div><div class="card-sub">Standard brain MRI</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-tumor">
+          <div class="card-body"><div class="card-title">Brain &mdash; Tumor / Mass / Mets</div><div class="card-sub">With contrast; 3D MPRAGE post-gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-ms">
+          <div class="card-body"><div class="card-title">Brain &mdash; MS / Demyelinating</div><div class="card-sub">3D FLAIR; 5-min gad delay</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-seizure-rossi">
+          <div class="card-body"><div class="card-title">Brain &mdash; Seizure (Dr. Rossi)</div><div class="card-sub">3T preferred; SPACE sequences</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-seizure">
+          <div class="card-body"><div class="card-title">Brain &mdash; Refractory Seizures</div><div class="card-sub">Non-Rossi; patients &lt;70 y.o.</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-stroke">
+          <div class="card-body"><div class="card-title">Brain &mdash; Stroke</div><div class="card-sub">Routine + optional MRA/perfusion</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-avm">
+          <div class="card-body"><div class="card-title">Brain &mdash; AVM</div><div class="card-sub">Routine + intracranial MRA &amp; MRV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-aneurysm">
+          <div class="card-body"><div class="card-title">Brain &mdash; Aneurysm</div><div class="card-sub">Routine + intracranial MRA</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-csf">
+          <div class="card-body"><div class="card-title">Brain &mdash; CSF Flow Study</div><div class="card-sub">NPH, Chiari, aqueductal stenosis</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brain-tbi">
+          <div class="card-body"><div class="card-title">Brain &mdash; Traumatic Brain Injury</div><div class="card-sub">Subacute TBI; SWI + 3D FLAIR</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-iac">
+          <div class="card-body"><div class="card-title">IAC / 7th &amp; 5th Neuralgia</div><div class="card-sub">Bell's palsy, trigeminal neuralgia; CISS</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-pituitary">
+          <div class="card-body"><div class="card-title">Pituitary Gland</div><div class="card-sub">Dynamic post-gad coronal</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-c-spine-rtn">
+          <div class="card-body"><div class="card-title">Cervical Spine &mdash; Routine</div><div class="card-sub">Skull base through T1–2</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-c-spine-syrinx">
+          <div class="card-body"><div class="card-title">Cervical Spine &mdash; Syrinx</div><div class="card-sub">Add axial T1 &amp; T2 spoiled GE</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-c-spine-postop">
+          <div class="card-body"><div class="card-title">Cervical Spine &mdash; Post Op</div><div class="card-sub">Routine without Gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-c-spine-gad">
+          <div class="card-body"><div class="card-title">Cervical Spine &mdash; Tumor / Infection</div><div class="card-sub">With Gad; fat-sat post-contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-t-spine-rtn">
+          <div class="card-body"><div class="card-title">Thoracic Spine &mdash; Routine</div><div class="card-sub">Vitamin E marker at C-T junction</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-t-spine-gad">
+          <div class="card-body"><div class="card-title">Thoracic Spine &mdash; Tumor / Infection</div><div class="card-sub">With Gad; fat-sat post-contrast</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-l-spine-rtn">
+          <div class="card-body"><div class="card-title">Lumbar Spine &mdash; Routine</div><div class="card-sub">Angled axial blocks through disc spaces</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-l-spine-postop">
+          <div class="card-body"><div class="card-title">Lumbar Spine &mdash; Post Op / With Gad</div><div class="card-sub">Pre &amp; post Gad axials over entire spine</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-spine-csf">
+          <div class="card-body"><div class="card-title">Spine &mdash; CSF Flow</div><div class="card-sub">2D phase contrast; pulse gating</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-total-spine">
+          <div class="card-body"><div class="card-title">Abbreviated Total Spine Survey</div><div class="card-sub">Cord compression, mets, infection</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-orbits">
+          <div class="card-body"><div class="card-title">Orbits</div><div class="card-sub">Whole brain + orbital sequences</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-neck">
+          <div class="card-body"><div class="card-title">Neck</div><div class="card-sub">Soft tissue neck with Gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-tmj">
+          <div class="card-body"><div class="card-title">TMJ</div><div class="card-sub">Bilateral open &amp; closed positions</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- MRI MSK -->
+    <div class="sub-section" data-proto-section="mri-msk">
+      <div class="sub-section-title">🦵 MRI &mdash; Musculoskeletal</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-knee">
+          <div class="card-body"><div class="card-title">Knee &mdash; Routine</div><div class="card-sub">PD Fat Sat; do not angle sagittals</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-knee-arthrogram">
+          <div class="card-body"><div class="card-title">Knee &mdash; Arthrogram</div><div class="card-sub">Post-injection T1 &amp; T2 Fat Sat</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-shoulder">
+          <div class="card-body"><div class="card-title">Shoulder &mdash; Routine</div><div class="card-sub">Coronal, sagittal, axial PD</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-shoulder-arthrogram">
+          <div class="card-body"><div class="card-title">Shoulder &mdash; Arthrogram</div><div class="card-sub">Post-injection; includes ABER view</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-brachial-plexus">
+          <div class="card-body"><div class="card-title">Brachial Plexus</div><div class="card-sub">Large bilateral + small unilateral FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-pect-major">
+          <div class="card-body"><div class="card-title">Pectoralis Major</div><div class="card-sub">Shoulder coil; pectoralis insertion</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-wrist">
+          <div class="card-body"><div class="card-title">Wrist &mdash; Routine</div><div class="card-sub">Plain films needed; smallest FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-wrist-arthrogram">
+          <div class="card-body"><div class="card-title">Wrist &mdash; Arthrogram</div><div class="card-sub">Post-injection T1 &amp; T2 Fat Sat</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-hand">
+          <div class="card-body"><div class="card-title">Hand &mdash; Routine</div><div class="card-sub">High-res axial PD</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-hand-arthritis">
+          <div class="card-body"><div class="card-title">Hand &mdash; Arthritis</div><div class="card-sub">Bilateral; screening inflammatory arthritis</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-digit">
+          <div class="card-body"><div class="card-title">Digit</div><div class="card-sub">Thumb: scan in plane of thumb</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-hips">
+          <div class="card-body"><div class="card-title">Hips</div><div class="card-sub">Bilateral body coil + unilateral small FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-hip-arthrogram">
+          <div class="card-body"><div class="card-title">Hip &mdash; Arthrogram</div><div class="card-sub">Post-injection; axial oblique</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-pelvis-bony">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Bony</div><div class="card-sub">Routine hips covering entire pelvis</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-quad">
+          <div class="card-body"><div class="card-title">Quadriceps / Thigh</div><div class="card-sub">Bilateral large + unilateral small FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-adductor">
+          <div class="card-body"><div class="card-title">Adductor Detachment / Athletic Hernia</div><div class="card-sub">Axial oblique through symphysis</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-si-joints">
+          <div class="card-body"><div class="card-title">Sacroiliac Joints</div><div class="card-sub">Oblique coronal &amp; axial; with Gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-sacrum">
+          <div class="card-body"><div class="card-title">Sacrum</div><div class="card-sub">Axial, coronal, sagittal</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-ls-plexus">
+          <div class="card-body"><div class="card-title">Lumbosacral Plexus</div><div class="card-sub">Coronal oblique T1 Fat Sat + STIR</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-ext-mass">
+          <div class="card-body"><div class="card-title">Extremity Mass</div><div class="card-sub">X-rays + skin marker required; Gad on all</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-ext-infection">
+          <div class="card-body"><div class="card-title">Extremity Infection</div><div class="card-sub">Pre &amp; post Gad; Fat Sat axials</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-thigh">
+          <div class="card-body"><div class="card-title">Thigh (Other Than Mass)</div><div class="card-sub">Bilateral large + unilateral small FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-leg">
+          <div class="card-body"><div class="card-title">Leg (Other Than Mass)</div><div class="card-sub">Bilateral large + unilateral small FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-ankle">
+          <div class="card-body"><div class="card-title">Ankle / Foot &mdash; Routine</div><div class="card-sub">Plain films if for bone; hindfoot = ankle</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-foot-neuroma">
+          <div class="card-body"><div class="card-title">Foot &mdash; Neuroma</div><div class="card-sub">Routine + coronal T1 Fat Sat pre &amp; post</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-foot-infection">
+          <div class="card-body"><div class="card-title">Foot &mdash; Infection</div><div class="card-sub">Axial = long axis; coronal = short axis</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-elbow">
+          <div class="card-body"><div class="card-title">Elbow &mdash; Routine</div><div class="card-sub">Set off axial; include bicipital tuberosity</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-elbow-arthrogram">
+          <div class="card-body"><div class="card-title">Elbow &mdash; Arthrogram</div><div class="card-sub">Post-injection T1 &amp; T2 Fat Sat</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-bicep">
+          <div class="card-body"><div class="card-title">Elbow / Arm &mdash; Bicep Rupture</div><div class="card-sub">Large FOV 200–250 cm sagittal</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-forearm">
+          <div class="card-body"><div class="card-title">Forearm</div><div class="card-sub">Axial, sagittal, coronal PD Fat Sat</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-myeloma">
+          <div class="card-body"><div class="card-title">Total Body &mdash; Multiple Myeloma</div><div class="card-sub">Coronal T1 + STIR; head to toe</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- MRI ABDOMINAL -->
+    <div class="sub-section" data-proto-section="mri-abd">
+      <div class="sub-section-title">🫄 MRI &mdash; Abdominal</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-liver">
+          <div class="card-body"><div class="card-title">Liver &mdash; Routine</div><div class="card-sub">Dynamic multiphase; single breath hold</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-spleen">
+          <div class="card-body"><div class="card-title">Spleen</div><div class="card-sub">Same as routine liver; 15-min delay</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-liver-eovist">
+          <div class="card-body"><div class="card-title">Liver &mdash; Eovist</div><div class="card-sub">Hepatoma, cirrhosis, mets; 20-min imaging</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-pancreas">
+          <div class="card-body"><div class="card-title">Pancreas</div><div class="card-sub">MRCP + dynamic multiphase</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-mrcp">
+          <div class="card-body"><div class="card-title">Biliary System &mdash; MRCP</div><div class="card-sub">3D triggered + in/out phase; liver included</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-renal">
+          <div class="card-body"><div class="card-title">Renal</div><div class="card-sub">In/out phase; dynamic + subtraction images</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-mr-urog">
+          <div class="card-body"><div class="card-title">MR Urogram</div><div class="card-sub">IV Lasix required; nursing needed</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-adrenal">
+          <div class="card-body"><div class="card-title">Adrenal Gland</div><div class="card-sub">In/out phase GE axial &amp; coronal</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-abdomen-ns">
+          <div class="card-body"><div class="card-title">Abdomen &mdash; Nonspecific</div><div class="card-sub">Abdominal pain; diaphragm to iliac crests</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-enterography">
+          <div class="card-body"><div class="card-title">MRI Enterography</div><div class="card-sub">Prone; Volumen 3×450 ml; optional glucagon</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-pelvis-soft">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Soft Tissues / Bladder CA</div><div class="card-sub">DWI; post-gad if requested</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-perianal">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Perianal Fistula</div><div class="card-sub">No rectal gel; angled to anal canal</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-uterus-congenital">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Congenital Uterus</div><div class="card-sub">Müllerian anomaly; angled along uterus</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-endometriosis">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Endometriosis</div><div class="card-sub">T1 Fat Sat + T2*; no-fat-sat sequences</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-urethral-div">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Urethral Diverticulum</div><div class="card-sub">Large + small FOV; SPACE if available</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-uae">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Uterine Artery Embolization</div><div class="card-sub">Angled to long axis of uterus</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-pelvimetry">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Pelvimetry</div><div class="card-sub">Oblique inlet coronal T1</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-placenta">
+          <div class="card-body"><div class="card-title">Pelvis &mdash; Placenta</div><div class="card-sub">T1 GE + T2 TSE breath hold; 3 planes</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-rectal">
+          <div class="card-body"><div class="card-title">Rectal / Cervix Staging</div><div class="card-sub">3T; 120 ml rectal gel; axial oblique to tumor</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-defecography">
+          <div class="card-body"><div class="card-title">MR Defecography</div><div class="card-sub">COE &amp; Barberton only; SSFP cine dynamic</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-prostate">
+          <div class="card-body"><div class="card-title">Prostate</div><div class="card-sub">3T; DWI b1400; multiphase post-gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-scrotum">
+          <div class="card-body"><div class="card-title">Scrotum</div><div class="card-sub">Small flex coil; pre &amp; post Gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-penile">
+          <div class="card-body"><div class="card-title">Penile MRI</div><div class="card-sub">Position sagittally; in/out phase + DWI</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-appendicitis-preg">
+          <div class="card-body"><div class="card-title">Abdomen/Pelvis &mdash; Appendicitis in Pregnancy</div><div class="card-sub">SSFSE breath hold; wide coronal FOV</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-abd-wall-mass">
+          <div class="card-body"><div class="card-title">Abdominal Wall Mass</div><div class="card-sub">Area of interest only; palpable marker</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-chest">
+          <div class="card-body"><div class="card-title">MRI Chest</div><div class="card-sub">Prone for anterior structures</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- MRI MRA -->
+    <div class="sub-section" data-proto-section="mri-mra">
+      <div class="sub-section-title">🩸 MRI &mdash; MRA / Vascular</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-cow">
+          <div class="card-body"><div class="card-title">MRA &mdash; Circle of Willis</div><div class="card-sub">3D TOF combined MOTSA</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-carotid">
+          <div class="card-body"><div class="card-title">MRA &mdash; Carotid (With Contrast)</div><div class="card-sub">Arch to Circle of Willis post-gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-carotid-nc">
+          <div class="card-body"><div class="card-title">MRA &mdash; Carotid (Non-Contrast)</div><div class="card-sub">2D or 3D TOF; bifurcation focus</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mrv-head">
+          <div class="card-body"><div class="card-title">MR Venogram &mdash; Head</div><div class="card-sub">Dural venous sinuses; 2D TOF</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-ivc">
+          <div class="card-body"><div class="card-title">MRA &mdash; Inferior Vena Cava</div><div class="card-sub">2D axial MRA; 30-sec delay post-gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-renal">
+          <div class="card-body"><div class="card-title">MRA &mdash; Renal Arteries</div><div class="card-sub">3D TOF post-gad; coronal subtraction</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-renal-donor">
+          <div class="card-body"><div class="card-title">MRA &mdash; Renal Arteries (Donor)</div><div class="card-sub">Timing bolus; 3D TOF + coronal T1</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-renal-veins">
+          <div class="card-body"><div class="card-title">MRA &mdash; Renal Veins</div><div class="card-sub">10-sec delay; 5 cc test bolus</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-portal">
+          <div class="card-body"><div class="card-title">MRA &mdash; Portal Vein</div><div class="card-sub">2D TOF sat bands; double-dose post-gad</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-thoracic-ao">
+          <div class="card-body"><div class="card-title">MRA &mdash; Thoracic Aorta</div><div class="card-sub">Cardiac gating; candy-cane para-sagittal</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-ao-arch">
+          <div class="card-body"><div class="card-title">MRA &mdash; Aortic Arch &amp; Great Vessels</div><div class="card-sub">Para-sagittal CareBolus</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-abdominal-ao">
+          <div class="card-body"><div class="card-title">MRA &mdash; Abdominal Aorta</div><div class="card-sub">Coronal 3D CareBolus</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mra-peripheral">
+          <div class="card-body"><div class="card-title">MRA &mdash; Peripheral Lower Extremity Run-Off</div><div class="card-sub">Renal to ankle; 2-phase injection</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- MRI BREAST -->
+    <div class="sub-section" data-proto-section="mri-breast">
+      <div class="sub-section-title">🎀 MRI &mdash; Breast</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-breast">
+          <div class="card-body"><div class="card-title">Breast &mdash; Routine</div><div class="card-sub">10 ml Gadavist; multiphase dynamic</div></div>
+        </a>
+        <a class="card" href="static/Protocols MRI ARI 2022c.pdf" data-panel-id="proto-mri-breast-implants">
+          <div class="card-body"><div class="card-title">Breast &mdash; Implants</div><div class="card-sub">TIRM + water suppression; axial &amp; sagittal</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- OTHER REFERENCE -->
+    <div class="sub-section" data-proto-section="other">
+      <div class="sub-section-title">📄 Other Reference</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols - CT recommendations.pdf">
+          <div class="card-body"><div class="card-title">CT Study Recommendations</div><div class="card-sub">Updated 9-4-2019</div></div>
+        </a>
+        <a class="card" href="static/Protocols - MRI Recommendations.pdf">
+          <div class="card-body"><div class="card-title">MRI Study Recommendations</div><div class="card-sub">Updated 9-4-2019</div></div>
+        </a>
+        <a class="card" href="static/Gadolinium Advisory Statement ARI 2018.pdf">
+          <div class="card-body"><div class="card-title">Gadolinium Advisory Statement</div></div>
+        </a>
+        <a class="card" href="static/Hydration protocol - ARI.pdf">
+          <div class="card-body"><div class="card-title">Hydration Protocol</div><div class="card-sub">Updated 9-4-2019</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">📷 Radiography &amp; Ultrasound</div>
+      <div class="card-grid">
+        <a class="card" href="static/Protocols Radiography ARI 2020.pdf">
+          <div class="card-body"><div class="card-title">Radiography Protocols</div><div class="card-sub">Updated 8-24-2020</div></div>
+        </a>
+        <a class="card" href="static/Protocols Ultrasound ARI 2022b.pdf">
+          <div class="card-body"><div class="card-title">Ultrasound Protocols</div><div class="card-sub">Updated 5-31-2022</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-title">☢️ On-Call &amp; Emergency Procedures</div>
+      <div class="card-grid">
+        <a class="card" href="static/NucMed Emergency On-Call Policy.pdf">
+          <div class="card-body"><div class="card-title">Nuc Med Emergency On-Call Procedure</div></div>
+        </a>
+        <a class="card" href="static/MRI Emergency On-Call Policy.pdf">
+          <div class="card-body"><div class="card-title">MRI Emergency On-Call Procedure</div></div>
+        </a>
+        <a class="card" href="static/protocol 2022b.pdf">
+          <div class="card-body"><div class="card-title">Protocol Update</div><div class="card-sub">5-31-2022</div></div>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -760,137 +1211,752 @@
     <div class="section-title">🔗 Helpful Links &amp; Info</div>
     <div class="card-grid">
       <a class="card" href="/static/Contrast Reaction - ACR.pdf">
-        <span class="card-icon">🚨</span>
         <div class="card-body">
-          <div class="card-title" style="color: var(--accent3);">ACR Contrast Reaction Protocol</div>
+          <div class="card-title" style="color:var(--accent3);">ACR Contrast Reaction Protocol</div>
           <div class="card-sub">Emergency reference</div>
         </div>
       </a>
       <a class="card" href="sugano.html">
-        <span class="card-icon">💡</span>
         <div class="card-body"><div class="card-title">Sugano's Tech Tips</div></div>
       </a>
-      <a class="card new-item" href="/static/PhonedirectoryforTechareas.pdf">
-        <span class="card-icon">📞</span>
-        <div class="card-body"><div class="card-title">Phone Directory for Tech Areas <span class="badge-new">New!</span></div></div>
+      <a class="card" href="/static/PhonedirectoryforTechareas.pdf">
+        <div class="card-body"><div class="card-title">Phone Directory for Tech Areas</div></div>
       </a>
       <a class="card" href="static/PIT phone numbers.png">
-        <span class="card-icon">📞</span>
         <div class="card-body"><div class="card-title">Phone Numbers — Core Wall</div></div>
       </a>
       <a class="card" href="static/Neurologist phone numbers.pdf">
-        <span class="card-icon">🧠</span>
         <div class="card-body"><div class="card-title">Phone Numbers for Neurologists</div></div>
       </a>
       <a class="card" href="articles.html">
-        <span class="card-icon">📚</span>
         <div class="card-body"><div class="card-title">Reference Articles</div></div>
       </a>
       <a class="card" href="/static/summa_telephone_directory.html">
-        <span class="card-icon">📖</span>
         <div class="card-body"><div class="card-title">Summa Telephone Directory</div></div>
       </a>
       <a class="card" href="https://careone.westernreservehospital.org/vpn/index.html">
-        <span class="card-icon">🔐</span>
         <div class="card-body">
           <div class="card-title">CareOne Sign-off — WRH (Off-site)</div>
           <div class="card-sub">Use "Help me log in" if badge not available</div>
         </div>
       </a>
       <a class="card" href="Flap CTA.html">
-        <span class="card-icon">📢</span>
         <div class="card-body"><div class="card-title">Dr. Unger — CTA Abdominal Wall for Flaps (DIEP)</div></div>
       </a>
     </div>
   </section>
-
 </main>
 
 <footer>🩻 Questions? Comments? Something broken? Holler at Rob Sheu.</footer>
 
+<div id="panel-backdrop"></div>
+<div id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+  <div class="panel-header">
+    <span id="panel-title">—</span>
+    <a id="panel-open-full" href="#" target="_blank" rel="noopener" class="panel-btn">↗ Open Full</a>
+    <button id="panel-close" class="panel-btn">✕ Close</button>
+  </div>
+  <div id="panel-body"></div>
+</div>
+
+<script src="ct-protocols-data.js"></script>
+<script src="mri-protocols-data.js"></script>
 <script>
-  const allCards = Array.from(document.querySelectorAll('section .card')).map(el => {
-    const section = el.closest('section');
-    return { el, cat: section ? section.dataset.cat : null, text: el.textContent.toLowerCase() };
-  });
+// ── GUIDELINE CONTENT ──────────────────────────────────────────────────────
+const panelContent = {
 
-  const catLabels = {
-    'best-practice': ['cat-bp', 'Best Practice'],
-    'diagnostic':    ['cat-dx', 'Diagnostic'],
-    'interventional':['cat-ir', 'Interventional'],
-    'protocols':     ['cat-proto', 'Protocols'],
-    'links':         ['cat-link', 'Links'],
-  };
+'fleischner': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">2017 Fleischner Society Guidelines</div>
+    <div class="gp-meta">MacMahon et al. Radiology 2017;284:228–243 &nbsp;·&nbsp; Pulmonary Nodule Management</div>
+  </div>
 
-  const tabs = document.querySelectorAll('.tab');
-  const sections = document.querySelectorAll('section.section');
-  const resultsSection = document.getElementById('search-results-section');
-  const resultsGrid = document.getElementById('search-results-grid');
-  const noResults = document.getElementById('no-results');
-  const searchInput = document.getElementById('search');
-  const clearBtn = document.getElementById('clear-search');
+  <div class="gp-section">
+    <div class="gp-section-title">Solid Pulmonary Nodules</div>
+    <table class="gp-table">
+      <thead><tr><th>Size (diameter)</th><th>Low Risk*</th><th>High Risk†</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>&lt;6 mm</strong> (&lt;100 mm³)</td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+          <td><span class="gp-tag gp-yellow">Optional CT at 12 months</span></td>
+        </tr>
+        <tr>
+          <td><strong>6–8 mm</strong> (100–250 mm³)</td>
+          <td><span class="gp-tag gp-yellow">CT at 6–12 m</span>, then 18–24 m if no change</td>
+          <td><span class="gp-tag gp-orange">CT at 6–12 m</span>, then 18–24 m</td>
+        </tr>
+        <tr>
+          <td><strong>&gt;8 mm</strong> (&gt;250 mm³)</td>
+          <td colspan="2" style="text-align:center"><span class="gp-tag gp-red">CT at 3 months, PET/CT, and/or tissue sampling</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="gp-note">*Low risk: No or minimal smoking history; no other known risk factors. †High risk: Smoking or other risk factors (occupational exposure, previous cancer, emphysema, family history, upper lobe location).</p>
+  </div>
 
-  function showCat(cat) {
-    sections.forEach(s => s.classList.toggle('visible', s.dataset.cat === cat));
-    tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  <div class="gp-section">
+    <div class="gp-section-title">Subsolid Pulmonary Nodules</div>
+    <table class="gp-table">
+      <thead><tr><th>Type</th><th>Size</th><th>Recommendation</th></tr></thead>
+      <tbody>
+        <tr>
+          <td rowspan="2"><strong>Pure GGO</strong></td>
+          <td>&lt;6 mm</td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+        </tr>
+        <tr>
+          <td>≥6 mm</td>
+          <td><span class="gp-tag gp-yellow">CT at 6–12 m to confirm persistence</span>, then CT every 2 years × 5 years</td>
+        </tr>
+        <tr>
+          <td rowspan="2"><strong>Part-Solid</strong></td>
+          <td>&lt;6 mm total</td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+        </tr>
+        <tr>
+          <td>≥6 mm total</td>
+          <td><span class="gp-tag gp-yellow">CT at 3–6 m to confirm persistence</span><br>If persistent: annual CT × 5 yrs if solid component &lt;6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Key Exclusions &amp; Notes</div>
+    <ul class="gp-ul">
+      <li>Does <strong>not apply</strong> to patients &lt;35 years, immunocompromised, or with known/suspected primary malignancy</li>
+      <li>Multiple nodules: manage based on most suspicious nodule; bilateral miliary pattern → consider infection or metastases</li>
+      <li>Volumetry preferred when available; diameter-based thresholds are used in the table above</li>
+      <li>These recommendations apply to <em>incidentally detected</em> nodules, not screening LDCT (use LUNG-RADS for screening)</li>
+    </ul>
+  </div>
+</div>`,
+
+'lung-rads': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">LUNG-RADS 2022</div>
+    <div class="gp-meta">ACR Lung Imaging Reporting &amp; Data System v2022 &nbsp;·&nbsp; Low-Dose CT Lung Cancer Screening</div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Categories &amp; Management</div>
+    <table class="gp-table">
+      <thead><tr><th>Cat.</th><th>Name</th><th>Key Findings</th><th>Management</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>0</strong></td><td>Incomplete</td>
+          <td>Prior CT needed for comparison; technical failure</td>
+          <td>Additional imaging or repeat</td>
+        </tr>
+        <tr>
+          <td><strong>1</strong></td><td>Negative</td>
+          <td>No nodules; definitely benign calcification</td>
+          <td><span class="gp-tag gp-green">Annual LDCT</span></td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td><td>Benign</td>
+          <td>Solid &lt;6 mm; Perifissural solid &lt;10 mm; GGO &lt;30 mm; Part-solid &lt;6 mm solid component</td>
+          <td><span class="gp-tag gp-green">Annual LDCT</span></td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td><td>Probably Benign</td>
+          <td>Solid 6–7 mm (or new &lt;6 mm); GGO ≥30 mm stable ≥3 months; Part-solid ≥6 mm with solid component &lt;6 mm</td>
+          <td><span class="gp-tag gp-yellow">6-month LDCT</span></td>
+        </tr>
+        <tr>
+          <td><strong>4A</strong></td><td>Suspicious</td>
+          <td>Solid ≥8 mm (or new/growing 6–7 mm); Part-solid with solid component 6–7 mm; Endobronchial nodule</td>
+          <td><span class="gp-tag gp-orange">3-month CT ± contrast<br>or PET/CT</span></td>
+        </tr>
+        <tr>
+          <td><strong>4B</strong></td><td>Very Suspicious</td>
+          <td>Solid ≥15 mm (or new/growing ≥8 mm); Part-solid with solid component ≥8 mm</td>
+          <td><span class="gp-tag gp-red">PET/CT + tissue sampling</span></td>
+        </tr>
+        <tr>
+          <td><strong>4X</strong></td><td>Cat. 3/4 + features</td>
+          <td>Spiculation, upper lobe location, lymphadenopathy, pleural/pericardial effusion, pleural or chest wall involvement</td>
+          <td><span class="gp-tag gp-red">PET/CT + tissue sampling</span></td>
+        </tr>
+        <tr>
+          <td><strong>S</strong></td><td>Significant Incidental</td>
+          <td>Clinically significant non-lung finding (e.g., aortic aneurysm ≥5 cm, coronary calcium, pericardial effusion)</td>
+          <td>Per finding — report separately</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Notes</div>
+    <ul class="gp-ul">
+      <li>Always report the <strong>highest applicable category</strong> based on the most suspicious nodule</li>
+      <li>Add <strong>-C modifier</strong> when a clinically significant incidental finding is present alongside any category</li>
+      <li><strong>Perifissural nodules</strong> (triangular, lentiform, or polygonal; touching fissure): Cat. 1 if &lt;10 mm; Cat. 2 if ≥10 mm and &lt;30 mm</li>
+      <li>Solid nodule size = <strong>average of long and short axis</strong> in the axial plane</li>
+      <li>GGO size = largest diameter in any plane</li>
+      <li>Part-solid: solid component ≥6 mm or growing → upgrade category</li>
+    </ul>
+  </div>
+</div>`,
+
+'ti-rads': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">ACR TI-RADS</div>
+    <div class="gp-meta">Tessler et al. JACR 2017;14(3):364–370 &nbsp;·&nbsp; Thyroid Imaging Reporting &amp; Data System</div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Step 1 — Score Each Feature</div>
+    <table class="gp-table">
+      <thead><tr><th>Feature</th><th>Options → Points</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Composition</strong></td>
+          <td>Cystic/almost completely cystic → 0 &nbsp;·&nbsp; Spongiform → 0 &nbsp;·&nbsp; Mixed cystic/solid → 1 &nbsp;·&nbsp; Solid/almost completely solid → 2</td>
+        </tr>
+        <tr>
+          <td><strong>Echogenicity</strong></td>
+          <td>Anechoic → 0 &nbsp;·&nbsp; Hyperechoic or isoechoic → 1 &nbsp;·&nbsp; Hypoechoic → 2 &nbsp;·&nbsp; Very hypoechoic → 3</td>
+        </tr>
+        <tr>
+          <td><strong>Shape</strong></td>
+          <td>Wider-than-tall → 0 &nbsp;·&nbsp; Taller-than-wide → 3</td>
+        </tr>
+        <tr>
+          <td><strong>Margin</strong></td>
+          <td>Smooth or ill-defined → 0 &nbsp;·&nbsp; Lobulated or irregular → 2 &nbsp;·&nbsp; Extra-thyroidal extension → 3</td>
+        </tr>
+        <tr>
+          <td><strong>Echogenic Foci</strong><br><span style="font-weight:400;font-style:italic;font-size:11px">Choose highest-scoring applicable</span></td>
+          <td>None or large comet-tail artifact → 0 &nbsp;·&nbsp; Macrocalcifications → 1 &nbsp;·&nbsp; Peripheral (rim) calcifications → 2 &nbsp;·&nbsp; Punctate echogenic foci → 3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Step 2 — Category &amp; Action</div>
+    <table class="gp-table">
+      <thead><tr><th>Category</th><th>Points</th><th>Suspicion</th><th>FNA if ≥</th><th>Follow if ≥</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="gp-tag gp-green">TR 1</span></td><td>0</td><td>Benign</td>
+          <td colspan="2" style="text-align:center;color:var(--text-muted)">No FNA · No follow-up</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-green">TR 2</span></td><td>2</td><td>Not suspicious</td>
+          <td colspan="2" style="text-align:center;color:var(--text-muted)">No FNA · No follow-up</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-yellow">TR 3</span></td><td>3</td><td>Mildly suspicious</td>
+          <td>≥2.5 cm</td><td>≥1.5 cm</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-orange">TR 4</span></td><td>4–6</td><td>Moderately suspicious</td>
+          <td>≥1.5 cm</td><td>≥1.0 cm</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-red">TR 5</span></td><td>≥7</td><td>Highly suspicious</td>
+          <td>≥1.0 cm</td><td>≥0.5 cm</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="gp-note">Follow-up surveillance: US at 1, 2, 3, and 5 years for nodules above the follow-up threshold.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Key Rules</div>
+    <ul class="gp-ul">
+      <li><strong>Spongiform</strong> (&gt;50% tiny cystic spaces): automatically TR1, regardless of other features</li>
+      <li><strong>Purely cystic</strong>: TR1 — no FNA indicated</li>
+      <li>Echogenic foci: apply only the <strong>highest-scoring</strong> option that is present</li>
+      <li>Nodule size uses the <strong>largest dimension</strong> in any imaging plane</li>
+      <li>Multiple nodules: score each independently; manage the highest-risk nodule</li>
+    </ul>
+  </div>
+</div>`,
+
+'recist': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">RECIST 1.1</div>
+    <div class="gp-meta">Eisenhauer et al. Eur J Cancer 2009;45:228–247 &nbsp;·&nbsp; Response Evaluation Criteria in Solid Tumors</div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Lesion Selection</div>
+    <table class="gp-table">
+      <thead><tr><th>Type</th><th>Definition</th><th>Limits</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Target (measurable)</strong></td>
+          <td>Longest diameter ≥10 mm on CT; lymph nodes: short axis ≥15 mm</td>
+          <td>Max 5 total; max 2 per organ</td>
+        </tr>
+        <tr>
+          <td><strong>Non-target</strong></td>
+          <td>All other lesions including nodes 10–14 mm short axis; assessed but not measured</td>
+          <td>Record all at baseline</td>
+        </tr>
+        <tr>
+          <td><strong>Non-measurable</strong></td>
+          <td>Leptomeningeal, ascites, pleural/pericardial effusion, inflammatory breast disease, lymphangitis, cystic/necrotic lesions, bone lesions without soft tissue component</td>
+          <td>Cannot be target lesions</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Target Lesion Response</div>
+    <table class="gp-table">
+      <thead><tr><th>Response</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="gp-tag gp-green">CR</span> Complete Response</td>
+          <td>Disappearance of all target lesions; all nodes must be &lt;10 mm (short axis)</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-blue">PR</span> Partial Response</td>
+          <td>≥30% decrease in sum of diameters vs. baseline (nadir comparison for subsequent)</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-yellow">SD</span> Stable Disease</td>
+          <td>Neither sufficient shrinkage for PR nor sufficient increase for PD vs. nadir</td>
+        </tr>
+        <tr>
+          <td><span class="gp-tag gp-red">PD</span> Progressive Disease</td>
+          <td>≥20% increase in sum <em>AND</em> ≥5 mm absolute increase vs. nadir; new lesion = PD</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Non-Target Lesion Response</div>
+    <table class="gp-table">
+      <thead><tr><th>Response</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><span class="gp-tag gp-green">CR</span></td><td>Disappearance of all non-target lesions; all nodes &lt;10 mm short axis</td></tr>
+        <tr><td><span class="gp-tag gp-blue">Non-CR / Non-PD</span></td><td>Persistence of ≥1 non-target lesion</td></tr>
+        <tr><td><span class="gp-tag gp-red">PD</span></td><td>Unequivocal progression of existing non-target lesions; appearance of new lesion</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Overall Best Response (Target + Non-Target)</div>
+    <table class="gp-table">
+      <thead><tr><th>Target</th><th>Non-Target</th><th>New Lesion</th><th>Overall</th></tr></thead>
+      <tbody>
+        <tr><td>CR</td><td>CR</td><td>No</td><td><span class="gp-tag gp-green">CR</span></td></tr>
+        <tr><td>CR</td><td>Non-CR/Non-PD</td><td>No</td><td><span class="gp-tag gp-blue">PR</span></td></tr>
+        <tr><td>PR</td><td>Non-PD</td><td>No</td><td><span class="gp-tag gp-blue">PR</span></td></tr>
+        <tr><td>SD</td><td>Non-PD</td><td>No</td><td><span class="gp-tag gp-yellow">SD</span></td></tr>
+        <tr><td>Any</td><td>PD</td><td>Any</td><td><span class="gp-tag gp-red">PD</span></td></tr>
+        <tr><td>Any</td><td>Any</td><td>Yes</td><td><span class="gp-tag gp-red">PD</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Technical Notes</div>
+    <ul class="gp-ul">
+      <li>CT preferred; slice thickness ≤5 mm; lesion must be ≥2× slice thickness to be measurable</li>
+      <li>Lymph nodes: always measure <strong>short axis</strong>; normal = &lt;10 mm short axis</li>
+      <li>Confirm CR and PD with repeat imaging ≥4 weeks later when clinically feasible</li>
+      <li>Pleural effusions, ascites, pericardial effusion: non-measurable (non-target)</li>
+      <li>Lytic bone lesions with measurable soft tissue component may qualify as target; sclerotic alone do not</li>
+    </ul>
+  </div>
+</div>`,
+
+'aspects': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">ASPECTS Scoring</div>
+    <div class="gp-meta">Alberta Stroke Program Early CT Score &nbsp;·&nbsp; Barber et al. Lancet 2000;355:1670–1674</div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Method</div>
+    <p style="margin-bottom:10px;line-height:1.7">Start at <strong>10</strong>. Subtract <strong>1 point</strong> for each MCA territory region showing early ischemic change: hypoattenuation, loss of gray-white differentiation, or sulcal effacement.</p>
+    <table class="gp-table">
+      <thead><tr><th>Region</th><th>Code</th><th>CT Level</th></tr></thead>
+      <tbody>
+        <tr><td>Caudate nucleus</td><td><strong>C</strong></td><td rowspan="4">Basal ganglia cut</td></tr>
+        <tr><td>Putamen</td><td><strong>P</strong></td></tr>
+        <tr><td>Internal capsule (posterior limb)</td><td><strong>IC</strong></td></tr>
+        <tr><td>Insula ribbon</td><td><strong>I</strong></td></tr>
+        <tr><td>MCA cortex — anterior frontal</td><td><strong>M1</strong></td><td rowspan="3">Basal ganglia cut</td></tr>
+        <tr><td>MCA cortex — anterior temporal</td><td><strong>M2</strong></td></tr>
+        <tr><td>MCA cortex — posterior temporal</td><td><strong>M3</strong></td></tr>
+        <tr><td>MCA cortex — anterior superior frontal</td><td><strong>M4</strong></td><td rowspan="3">Supraganglion cut</td></tr>
+        <tr><td>MCA cortex — superior parietal / precentral</td><td><strong>M5</strong></td></tr>
+        <tr><td>MCA cortex — posterior parietal / angular</td><td><strong>M6</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Interpretation</div>
+    <table class="gp-table">
+      <thead><tr><th>Score</th><th>Interpretation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>10</strong></td><td><span class="gp-tag gp-green">Normal</span> — No early ischemic change</td></tr>
+        <tr><td><strong>8–9</strong></td><td><span class="gp-tag gp-yellow">Minimal ischemia</span> — Favorable; likely benefits from intervention</td></tr>
+        <tr><td><strong>6–7</strong></td><td><span class="gp-tag gp-orange">Moderate ischemia</span> — Borderline; individualize decision</td></tr>
+        <tr><td><strong>≤5</strong></td><td><span class="gp-tag gp-red">Extensive ischemia</span> — High risk of poor outcome; generally excludes thrombectomy</td></tr>
+        <tr><td><strong>0</strong></td><td>Diffuse MCA territory infarction</td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">Common threshold: ASPECTS &lt;6 is a contraindication to mechanical thrombectomy in most trial protocols. Some centers use &lt;7. Use alongside perfusion imaging and clinical judgment.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Notes</div>
+    <ul class="gp-ul">
+      <li>Score on <strong>non-contrast CT</strong> only — not on CTP or MRI maps</li>
+      <li>MCA territory only — does not account for posterior fossa, ACA, or PCA infarction</li>
+      <li>Interrater variability is significant; use as one input alongside CTP and clinical picture</li>
+    </ul>
+  </div>
+</div>`,
+
+'aast-spleen': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">AAST Splenic Injury Grading</div>
+    <div class="gp-meta">American Association for the Surgery of Trauma &nbsp;·&nbsp; Organ Injury Scale (2018 revision)</div>
+  </div>
+  <table class="gp-table">
+    <thead><tr><th>Grade</th><th>CT / Imaging Findings</th><th>Management Clue</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="gp-tag gp-green">I</span></td>
+        <td>Subcapsular hematoma &lt;10% surface area; parenchymal laceration &lt;1 cm depth; capsular tear</td>
+        <td>Non-operative</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-green">II</span></td>
+        <td>Subcapsular hematoma 10–50% surface area; intraparenchymal hematoma &lt;5 cm; laceration 1–3 cm depth, no trabecular vessel involvement</td>
+        <td>Non-operative</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-yellow">III</span></td>
+        <td>Subcapsular hematoma &gt;50% surface area or expanding/ruptured; intraparenchymal hematoma ≥5 cm or expanding; laceration &gt;3 cm depth or involving trabecular vessels; <strong>vascular injury/active bleeding confined within splenic capsule</strong></td>
+        <td>Angioembolization often indicated</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-orange">IV</span></td>
+        <td>Laceration involving segmental or hilar vessels producing &gt;25% devascularization; <strong>active bleeding extending beyond spleen into peritoneum</strong></td>
+        <td>Angioembolization or OR</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-red">V</span></td>
+        <td>Shattered spleen; hilar vascular injury with total splenic devascularization</td>
+        <td>OR — splenectomy</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="gp-note" style="margin-top:10px">Advance one grade for multiple injuries to the same organ, up to Grade III. Active arterial extravasation (blush) extending beyond the capsule on CT = at least Grade IV.</p>
+</div>`,
+
+'aast-liver': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">AAST Liver Injury Grading</div>
+    <div class="gp-meta">American Association for the Surgery of Trauma &nbsp;·&nbsp; Organ Injury Scale (2018 revision)</div>
+  </div>
+  <table class="gp-table">
+    <thead><tr><th>Grade</th><th>CT / Imaging Findings</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="gp-tag gp-green">I</span></td>
+        <td>Subcapsular hematoma &lt;10% surface area; parenchymal laceration &lt;1 cm depth; capsular tear</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-green">II</span></td>
+        <td>Subcapsular hematoma 10–50% surface area; intraparenchymal hematoma &lt;10 cm; laceration 1–3 cm depth, &lt;10 cm length</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-yellow">III</span></td>
+        <td>Subcapsular hematoma &gt;50% surface area or expanding/ruptured; intraparenchymal hematoma &gt;10 cm or expanding; laceration &gt;3 cm depth; <strong>vascular injury/active bleeding confined within hepatic parenchyma</strong></td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-orange">IV</span></td>
+        <td>Laceration involving 25–75% of a hepatic lobe or 1–3 Couinaud segments; <strong>active bleeding extending beyond liver into peritoneum</strong></td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-red">V</span></td>
+        <td>Laceration &gt;75% of hepatic lobe or &gt;3 Couinaud segments within a single lobe; juxtahepatic venous injury (retrohepatic IVC or central major hepatic veins)</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-red" style="background:rgba(100,0,0,0.18);color:#900">VI</span></td>
+        <td>Hepatic avulsion</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="gp-note" style="margin-top:10px">Advance one grade for multiple injuries to the same organ, up to Grade III. Active arterial extravasation extending beyond the liver capsule on CT = at least Grade IV.</p>
+</div>`,
+
+'aast-kidney': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">AAST Kidney Injury Grading</div>
+    <div class="gp-meta">American Association for the Surgery of Trauma &nbsp;·&nbsp; Organ Injury Scale (2018 revision)</div>
+  </div>
+  <table class="gp-table">
+    <thead><tr><th>Grade</th><th>CT / Imaging Findings</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="gp-tag gp-green">I</span></td>
+        <td>Non-expanding subcapsular hematoma without parenchymal laceration; contusion (microscopic or gross hematuria, normal imaging)</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-green">II</span></td>
+        <td>Non-expanding perinephric hematoma confined to retroperitoneum; laceration &lt;1 cm parenchymal depth, <strong>no urinary extravasation</strong></td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-yellow">III</span></td>
+        <td>Laceration &gt;1 cm parenchymal depth without collecting system rupture or urinary extravasation; <strong>vascular injury/active bleeding confined within Gerota's fascia</strong></td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-orange">IV</span></td>
+        <td>Laceration extending through corticomedullary junction into collecting system (<strong>urinary extravasation on delayed phase</strong>); segmental renal artery or vein injury; <strong>active bleeding extending beyond Gerota's fascia</strong>; renal pelvis laceration or UPJ disruption</td>
+      </tr>
+      <tr>
+        <td><span class="gp-tag gp-red">V</span></td>
+        <td>Main renal artery or vein laceration or avulsion; shattered kidney; devascularized kidney with active bleeding</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="gp-note" style="margin-top:10px">Grade IV collecting system injury requires <strong>delayed phase imaging</strong> (urographic phase, ~10 min) to detect urinary extravasation. Active arterial extravasation on arterial phase extending beyond Gerota's fascia = at least Grade IV–V.</p>
+</div>`,
+
+'aast-all': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">AAST Trauma Grading — Quick Reference</div>
+    <div class="gp-meta">American Association for the Surgery of Trauma &nbsp;·&nbsp; Organ Injury Scale (2018 revision)</div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Spleen</div>
+    <table class="gp-table">
+      <thead><tr><th>Grade</th><th>Key CT Finding</th></tr></thead>
+      <tbody>
+        <tr><td><span class="gp-tag gp-green">I</span></td><td>Subcapsular hematoma &lt;10%; laceration &lt;1 cm</td></tr>
+        <tr><td><span class="gp-tag gp-green">II</span></td><td>Subcapsular hematoma 10–50%; laceration 1–3 cm</td></tr>
+        <tr><td><span class="gp-tag gp-yellow">III</span></td><td>Subcapsular &gt;50% or expanding; laceration &gt;3 cm; active bleed confined to capsule</td></tr>
+        <tr><td><span class="gp-tag gp-orange">IV</span></td><td>Hilar/segmental vessel injury &gt;25% devascularization; active bleed into peritoneum</td></tr>
+        <tr><td><span class="gp-tag gp-red">V</span></td><td>Shattered spleen; hilar devascularization</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Liver</div>
+    <table class="gp-table">
+      <thead><tr><th>Grade</th><th>Key CT Finding</th></tr></thead>
+      <tbody>
+        <tr><td><span class="gp-tag gp-green">I</span></td><td>Subcapsular hematoma &lt;10%; laceration &lt;1 cm</td></tr>
+        <tr><td><span class="gp-tag gp-green">II</span></td><td>Subcapsular hematoma 10–50%; laceration 1–3 cm, &lt;10 cm long</td></tr>
+        <tr><td><span class="gp-tag gp-yellow">III</span></td><td>Subcapsular &gt;50% or expanding; laceration &gt;3 cm; active bleed confined to parenchyma</td></tr>
+        <tr><td><span class="gp-tag gp-orange">IV</span></td><td>Laceration 25–75% hepatic lobe or 1–3 segments; active bleed into peritoneum</td></tr>
+        <tr><td><span class="gp-tag gp-red">V</span></td><td>Laceration &gt;75% lobe or &gt;3 segments; juxtahepatic vein injury</td></tr>
+        <tr><td><span class="gp-tag gp-red" style="background:rgba(100,0,0,0.18);color:#900">VI</span></td><td>Hepatic avulsion</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Kidney</div>
+    <table class="gp-table">
+      <thead><tr><th>Grade</th><th>Key CT Finding</th></tr></thead>
+      <tbody>
+        <tr><td><span class="gp-tag gp-green">I</span></td><td>Subcapsular hematoma; contusion only</td></tr>
+        <tr><td><span class="gp-tag gp-green">II</span></td><td>Perinephric hematoma; laceration &lt;1 cm, no UE</td></tr>
+        <tr><td><span class="gp-tag gp-yellow">III</span></td><td>Laceration &gt;1 cm, no collecting system injury; active bleed within Gerota's</td></tr>
+        <tr><td><span class="gp-tag gp-orange">IV</span></td><td>Collecting system laceration (urinary extravasation on delayed); active bleed beyond Gerota's</td></tr>
+        <tr><td><span class="gp-tag gp-red">V</span></td><td>Main renal vessel laceration; shattered or devascularized kidney</td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">UE = urinary extravasation. Advance one grade for multiple injuries to the same organ (up to Grade III).</p>
+  </div>
+</div>`
+
+}; // end panelContent
+
+// Merge CT protocol panels (loaded via ct-protocols-data.js)
+if (typeof ctProtocolContent !== 'undefined') Object.assign(panelContent, ctProtocolContent);
+if (typeof mriProtocolContent !== 'undefined') Object.assign(panelContent, mriProtocolContent);
+
+// ── SEARCH ────────────────────────────────────────────────────────────────
+const allCards = Array.from(document.querySelectorAll('section .card')).map(el => {
+  const section = el.closest('section');
+  return { el, cat: section ? section.dataset.cat : null, text: el.textContent.toLowerCase() };
+});
+const catLabels = {
+  'best-practice': ['cat-bp', 'Best Practice'],
+  'diagnostic':    ['cat-dx', 'Diagnostic'],
+  'interventional':['cat-ir', 'Interventional'],
+  'protocols':     ['cat-proto', 'Protocols'],
+  'links':         ['cat-link', 'Links'],
+};
+const tabs          = document.querySelectorAll('.tab');
+const sections      = document.querySelectorAll('section.section');
+const resultsSection = document.getElementById('search-results-section');
+const resultsGrid   = document.getElementById('search-results-grid');
+const noResults     = document.getElementById('no-results');
+const searchInput   = document.getElementById('search');
+const clearBtn      = document.getElementById('clear-search');
+
+function showCat(cat) {
+  sections.forEach(s => s.classList.toggle('visible', s.dataset.cat === cat));
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  resultsSection.classList.remove('visible');
+}
+tabs.forEach(tab => tab.addEventListener('click', () => {
+  searchInput.value = ''; clearBtn.style.display = 'none'; showCat(tab.dataset.cat);
+}));
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  clearBtn.style.display = q ? 'block' : 'none';
+  if (!q) {
     resultsSection.classList.remove('visible');
+    sections.forEach(s => s.classList.remove('visible'));
+    const active = document.querySelector('.tab.active');
+    if (active) showCat(active.dataset.cat);
+    return;
   }
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      searchInput.value = '';
-      clearBtn.style.display = 'none';
-      showCat(tab.dataset.cat);
-    });
-  });
-
-  searchInput.addEventListener('input', () => {
-    const q = searchInput.value.trim().toLowerCase();
-    clearBtn.style.display = q ? 'block' : 'none';
-    if (!q) {
-      resultsSection.classList.remove('visible');
-      sections.forEach(s => s.classList.remove('visible'));
-      const activeTab = document.querySelector('.tab.active');
-      if (activeTab) showCat(activeTab.dataset.cat);
-      return;
+  sections.forEach(s => s.classList.remove('visible'));
+  resultsSection.classList.add('visible');
+  resultsGrid.innerHTML = '';
+  const matches = allCards.filter(c => c.text.includes(q));
+  matches.forEach(({ el, cat }) => {
+    const clone = el.cloneNode(true);
+    if (cat && catLabels[cat]) {
+      const badge = document.createElement('span');
+      badge.className = 'cat-badge ' + catLabels[cat][0];
+      badge.textContent = catLabels[cat][1];
+      clone.querySelector('.card-title').appendChild(badge);
     }
-    sections.forEach(s => s.classList.remove('visible'));
-    resultsSection.classList.add('visible');
-    resultsGrid.innerHTML = '';
-    const matches = allCards.filter(c => c.text.includes(q));
-    matches.forEach(({ el, cat }) => {
-      const clone = el.cloneNode(true);
-      if (cat && catLabels[cat]) {
-        const badge = document.createElement('span');
-        badge.className = 'cat-badge ' + catLabels[cat][0];
-        badge.textContent = catLabels[cat][1];
-        clone.querySelector('.card-title').appendChild(badge);
-      }
-      resultsGrid.appendChild(clone);
-    });
-    noResults.style.display = matches.length === 0 ? 'block' : 'none';
+    resultsGrid.appendChild(clone);
   });
+  noResults.style.display = matches.length === 0 ? 'block' : 'none';
+});
+clearBtn.addEventListener('click', () => {
+  searchInput.value = ''; clearBtn.style.display = 'none';
+  resultsSection.classList.remove('visible');
+  sections.forEach(s => s.classList.remove('visible'));
+  const active = document.querySelector('.tab.active');
+  if (active) showCat(active.dataset.cat);
+});
 
-  clearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    clearBtn.style.display = 'none';
-    resultsSection.classList.remove('visible');
-    sections.forEach(s => s.classList.remove('visible'));
-    const activeTab = document.querySelector('.tab.active');
-    if (activeTab) showCat(activeTab.dataset.cat);
-  });
+// ── THEME ─────────────────────────────────────────────────────────────────
+const themeBtn = document.getElementById('theme-toggle');
+const savedTheme = localStorage.getItem('ari-theme');
+if (savedTheme !== 'light') {
+  document.documentElement.classList.add('dark'); themeBtn.textContent = '☀️';
+}
+themeBtn.addEventListener('click', () => {
+  const isDark = document.documentElement.classList.toggle('dark');
+  themeBtn.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('ari-theme', isDark ? 'dark' : 'light');
+});
 
-  // Theme toggle
-  const themeBtn = document.getElementById('theme-toggle');
-  if (localStorage.getItem('ari-theme') === 'dark') {
-    document.documentElement.classList.add('dark');
-    themeBtn.textContent = '☀️';
+// ── PANEL ─────────────────────────────────────────────────────────────────
+const panel      = document.getElementById('panel');
+const backdrop   = document.getElementById('panel-backdrop');
+const panelTitle = document.getElementById('panel-title');
+const panelFull  = document.getElementById('panel-open-full');
+const panelClose = document.getElementById('panel-close');
+const panelBody  = document.getElementById('panel-body');
+
+function openPanel(href, title) {
+  panelTitle.textContent = title;
+  panelFull.href = href;
+  panelFull.style.display = '';
+  const safeHref  = href.replace(/"/g, '%22');
+  const safeTitle = title.replace(/"/g, '&quot;');
+  const isImage   = /\.(jpe?g|png|gif|svg|webp)(\?.*)?$/i.test(href);
+  panelBody.innerHTML = isImage
+    ? `<img src="${safeHref}" alt="${safeTitle}">`
+    : `<iframe src="${safeHref}" title="${safeTitle}"></iframe>`;
+  _showPanel();
+}
+
+function openPanelInline(html, title, fullHref) {
+  panelTitle.textContent = title;
+  if (fullHref) { panelFull.href = fullHref; panelFull.style.display = ''; }
+  else          { panelFull.style.display = 'none'; }
+  panelBody.innerHTML = html;
+  _showPanel();
+}
+
+function _showPanel() {
+  panel.classList.add('open');
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  panelClose.focus();
+}
+
+function closePanel() {
+  panel.classList.remove('open');
+  backdrop.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { panelBody.innerHTML = ''; }, 300);
+}
+
+panelClose.addEventListener('click', closePanel);
+backdrop.addEventListener('click', closePanel);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+// Intercept local link clicks in main + quick-bar
+document.addEventListener('click', e => {
+  const link = e.target.closest('a');
+  if (!link) return;
+  const href = link.getAttribute('href');
+  if (!href || /^https?:\/\//.test(href) || href === '#') return;
+  if (!link.closest('main') && !link.closest('.quick-bar')) return;
+  e.preventDefault();
+
+  const card        = link.closest('.card');
+  const cardTitleEl = card && card.querySelector('.card-title');
+  const cardTitleText = cardTitleEl
+    ? Array.from(cardTitleEl.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent).join('').trim()
+    : null;
+  const subSuffix = link.classList.contains('sub-link') ? ` — ${link.textContent.trim()}` : '';
+  const title = cardTitleText ? cardTitleText + subSuffix : link.textContent.trim() || href;
+
+  // Inline content: only when clicking the card itself (not a sub-link)
+  const pid = card && !link.classList.contains('sub-link') ? card.dataset.panelId : null;
+  if (pid && panelContent[pid]) {
+    openPanelInline(panelContent[pid], cardTitleText || title, card.getAttribute('href'));
+  } else {
+    openPanel(href, title);
   }
-  themeBtn.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    themeBtn.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('ari-theme', isDark ? 'dark' : 'light');
+});
+
+// ── PROTOCOL FILTER PILLS ─────────────────────────────────────────────────
+const protoSection = document.querySelector('section[data-cat="protocols"]');
+if (protoSection) {
+  protoSection.addEventListener('click', e => {
+    const pill = e.target.closest('.proto-pill');
+    if (!pill) return;
+    const filter = pill.dataset.filter;
+    protoSection.querySelectorAll('.proto-pill').forEach(p => p.classList.toggle('active', p === pill));
+    protoSection.querySelectorAll('.sub-section[data-proto-section]').forEach(sec => {
+      sec.classList.toggle('proto-sub-hidden', filter !== 'all' && sec.dataset.protoSection !== filter);
+    });
   });
+}
 </script>
 </body>
 </html>
