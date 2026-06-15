@@ -294,6 +294,25 @@
     .gp-ul { padding-left: 18px; line-height: 2; }
 
     @media (max-width: 900px) { #panel { width: 100%; max-width: 100%; } }
+  /* ── COPY-TO-REPORT BUTTON ── */
+  .gp-copy-row { padding: 8px 2px 4px; }
+  .copy-report-btn {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    color: var(--text-muted); font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 700; padding: 5px 14px;
+    border-radius: 6px; cursor: pointer; transition: all 0.15s;
+  }
+  .copy-report-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .copy-row { cursor: pointer; }
+  .copy-row td.row-copy-cell { width: 28px; text-align: center; padding: 0 4px; }
+  .row-copy-btn {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: 13px; opacity: 0.45; transition: all 0.15s; padding: 2px 3px;
+    border-radius: 4px; line-height: 1;
+  }
+  .copy-row:hover .row-copy-btn { opacity: 1; }
+  .row-copy-btn:hover { background: var(--surface2); color: var(--accent); opacity: 1; }
+
   /* ── FEEDBACK BUTTON ── */
   #feedbackBtn {
     position: fixed; bottom: 24px; left: 24px;
@@ -460,6 +479,18 @@
             <div class="sub-links">
               <a class="sub-link" href="static/ASPECT scoring AJNR.pdf">AJNR PDF</a>
             </div>
+          </div>
+        </a>
+        <a class="card new-item" data-panel-id="bp-gb-polyp" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental Gallbladder Polyp Follow-up</div>
+            <div class="card-sub">ESGAR 2021 · SRU 2022 · KSAR 2025</div>
+          </div>
+        </a>
+        <a class="card new-item" data-panel-id="bp-aaa" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental AAA Follow-up</div>
+            <div class="card-sub">ESVS 2024 · ACR 2025</div>
           </div>
         </a>
       </div>
@@ -1341,31 +1372,153 @@
 // ── GUIDELINE CONTENT ──────────────────────────────────────────────────────
 const panelContent = {
 
+'bp-gb-polyp': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Gallbladder Polyp Follow-up</div>
+    <div class="gp-meta">ESGAR/EAES/EFISDS/ESGE 2021 &nbsp;·&nbsp; SRU 2022 &nbsp;·&nbsp; Korean Society of Abdominal Radiology 2025</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-gb-polyp',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">SRU 2022 — Morphology-Based Risk Stratification</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Risk tier</th><th>Morphology</th><th>Management</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td><span class="gp-tag gp-green">Extremely low</span></td><td>Pedunculated, thin stalk ("ball-on-wall")</td><td>Size-based follow-up below</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Gallbladder polyp — extremely low risk morphology (pedunculated, thin stalk / ball-on-wall). Recommend size-based surveillance per ESGAR 2021 guidelines.',this,'Fetzer DT et al. Society of Radiologists in Ultrasound Consensus Conference Recommendations for Incidental Gallbladder Polyp Management. Radiology 2022. https://pubs.rsna.org/doi/full/10.1148/radiol.213079')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-yellow">Low</span></td><td>Pedunculated (thick/wide stalk) or sessile</td><td>Size-based follow-up below</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Gallbladder polyp — low risk morphology (pedunculated thick/wide stalk or sessile). Recommend size-based surveillance per ESGAR 2021 guidelines.',this,'Fetzer DT et al. Society of Radiologists in Ultrasound Consensus Conference Recommendations for Incidental Gallbladder Polyp Management. Radiology 2022. https://pubs.rsna.org/doi/full/10.1148/radiol.213079')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-orange">Indeterminate</span></td><td>Focal GB wall thickening adjacent to polyp</td><td>Consider CEUS or surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Gallbladder polyp — indeterminate morphology with focal gallbladder wall thickening adjacent to the polyp. Recommend CEUS for further characterization or surgical referral.',this,'Fetzer DT et al. Society of Radiologists in Ultrasound Consensus Conference Recommendations for Incidental Gallbladder Polyp Management. Radiology 2022. https://pubs.rsna.org/doi/full/10.1148/radiol.213079')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">SRU 2022 emphasizes morphology over pure size — sessile polyps carry higher malignancy risk than pedunculated ones of the same diameter.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">ESGAR 2021 — Size &amp; Risk Factor–Based Surveillance</div>
+    <table class="gp-table">
+      <thead><tr><th>Polyp size</th><th>Risk factors?</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;5 mm</td><td>None</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental gallbladder polyp <5 mm with no risk factors. Recommendation: no follow-up required per ESGAR 2021 guidelines.',this,'Foley KG et al. Management and follow-up of gallbladder polyps: updated joint guidelines between the ESGAR, EAES, EFISDS and ESGE. Eur Radiol 2022. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9038818/')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>5 mm</td><td>Yes</td><td>US at 6 mo, 1 yr, 2 yrs</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental gallbladder polyp 5 mm with risk factors for malignancy. Recommendation: ultrasound surveillance at 6 months, 1 year, and 2 years. Discontinue if no interval growth.',this,'Foley KG et al. Management and follow-up of gallbladder polyps: updated joint guidelines between the ESGAR, EAES, EFISDS and ESGE. Eur Radiol 2022. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9038818/')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>6–9 mm</td><td>Any</td><td>US at 6 mo, 1 yr, 2 yrs</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental gallbladder polyp 6–9 mm. Recommendation: ultrasound surveillance at 6 months, 1 year, and 2 years. Discontinue if no interval growth.',this,'Foley KG et al. Management and follow-up of gallbladder polyps: updated joint guidelines between the ESGAR, EAES, EFISDS and ESGE. Eur Radiol 2022. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9038818/')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥10 mm</td><td>Any</td><td>Cholecystectomy (if surgically fit)</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental gallbladder polyp ≥10 mm. Recommendation: surgical referral for cholecystectomy if patient is surgically fit, per ESGAR 2021 guidelines.',this,'Foley KG et al. Management and follow-up of gallbladder polyps: updated joint guidelines between the ESGAR, EAES, EFISDS and ESGE. Eur Radiol 2022. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9038818/')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td colspan="2">Growth ≥2 mm on follow-up</td><td>Reassess; consider surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Gallbladder polyp with interval growth ≥2 mm. Recommendation: reassess with current size and patient risk factors; consider surgical referral.',this,'Foley KG et al. Management and follow-up of gallbladder polyps: updated joint guidelines between the ESGAR, EAES, EFISDS and ESGE. Eur Radiol 2022. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9038818/')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Risk Factors for Malignancy</div>
+    <ul class="gp-ul">
+      <li>Age &gt;60</li>
+      <li>Primary sclerosing cholangitis (PSC)</li>
+      <li>Indian ethnicity</li>
+      <li>Sessile morphology</li>
+    </ul>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Imaging Notes</div>
+    <ul class="gp-ul">
+      <li><strong>US is the only recommended surveillance modality</strong> — routine CT and MRI are not advised by any current guideline</li>
+      <li><strong>CEUS</strong> may be used for problem-solving when US is equivocal (sensitivity ~85%, specificity ~87% for adenoma vs. cholesterol polyp)</li>
+      <li>If polyp disappears on follow-up, surveillance can be discontinued</li>
+    </ul>
+  </div>
+</div>`,
+
+'bp-aaa': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Abdominal Aortic Aneurysm Follow-up</div>
+    <div class="gp-meta">ESVS 2024 Clinical Practice Guidelines &nbsp;·&nbsp; ACR Appropriateness Criteria 2025</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-aaa',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Size Definitions</div>
+    <table class="gp-table">
+      <thead><tr><th>Category</th><th>Diameter</th></tr></thead>
+      <tbody>
+        <tr><td>Normal</td><td>&lt;25 mm</td></tr>
+        <tr><td>Sub-aneurysmal / ectatic</td><td>25–29 mm</td></tr>
+        <tr><td><strong>Aneurysm (AAA)</strong></td><td>≥30 mm</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">ESVS 2024 — Surveillance Intervals</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Diameter</th><th>Interval</th><th>Action</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>25–29 mm</td><td>Every 5 years</td><td>Ultrasound</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental sub-aneurysmal aorta measuring 25–29 mm. Recommendation: surveillance abdominal ultrasound in 5 years per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>30–39 mm</td><td>Every 3 years</td><td>Ultrasound</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental abdominal aortic aneurysm measuring 30–39 mm. Recommendation: surveillance abdominal ultrasound in 3 years per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>40–44 mm</td><td>Annually</td><td>Ultrasound</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental abdominal aortic aneurysm measuring 40–44 mm. Recommendation: annual surveillance abdominal ultrasound per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-orange">45–54 mm</span></td><td>Every 6 months</td><td>Ultrasound + vascular surgery referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental abdominal aortic aneurysm measuring 45–54 mm. Recommendation: surveillance abdominal ultrasound every 6 months and vascular surgery referral per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-red">≥55 mm men / ≥50 mm women</span></td><td>—</td><td>Elective repair threshold</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental abdominal aortic aneurysm at or above elective repair threshold (≥55 mm in men, ≥50 mm in women). Recommendation: vascular surgery referral for elective repair planning per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">Women have lower repair thresholds due to higher rupture risk per unit diameter — consider vascular referral at ≥45 mm in women.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Repair Thresholds &amp; Special Cases</div>
+    <table class="gp-table">
+      <tbody>
+        <tr class="copy-row"><td class="proto-label">Infrarenal AAA — Men</td><td>≥55 mm</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('AAA at elective repair threshold in male patient (≥55 mm). Vascular surgery referral recommended per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td class="proto-label">Infrarenal AAA — Women</td><td>≥50 mm</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('AAA at elective repair threshold in female patient (≥50 mm). Vascular surgery referral recommended per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td class="proto-label">Iliac artery aneurysm</td><td>≥35 mm</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental iliac artery aneurysm at or above repair threshold (≥35 mm). Vascular surgery referral recommended per ESVS 2024 guidelines.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td class="proto-label">Symptomatic (any size)</td><td>Urgent surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Symptomatic abdominal aortic aneurysm. Urgent vascular surgery referral indicated regardless of size.',this,'Bjorck M et al. ESVS 2024 Clinical Practice Guidelines on the Management of Abdominal Aorto-Iliac Artery Aneurysms. Eur J Vasc Endovasc Surg 2024. https://www.ejves.com/article/S1078-5884(23)00889-4/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Imaging Modality Guidance</div>
+    <ul class="gp-ul">
+      <li><strong>Ultrasound</strong> — preferred modality for surveillance of unrepaired AAA; sufficient for diameter monitoring</li>
+      <li><strong>CTA</strong> — reserved for pre-operative planning and post-EVAR follow-up; not needed for routine small AAA surveillance</li>
+      <li><strong>Post-EVAR protocol</strong>: CTA at 1 month, then annual US; CTA only if endoleak suspected or sac enlargement on US</li>
+    </ul>
+  </div>
+</div>`,
+
 'fleischner': `
 <div class="guideline-panel">
   <div class="gp-header">
     <div class="gp-title">2017 Fleischner Society Guidelines</div>
     <div class="gp-meta">MacMahon et al. Radiology 2017;284:228–243 &nbsp;·&nbsp; Pulmonary Nodule Management</div>
   </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('fleischner',this)">📋 Copy full recommendation sheet</button>
+  </div>
 
   <div class="gp-section">
     <div class="gp-section-title">Solid Pulmonary Nodules</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any recommendation to copy it (with citation) to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Size (diameter)</th><th>Low Risk*</th><th>High Risk†</th></tr></thead>
       <tbody>
         <tr>
           <td><strong>&lt;6 mm</strong> (&lt;100 mm³)</td>
-          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
-          <td><span class="gp-tag gp-yellow">Optional CT at 12 months</span></td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span> <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule <6 mm, low-risk patient. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-yellow">Optional CT at 12 months</span> <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule <6 mm, high-risk patient. Recommendation: optional CT at 12 months per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
         <tr>
           <td><strong>6–8 mm</strong> (100–250 mm³)</td>
-          <td><span class="gp-tag gp-yellow">CT at 6–12 m</span>, then 18–24 m if no change</td>
-          <td><span class="gp-tag gp-orange">CT at 6–12 m</span>, then 18–24 m</td>
+          <td><span class="gp-tag gp-yellow">CT at 6–12 m</span>, then 18–24 m if no change <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule 6–8 mm, low-risk patient. Recommendation: CT at 6–12 months, then at 18–24 months if no change per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-orange">CT at 6–12 m</span>, then 18–24 m <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule 6–8 mm, high-risk patient. Recommendation: CT at 6–12 months, then at 18–24 months per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
         <tr>
           <td><strong>&gt;8 mm</strong> (&gt;250 mm³)</td>
-          <td colspan="2" style="text-align:center"><span class="gp-tag gp-red">CT at 3 months, PET/CT, and/or tissue sampling</span></td>
+          <td colspan="2" style="text-align:center"><span class="gp-tag gp-red">CT at 3 months, PET/CT, and/or tissue sampling</span> <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule >8 mm. Recommendation: CT at 3 months, PET/CT, and/or tissue sampling per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
       </tbody>
     </table>
@@ -1380,20 +1533,20 @@ const panelContent = {
         <tr>
           <td rowspan="2"><strong>Pure GGO</strong></td>
           <td>&lt;6 mm</td>
-          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span> <button class="row-copy-btn" onclick="copySnippet('Incidental pure ground-glass opacity (GGO) <6 mm. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
         <tr>
           <td>≥6 mm</td>
-          <td><span class="gp-tag gp-yellow">CT at 6–12 m to confirm persistence</span>, then CT every 2 years × 5 years</td>
+          <td><span class="gp-tag gp-yellow">CT at 6–12 m to confirm persistence</span>, then CT every 2 years × 5 years <button class="row-copy-btn" onclick="copySnippet('Incidental pure ground-glass opacity (GGO) ≥6 mm. Recommendation: CT at 6–12 months to confirm persistence, then CT every 2 years for 5 years per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
         <tr>
           <td rowspan="2"><strong>Part-Solid</strong></td>
           <td>&lt;6 mm total</td>
-          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span> <button class="row-copy-btn" onclick="copySnippet('Incidental part-solid pulmonary nodule <6 mm total size. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
         <tr>
           <td>≥6 mm total</td>
-          <td><span class="gp-tag gp-yellow">CT at 3–6 m to confirm persistence</span><br>If persistent: annual CT × 5 yrs if solid component &lt;6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm</td>
+          <td><span class="gp-tag gp-yellow">CT at 3–6 m to confirm persistence</span><br>If persistent: annual CT × 5 yrs if solid component &lt;6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm <button class="row-copy-btn" onclick="copySnippet('Incidental part-solid pulmonary nodule ≥6 mm total size. Recommendation: CT at 3–6 months to confirm persistence. If persistent: annual CT for 5 years if solid component <6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
         </tr>
       </tbody>
     </table>
@@ -1999,7 +2152,8 @@ document.addEventListener('click', e => {
   const link = e.target.closest('a');
   if (!link) return;
   const href = link.getAttribute('href');
-  if (!href || /^https?:\/\//.test(href) || href === '#') return;
+  const hasPanelId = !!link.closest('.card')?.dataset.panelId;
+  if (!href || /^https?:\/\//.test(href) || (href === '#' && !hasPanelId)) return;
   if (!link.closest('main') && !link.closest('.quick-bar')) return;
   e.preventDefault();
 
@@ -2031,6 +2185,103 @@ if (protoSection) {
     protoSection.querySelectorAll('.sub-section[data-proto-section]').forEach(sec => {
       sec.classList.toggle('proto-sub-hidden', filter !== 'all' && sec.dataset.protoSection !== filter);
     });
+  });
+}
+
+// ── COPY SNIPPET (single row) ──
+function copySnippet(text, btn, ref) {
+  const full = ref ? text + '\n\nReference: ' + ref : text;
+  navigator.clipboard.writeText(full).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = full; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    const orig = btn.textContent;
+    btn.textContent = '✅';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  });
+}
+
+// ── COPY TO REPORT ──
+const reportSnippets = {
+  'bp-gb-polyp': `INCIDENTAL GALLBLADDER POLYP — FOLLOW-UP RECOMMENDATION
+(Per ESGAR/EAES 2021 and SRU 2022 guidelines)
+
+Morphology (SRU 2022):
+  - Pedunculated thin stalk ("ball-on-wall"): extremely low risk
+  - Pedunculated thick stalk or sessile: low risk
+  - Focal GB wall thickening adjacent to polyp: indeterminate — consider CEUS or surgical referral
+
+Size-based surveillance (ESGAR 2021):
+  - <5 mm, no risk factors: no follow-up required
+  - 5 mm with risk factors OR 6–9 mm: ultrasound at 6 months, 1 year, and 2 years; discontinue if no growth
+  - ≥10 mm: cholecystectomy recommended if patient is surgically fit
+  - Growth ≥2 mm on any follow-up exam: reassess; consider surgical referral
+
+Risk factors for malignancy: age >60, primary sclerosing cholangitis, Indian ethnicity, sessile morphology
+
+Note: Routine CT/MRI not recommended for surveillance. CEUS may be used for further characterization when US is equivocal.`,
+
+  'fleischner': `INCIDENTAL PULMONARY NODULE — FOLLOW-UP RECOMMENDATION
+(Per 2017 Fleischner Society Guidelines — MacMahon H et al. Radiology 2017;284(1):228-243)
+
+SOLID NODULES:
+  • <6 mm, low risk: no routine follow-up
+  • <6 mm, high risk: optional CT at 12 months
+  • 6–8 mm, low risk: CT at 6–12 months, then 18–24 months if no change
+  • 6–8 mm, high risk: CT at 6–12 months, then 18–24 months
+  • >8 mm (any risk): CT at 3 months, PET/CT, and/or tissue sampling
+
+SUBSOLID NODULES:
+  • Pure GGO <6 mm: no routine follow-up
+  • Pure GGO ≥6 mm: CT at 6–12 months to confirm persistence, then every 2 years × 5 years
+  • Part-solid <6 mm total: no routine follow-up
+  • Part-solid ≥6 mm total: CT at 3–6 months to confirm persistence; if persistent — annual CT × 5 yrs if solid component <6 mm; PET/CT, biopsy, or resection if solid component ≥6 mm
+
+Low risk: no/minimal smoking, no other risk factors.
+High risk: smoking, occupational exposure, prior cancer, emphysema, family history, upper lobe location.
+Note: Does not apply to patients <35 years, immunocompromised, or with known/suspected malignancy. For screening LDCT, use Lung-RADS.
+
+Reference: MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659`,
+
+  'bp-aaa': `INCIDENTAL ABDOMINAL AORTIC ANEURYSM — FOLLOW-UP RECOMMENDATION
+(Per ESVS 2024 Clinical Practice Guidelines and ACR Appropriateness Criteria 2025)
+
+Surveillance modality: abdominal ultrasound (preferred); CTA reserved for pre-operative planning only
+
+Recommended follow-up by diameter:
+  - 25–29 mm (sub-aneurysmal): ultrasound every 5 years
+  - 30–39 mm: ultrasound every 3 years
+  - 40–44 mm: ultrasound annually
+  - 45–54 mm: ultrasound every 6 months; vascular surgery referral recommended
+  - ≥55 mm (men) / ≥50 mm (women): elective repair threshold; vascular surgery referral
+
+Iliac artery aneurysm repair threshold: ≥35 mm
+
+Note: Symptomatic aneurysm (pain, tenderness, rapid expansion) warrants urgent surgical referral regardless of size.`
+};
+
+function copyToReport(id, btn) {
+  const text = reportSnippets[id];
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied to clipboard!';
+    setTimeout(() => btn.textContent = orig, 2200);
+  }).catch(() => {
+    // fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied to clipboard!';
+    setTimeout(() => btn.textContent = orig, 2200);
   });
 }
 
