@@ -303,15 +303,26 @@
     border-radius: 6px; cursor: pointer; transition: all 0.15s;
   }
   .copy-report-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .copy-row { cursor: pointer; }
-  .copy-row td.row-copy-cell { width: 28px; text-align: center; padding: 0 4px; }
+  .copy-row { cursor: pointer; transition: background 0.12s; }
+  .copy-row:hover td { background: var(--surface2) !important; }
+  .copy-row td.row-copy-cell { width: 32px; text-align: center; padding: 0 4px; }
   .row-copy-btn {
-    background: none; border: none; cursor: pointer; color: var(--text-muted);
-    font-size: 13px; opacity: 0.45; transition: all 0.15s; padding: 2px 3px;
-    border-radius: 4px; line-height: 1;
+    background: none; border: none; cursor: pointer; color: var(--accent);
+    font-size: 15px; opacity: 0.6; transition: all 0.15s; padding: 2px 4px;
+    border-radius: 4px; line-height: 1; pointer-events: none;
   }
   .copy-row:hover .row-copy-btn { opacity: 1; }
-  .row-copy-btn:hover { background: var(--surface2); color: var(--accent); opacity: 1; }
+  /* ── COPY TOAST ── */
+  #copyToast {
+    position: fixed; bottom: 80px; left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: var(--text-bright); color: var(--bg);
+    padding: 9px 22px; border-radius: 24px;
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    z-index: 500; pointer-events: none; white-space: nowrap;
+  }
+  #copyToast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   /* ── FEEDBACK BUTTON ── */
   #feedbackBtn {
@@ -491,6 +502,30 @@
           <div class="card-body">
             <div class="card-title">Incidental AAA Follow-up</div>
             <div class="card-sub">ESVS 2024 · ACR 2025</div>
+          </div>
+        </a>
+        <a class="card new-item" data-panel-id="bp-liver" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental Liver Lesion Follow-up</div>
+            <div class="card-sub">ACR White Paper 2017</div>
+          </div>
+        </a>
+        <a class="card new-item" data-panel-id="bp-orads" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental Adnexal / Ovarian Lesion</div>
+            <div class="card-sub">ACR O-RADS US v2022</div>
+          </div>
+        </a>
+        <a class="card new-item" data-panel-id="bp-adrenal" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental Adrenal Nodule Follow-up</div>
+            <div class="card-sub">ACR 2017 · ESE 2023</div>
+          </div>
+        </a>
+        <a class="card new-item" data-panel-id="bp-pancreas" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental Pancreatic Cyst Follow-up</div>
+            <div class="card-sub">AGA · IAP/Kyoto 2024</div>
           </div>
         </a>
       </div>
@@ -1490,6 +1525,178 @@ const panelContent = {
   </div>
 </div>`,
 
+'bp-liver': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Liver Lesion Follow-up</div>
+    <div class="gp-meta">ACR Incidental Findings Committee White Paper · Berland et al. JACR 2017</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-liver',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Low-Risk Patient (No Known or Suspected Malignancy)</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Size</th><th>CT Features</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;0.5 cm</td><td>Any</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion <0.5 cm, low-risk patient. Recommendation: no follow-up required per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>0.5–1.0 cm</td><td>Homogeneous hypodensity (probable cyst)</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion 0.5–1.0 cm with homogeneous hypodensity consistent with a simple cyst, low-risk patient. Recommendation: no follow-up required per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>0.5–1.0 cm</td><td>Indeterminate / suboptimal exam</td><td>US or MRI in 6 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental indeterminate hepatic lesion 0.5–1.0 cm, low-risk patient. Recommendation: follow-up ultrasound or MRI in 6 months per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>1.0–1.5 cm</td><td>Definite benign features (cyst, hemangioma)</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion 1.0–1.5 cm with definite benign imaging features (simple cyst or hemangioma), low-risk patient. Recommendation: no follow-up required per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>1.0–1.5 cm</td><td>Indeterminate features</td><td>MRI in 3–6 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental indeterminate hepatic lesion 1.0–1.5 cm, low-risk patient. Recommendation: MRI liver with and without contrast in 3–6 months per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.5 cm</td><td>Indeterminate features</td><td>MRI promptly</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental indeterminate hepatic lesion ≥1.5 cm, low-risk patient. Recommendation: MRI liver with and without contrast promptly for further characterization per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">High-Risk Patient (Known/Suspected Malignancy or Cirrhosis)</div>
+    <table class="gp-table">
+      <thead><tr><th>Size</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;1.0 cm</td><td>Short-interval follow-up MRI or CT in 3–6 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion <1.0 cm, high-risk patient (known malignancy or cirrhosis). Recommendation: short-interval follow-up MRI or CT in 3–6 months per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.0 cm</td><td>MRI promptly; LI-RADS assessment if cirrhosis</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion ≥1.0 cm, high-risk patient (known malignancy or cirrhosis). Recommendation: MRI liver promptly for characterization; LI-RADS assessment if cirrhotic per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Definite Benign Features on CT (No Follow-up Needed)</div>
+    <ul class="gp-ul">
+      <li><strong>Simple cyst</strong>: homogeneous water density, imperceptible wall, no enhancement</li>
+      <li><strong>Hemangioma</strong>: peripheral nodular enhancement with fill-in, or uniform flash-filling on arterial phase</li>
+      <li><strong>Fatty lesion</strong>: macroscopic fat density consistent with lipoma or AML</li>
+      <li>Stability on 2+ prior imaging studies spanning ≥2 years</li>
+    </ul>
+  </div>
+</div>`,
+
+'bp-orads': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Adnexal / Ovarian Lesion — O-RADS</div>
+    <div class="gp-meta">ACR O-RADS US v2022 · Andreotti RF et al. Radiology 2023</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-orads',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">O-RADS US v2022 — Risk Categories &amp; Management</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Category</th><th>Risk of Malignancy</th><th>Typical Findings</th><th>Management</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td><span class="gp-tag gp-blue">O-RADS 0</span></td><td>N/A</td><td>Incomplete evaluation</td><td>Repeat US to complete assessment</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adnexal lesion — O-RADS 0 (incomplete evaluation). Recommendation: repeat ultrasound to complete assessment per ACR O-RADS US v2022.',this,'Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-green">O-RADS 1</span></td><td>&lt;1%</td><td>Normal ovary; no lesion</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adnexal finding — O-RADS 1 (normal). Recommendation: no imaging follow-up required per ACR O-RADS US v2022.',this,'Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-green">O-RADS 2</span></td><td>&lt;1%</td><td>Almost certainly benign (classic simple cyst, follicle, corpus luteum, endometrioma, dermoid)</td><td>Routine gynecologic follow-up; no imaging follow-up for classic lesions. Premenopausal simple cyst &lt;10 cm: recheck in 8–12 weeks.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adnexal lesion — O-RADS 2 (almost certainly benign, <1% malignancy risk). Recommendation: routine gynecologic follow-up; no dedicated imaging follow-up required for classic benign lesions per ACR O-RADS US v2022.',this,'Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-yellow">O-RADS 3</span></td><td>1–&lt;10%</td><td>Low risk: unilocular smooth cyst ≥10 cm; cyst with smooth thin septations; echogenic cyst</td><td>GYN referral; US follow-up in 8–12 weeks, or MRI for further characterization</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adnexal lesion — O-RADS 3 (low risk, 1–10% malignancy risk). Recommendation: gynecology referral; follow-up ultrasound in 8–12 weeks or MRI for further characterization per ACR O-RADS US v2022.',this,'Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-orange">O-RADS 4</span></td><td>10–&lt;50%</td><td>Intermediate risk: cyst with irregular wall/septations, non-classic solid tissue, color flow in solid component</td><td>GYN oncology referral; MRI recommended</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adnexal lesion — O-RADS 4 (intermediate risk, 10–50% malignancy risk). Recommendation: gynecologic oncology referral; MRI recommended for further characterization per ACR O-RADS US v2022.',this,'Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><span class="gp-tag gp-red">O-RADS 5</span></td><td>≥50%</td><td>High risk: ascites, peritoneal nodularity, solid vascular lesion</td><td>GYN oncology referral; surgical evaluation</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adnexal lesion — O-RADS 5 (high risk, ≥50% malignancy risk). Recommendation: urgent gynecologic oncology referral and surgical evaluation per ACR O-RADS US v2022.',this,'Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">O-RADS applies to reproductive-age and postmenopausal women. Postmenopausal simple cysts ≤3 cm: O-RADS 2, no follow-up. For MRI characterization, use O-RADS MRI scoring system.</p>
+  </div>
+</div>`,
+
+'bp-adrenal': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Adrenal Nodule Follow-up</div>
+    <div class="gp-meta">ACR Incidental Findings Committee 2017 &nbsp;·&nbsp; European Society of Endocrinology (ESE) 2023</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-adrenal',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Step 1 — Non-Contrast CT Density (HU)</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Non-contrast HU</th><th>Interpretation</th><th>Action</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>≤10 HU</td><td>Lipid-rich adenoma — benign</td><td>No further imaging needed; hormonal workup</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adrenal nodule measuring ≤10 HU on non-contrast CT, consistent with lipid-rich adenoma. Recommendation: no further imaging required. Clinical endocrine evaluation recommended to exclude hormonal excess per ESE 2023 guidelines.',this,'Fassnacht M et al. European Society of Endocrinology Clinical Practice Guidelines on the Management of Adrenal Incidentalomas. Eur J Endocrinol 2023;189(1):G1-G42. https://academic.oup.com/ejendo/article/189/1/G1/7198474')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>11–20 HU, &lt;4 cm, homogeneous</td><td>Probable adenoma</td><td>Adrenal washout CT or MRI chemical shift; or repeat non-contrast CT in 12 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adrenal nodule 11–20 HU, <4 cm, homogeneous appearance. Recommendation: adrenal washout CT protocol or MRI with chemical shift imaging for further characterization; alternatively repeat non-contrast CT in 12 months per ESE 2023 guidelines.',this,'Fassnacht M et al. European Society of Endocrinology Clinical Practice Guidelines on the Management of Adrenal Incidentalomas. Eur J Endocrinol 2023;189(1):G1-G42. https://academic.oup.com/ejendo/article/189/1/G1/7198474')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>&gt;20 HU, or heterogeneous, or &gt;4 cm</td><td>Indeterminate / suspicious</td><td>Dedicated adrenal washout CT + MRI; surgical referral if features concerning</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adrenal nodule with indeterminate or suspicious features (>20 HU, heterogeneous, or >4 cm). Recommendation: dedicated adrenal washout CT protocol and/or MRI with chemical shift imaging; surgical/endocrine referral if features remain concerning per ESE 2023 guidelines.',this,'Fassnacht M et al. European Society of Endocrinology Clinical Practice Guidelines on the Management of Adrenal Incidentalomas. Eur J Endocrinol 2023;189(1):G1-G42. https://academic.oup.com/ejendo/article/189/1/G1/7198474')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Any HU — known malignancy</td><td>Metastasis until proven otherwise</td><td>Biopsy or PET/CT; urgent oncology/endocrine referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental adrenal nodule in patient with known malignancy. Recommendation: adrenal metastasis should be excluded; biopsy or PET/CT recommended; oncology referral per ACR guidelines.',this,'Berland LL et al. Management of Incidental Adrenal Masses: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30551-3/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Step 2 — Washout CT Criteria (if performed)</div>
+    <table class="gp-table">
+      <thead><tr><th>Washout Type</th><th>Formula</th><th>Adenoma Threshold</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>Absolute percentage washout (APW)</td><td>(Enhanced − Delayed) / (Enhanced − Unenhanced) × 100</td><td><span class="gp-tag gp-green">≥60% = adenoma</span></td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Adrenal washout CT result: absolute percentage washout ≥60% is diagnostic of a benign adrenal adenoma. No further imaging required; hormonal workup recommended.',this,'Fassnacht M et al. European Society of Endocrinology Clinical Practice Guidelines on the Management of Adrenal Incidentalomas. Eur J Endocrinol 2023;189(1):G1-G42. https://academic.oup.com/ejendo/article/189/1/G1/7198474')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Relative percentage washout (RPW)</td><td>(Enhanced − Delayed) / Enhanced × 100</td><td><span class="gp-tag gp-green">≥40% = adenoma</span></td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Adrenal washout CT result: relative percentage washout ≥40% is diagnostic of a benign adrenal adenoma. No further imaging required; hormonal workup recommended.',this,'Fassnacht M et al. European Society of Endocrinology Clinical Practice Guidelines on the Management of Adrenal Incidentalomas. Eur J Endocrinol 2023;189(1):G1-G42. https://academic.oup.com/ejendo/article/189/1/G1/7198474')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">All Incidental Adrenal Masses — Hormonal Workup</div>
+    <ul class="gp-ul">
+      <li><strong>All masses</strong>: 1 mg overnight dexamethasone suppression test (exclude subclinical Cushing)</li>
+      <li><strong>Hypertensive patients</strong>: plasma metanephrines (exclude pheochromocytoma)</li>
+      <li><strong>Hypertensive + hypokalemia</strong>: aldosterone/renin ratio (exclude Conn syndrome)</li>
+      <li><strong>ESE 2023</strong>: no imaging follow-up needed if ≤10 HU and hormonal workup normal</li>
+    </ul>
+  </div>
+</div>`,
+
+'bp-pancreas': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Pancreatic Cyst Follow-up</div>
+    <div class="gp-meta">AGA Clinical Practice Update 2024 &nbsp;·&nbsp; IAP/Kyoto Revised Guidelines 2024</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-pancreas',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">High-Risk Stigmata — Refer / Operate</div>
+    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Feature</th><th>Action</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>Obstructive jaundice with pancreatic head cyst</td><td>Surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst with obstructive jaundice — high-risk stigmata present. Recommendation: surgical referral per IAP/Kyoto 2024 and AGA guidelines.',this,'Pancreatic cyst guidelines: AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext | IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Enhancing mural nodule or solid component</td><td>Surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst with enhancing mural nodule or solid component — high-risk stigmata present. Recommendation: surgical referral per IAP/Kyoto 2024 and AGA guidelines.',this,'Pancreatic cyst guidelines: AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext | IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Main pancreatic duct ≥10 mm</td><td>Surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst with main pancreatic duct dilation ≥10 mm — high-risk stigmata present. Recommendation: surgical referral per IAP/Kyoto 2024 and AGA guidelines.',this,'Pancreatic cyst guidelines: AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext | IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Worrisome Features — EUS / Expedited Workup</div>
+    <table class="gp-table">
+      <thead><tr><th>Feature</th><th>Action</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>Cyst ≥3 cm</td><td>EUS ± FNA; consider surgical referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst ≥3 cm — worrisome feature. Recommendation: EUS with possible FNA; surgical referral consideration per IAP/Kyoto 2024 guidelines.',this,'IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Main pancreatic duct 5–9 mm</td><td>EUS; close surveillance</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst with main pancreatic duct dilation 5–9 mm — worrisome feature. Recommendation: EUS evaluation and close surveillance per IAP/Kyoto 2024 guidelines.',this,'IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Enhancing cyst wall, abrupt MPD caliber change, lymphadenopathy, elevated CA 19-9, new-onset DM, growth ≥5 mm/2 yrs</td><td>EUS; expedited specialist referral</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst with worrisome features (enhancing wall, abrupt MPD caliber change, lymphadenopathy, elevated CA 19-9, new DM, or rapid growth). Recommendation: EUS evaluation and expedited gastroenterology/surgical referral per IAP/Kyoto 2024 guidelines.',this,'IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Surveillance Intervals (Branch Duct IPMN, No High-Risk Features)</div>
+    <table class="gp-table">
+      <thead><tr><th>Cyst Size</th><th>Modality</th><th>Interval</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;1.5 cm</td><td>MRI/MRCP</td><td>Every 2–3 years</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst <1.5 cm without high-risk features, consistent with branch duct IPMN. Recommendation: MRI/MRCP surveillance every 2–3 years per AGA/IAP guidelines.',this,'AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>1.5–2.5 cm</td><td>MRI/MRCP</td><td>Annually × 2 years, then every 2 years</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst 1.5–2.5 cm without high-risk features, consistent with branch duct IPMN. Recommendation: MRI/MRCP annually for 2 years, then every 2 years per AGA/IAP guidelines.',this,'AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>2.5–3 cm</td><td>MRI/MRCP or EUS</td><td>Every 6–12 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst 2.5–3 cm without high-risk features, consistent with branch duct IPMN. Recommendation: MRI/MRCP or EUS every 6–12 months per AGA/IAP guidelines.',this,'AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>&gt;3 cm</td><td>EUS</td><td>Every 3–6 months; surgical evaluation</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pancreatic cyst >3 cm without high-risk stigmata. Recommendation: EUS every 3–6 months and surgical evaluation per AGA/IAP guidelines.',this,'AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">AGA recommends discontinuing surveillance after 5 years if no change and no high-risk features develop. These intervals apply to presumed IPMN; serous cystadenomas and pseudocysts do not require malignancy surveillance.</p>
+  </div>
+</div>`,
+
 'fleischner': `
 <div class="guideline-panel">
   <div class="gp-header">
@@ -2188,23 +2395,36 @@ if (protoSection) {
   });
 }
 
+// ── COPY TOAST ──
+function showCopyToast(msg) {
+  const toast = document.getElementById('copyToast');
+  toast.textContent = msg || '✅ Copied to clipboard!';
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
 // ── COPY SNIPPET (single row) ──
 function copySnippet(text, btn, ref) {
   const full = ref ? text + '\n\nReference: ' + ref : text;
   navigator.clipboard.writeText(full).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✅';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
+    showCopyToast();
   }).catch(() => {
     const ta = document.createElement('textarea');
     ta.value = full; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
-    const orig = btn.textContent;
-    btn.textContent = '✅';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
+    showCopyToast();
   });
 }
+
+// ── ROW CLICK → COPY ──
+document.addEventListener('click', e => {
+  const row = e.target.closest('tr.copy-row');
+  if (!row) return;
+  const btn = row.querySelector('.row-copy-btn');
+  if (btn) btn.click();
+});
 
 // ── COPY TO REPORT ──
 const reportSnippets = {
@@ -2225,6 +2445,87 @@ Size-based surveillance (ESGAR 2021):
 Risk factors for malignancy: age >60, primary sclerosing cholangitis, Indian ethnicity, sessile morphology
 
 Note: Routine CT/MRI not recommended for surveillance. CEUS may be used for further characterization when US is equivocal.`,
+
+  'bp-liver': `INCIDENTAL LIVER LESION — FOLLOW-UP RECOMMENDATION
+(Per ACR Incidental Findings Committee White Paper — Berland LL et al. JACR 2017)
+
+LOW-RISK PATIENT (no known/suspected malignancy):
+  • <0.5 cm: no follow-up required
+  • 0.5–1.0 cm, homogeneous hypodensity (probable cyst): no follow-up required
+  • 0.5–1.0 cm, indeterminate: follow-up US or MRI in 6 months
+  • 1.0–1.5 cm, definite benign features (cyst, hemangioma): no follow-up required
+  • 1.0–1.5 cm, indeterminate: MRI liver in 3–6 months
+  • ≥1.5 cm, indeterminate: MRI liver promptly
+
+HIGH-RISK PATIENT (known/suspected malignancy or cirrhosis):
+  • <1.0 cm: follow-up MRI or CT in 3–6 months
+  • ≥1.0 cm: MRI liver promptly; LI-RADS assessment if cirrhotic
+
+Definite benign features (no follow-up needed): simple cyst (water density, imperceptible wall, no enhancement), hemangioma (peripheral nodular fill-in enhancement), macroscopic fat.
+
+Reference: Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext`,
+
+  'bp-orads': `INCIDENTAL ADNEXAL / OVARIAN LESION — O-RADS RECOMMENDATION
+(Per ACR O-RADS US v2022 — Andreotti RF et al. Radiology 2023)
+
+  • O-RADS 0 (incomplete): repeat ultrasound to complete evaluation
+  • O-RADS 1 (normal): no follow-up needed
+  • O-RADS 2 (<1% malignancy, almost certainly benign): routine gynecologic follow-up; no dedicated imaging follow-up for classic lesions (simple cyst, follicle, corpus luteum, endometrioma, dermoid). Premenopausal simple cyst <10 cm: recheck in 8–12 weeks.
+  • O-RADS 3 (1–10% malignancy, low risk): gynecology referral; follow-up ultrasound in 8–12 weeks or MRI for further characterization
+  • O-RADS 4 (10–50% malignancy, intermediate risk): gynecologic oncology referral; MRI recommended
+  • O-RADS 5 (≥50% malignancy, high risk): urgent gynecologic oncology referral; surgical evaluation
+
+Note: Postmenopausal simple cysts ≤3 cm = O-RADS 2, no follow-up. For MRI characterization, use O-RADS MRI scoring system.
+
+Reference: Andreotti RF et al. O-RADS US v2022: An Update from the ACR Ovarian-Adnexal Reporting and Data System US Committee. Radiology 2023. https://pubs.rsna.org/doi/full/10.1148/radiol.230685`,
+
+  'bp-adrenal': `INCIDENTAL ADRENAL NODULE — FOLLOW-UP RECOMMENDATION
+(Per ACR Incidental Findings Committee 2017 and ESE Clinical Practice Guidelines 2023)
+
+IMAGING CHARACTERIZATION (non-contrast CT HU):
+  • ≤10 HU: lipid-rich adenoma — no further imaging required
+  • 11–20 HU, <4 cm, homogeneous: probable adenoma — adrenal washout CT or MRI chemical shift; or repeat non-contrast CT in 12 months
+  • >20 HU, heterogeneous, or >4 cm: indeterminate — dedicated adrenal washout CT and/or MRI; surgical/endocrine referral if concerning
+  • Any size in patient with known malignancy: exclude metastasis — biopsy or PET/CT; oncology referral
+
+WASHOUT CT CRITERIA (adenoma):
+  • Absolute percentage washout (APW) ≥60%: diagnostic of adenoma
+  • Relative percentage washout (RPW) ≥40%: diagnostic of adenoma
+
+HORMONAL WORKUP (all adrenal incidentalomas):
+  • 1 mg overnight dexamethasone suppression test (subclinical Cushing)
+  • Plasma metanephrines if hypertensive (pheochromocytoma)
+  • Aldosterone/renin ratio if hypertensive + hypokalemia (Conn syndrome)
+
+Reference: Fassnacht M et al. ESE Clinical Practice Guidelines on the Management of Adrenal Incidentalomas. Eur J Endocrinol 2023;189(1):G1-G42. https://academic.oup.com/ejendo/article/189/1/G1/7198474`,
+
+  'bp-pancreas': `INCIDENTAL PANCREATIC CYST — FOLLOW-UP RECOMMENDATION
+(Per AGA Clinical Practice Update 2024 and IAP/Kyoto Revised Guidelines 2024)
+
+HIGH-RISK STIGMATA (surgical referral):
+  • Obstructive jaundice with pancreatic head cyst
+  • Enhancing mural nodule or solid component
+  • Main pancreatic duct ≥10 mm
+
+WORRISOME FEATURES (EUS / expedited referral):
+  • Cyst ≥3 cm
+  • Main pancreatic duct 5–9 mm
+  • Enhancing cyst wall
+  • Abrupt MPD caliber change
+  • Lymphadenopathy
+  • Elevated CA 19-9
+  • New-onset diabetes or rapid worsening
+  • Growth ≥5 mm over 2 years
+
+SURVEILLANCE INTERVALS (branch duct IPMN, no high-risk features):
+  • <1.5 cm: MRI/MRCP every 2–3 years
+  • 1.5–2.5 cm: MRI/MRCP annually × 2 years, then every 2 years
+  • 2.5–3 cm: MRI/MRCP or EUS every 6–12 months
+  • >3 cm: EUS every 3–6 months; surgical evaluation
+
+Note: Discontinue surveillance after 5 years if no change and no high-risk features develop (AGA). Serous cystadenomas and pseudocysts do not require malignancy surveillance.
+
+Reference: AGA Clinical Practice Update 2024. Gastroenterology 2024. https://www.gastrojournal.org/article/S0016-5085(24)00248-8/fulltext | IAP/Kyoto Revised Guidelines 2024. https://www.ahpba.org/wp-content/uploads/2025/02/Kyoto-IPMN-Guidelines-2024.pdf`,
 
   'fleischner': `INCIDENTAL PULMONARY NODULE — FOLLOW-UP RECOMMENDATION
 (Per 2017 Fleischner Society Guidelines — MacMahon H et al. Radiology 2017;284(1):228-243)
@@ -2269,19 +2570,14 @@ function copyToReport(id, btn) {
   const text = reportSnippets[id];
   if (!text) return;
   navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✅ Copied to clipboard!';
-    setTimeout(() => btn.textContent = orig, 2200);
+    showCopyToast('✅ Full sheet copied to clipboard!');
   }).catch(() => {
-    // fallback for older browsers
     const ta = document.createElement('textarea');
     ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    const orig = btn.textContent;
-    btn.textContent = '✅ Copied to clipboard!';
-    setTimeout(() => btn.textContent = orig, 2200);
+    showCopyToast('✅ Full sheet copied to clipboard!');
   });
 }
 
@@ -2333,6 +2629,7 @@ async function submitFeedback() {
 }
 </script>
 
+<div id="copyToast"></div>
 <button id="feedbackBtn" onclick="openFeedback()">✏️ Something wrong?</button>
 
 <div class="fb-overlay" id="fbOverlay" onclick="closeFeedbackOnOverlay(event)">
