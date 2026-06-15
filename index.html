@@ -8,20 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #fdf6ee;
-      --surface: #fffaf4;
-      --surface2: #fceedd;
-      --border: #e8d5bc;
+      --bg: #edf1f7;
+      --surface: #f5f8fc;
+      --surface2: #dce6f0;
+      --border: #b4c8dd;
       --accent: #e8622a;
-      --accent2: #3a9e6f;
-      --accent3: #d63030;
-      --accent4: #7b5ea7;
-      --accent5: #2a7fbf;
-      --text: #4a3728;
-      --text-muted: #9a8070;
-      --text-bright: #2a1a0e;
-      --card-shadow: 3px 3px 0px #e8d5bc;
-      --header-bg: #e8622a;
+      --accent2: #2e9e7a;
+      --accent3: #c93535;
+      --accent4: #7055b8;
+      --accent5: #1e7ab8;
+      --text: #1c3348;
+      --text-muted: #6080a0;
+      --text-bright: #0c1f30;
+      --card-shadow: 3px 3px 0px #b4c8dd;
+      --header-bg: #1c3a58;
     }
     :root.dark {
       --bg: #0a0705; --surface: #120e09; --surface2: #1a1410;
@@ -35,8 +35,8 @@
       background: var(--bg); color: var(--text);
       font-family: 'Nunito', sans-serif; font-size: 14px;
       line-height: 1.6; min-height: 100vh;
-      background-image: radial-gradient(circle at 20% 50%, rgba(232,98,42,0.04) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(58,158,111,0.04) 0%, transparent 50%);
+      background-image: radial-gradient(circle at 20% 50%, rgba(30,58,88,0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(30,122,184,0.05) 0%, transparent 50%);
     }
     header {
       background: var(--header-bg); padding: 12px 20px;
@@ -294,6 +294,82 @@
     .gp-ul { padding-left: 18px; line-height: 2; }
 
     @media (max-width: 900px) { #panel { width: 100%; max-width: 100%; } }
+  /* ── FEEDBACK BUTTON ── */
+  #feedbackBtn {
+    position: fixed; bottom: 24px; left: 24px;
+    background: var(--accent); border: none; color: #fff;
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+    padding: 10px 18px; border-radius: 24px; cursor: pointer; z-index: 200;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 4px 18px rgba(232,98,42,0.45);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  #feedbackBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(232,98,42,0.6); }
+  #feedbackBtn:active { transform: translateY(0); }
+  :root.dark #feedbackBtn { box-shadow: 0 4px 18px rgba(240,133,74,0.35); }
+
+  /* ── FEEDBACK MODAL ── */
+  .fb-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    z-index: 500; align-items: flex-end; justify-content: center;
+  }
+  .fb-overlay.open { display: flex; }
+  .fb-panel {
+    background: var(--surface); border: 1px solid var(--border); border-bottom: none;
+    border-radius: 16px 16px 0 0; width: 100%; max-width: 560px;
+    padding: 28px 28px 32px;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.2);
+    animation: fbSlideUp 0.25s cubic-bezier(.34,1.4,.64,1);
+  }
+  @keyframes fbSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .fb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .fb-title { font-size: 15px; font-weight: 700; color: var(--text-bright); }
+  .fb-close {
+    background: none; border: none; color: var(--text-muted); font-size: 18px;
+    cursor: pointer; padding: 2px 6px; border-radius: 4px; line-height: 1;
+    transition: color 0.15s;
+  }
+  .fb-close:hover { color: var(--text-bright); }
+  .fb-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; }
+  .fb-row { margin-bottom: 14px; }
+  .fb-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .fb-label {
+    display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 5px;
+  }
+  .fb-input, .fb-select, .fb-textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 9px 12px;
+    font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--text-bright);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .fb-select {
+    cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a8070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+  }
+  .fb-textarea { resize: vertical; min-height: 88px; line-height: 1.5; }
+  .fb-input::placeholder, .fb-textarea::placeholder { color: var(--text-muted); }
+  .fb-input:focus, .fb-select:focus, .fb-textarea:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,98,42,0.12);
+  }
+  .fb-submit {
+    width: 100%; background: var(--accent); color: #fff; border: none;
+    border-radius: 8px; padding: 11px 20px;
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; margin-top: 4px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .fb-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+  .fb-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .fb-success { display: none; text-align: center; padding: 20px 0 8px; }
+  .fb-success-icon { font-size: 36px; margin-bottom: 8px; }
+  .fb-success strong { color: var(--accent2); font-size: 15px; }
+  .fb-success p { color: var(--text-muted); font-size: 12px; margin-top: 6px; }
   </style>
 </head>
 <body>
@@ -1247,7 +1323,7 @@
   </section>
 </main>
 
-<footer>🩻 Questions? Comments? Something broken? Holler at Rob Sheu.</footer>
+<footer>🩻 Questions? Comments? Something broken? Holler at Rob Sheu.<br><span style="font-size:11px;opacity:0.65;">Last updated: June 2026</span></footer>
 
 <div id="panel-backdrop"></div>
 <div id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
@@ -1957,6 +2033,93 @@ if (protoSection) {
     });
   });
 }
+
+// ── FEEDBACK BUTTON ──
+function openFeedback() {
+  document.getElementById('fbOverlay').classList.add('open');
+  document.getElementById('fbMessage').focus();
+}
+function closeFeedback() {
+  document.getElementById('fbOverlay').classList.remove('open');
+}
+function closeFeedbackOnOverlay(e) {
+  if (e.target === document.getElementById('fbOverlay')) closeFeedback();
+}
+async function submitFeedback() {
+  const name = document.getElementById('fbName').value.trim();
+  const type = document.getElementById('fbType').value;
+  const msg  = document.getElementById('fbMessage').value.trim();
+  if (!msg) { document.getElementById('fbMessage').focus(); return; }
+  const btn = document.getElementById('fbSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('https://formspree.io/f/mdavzvzr', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name || 'Anonymous', subject: 'ARI Guidelines — ' + type, message: msg })
+    });
+    if (res.ok) {
+      document.getElementById('fbForm').style.display = 'none';
+      document.getElementById('fbSuccess').style.display = 'block';
+      setTimeout(() => {
+        closeFeedback();
+        setTimeout(() => {
+          document.getElementById('fbForm').style.display = '';
+          document.getElementById('fbSuccess').style.display = 'none';
+          document.getElementById('fbName').value = '';
+          document.getElementById('fbMessage').value = '';
+          btn.disabled = false; btn.textContent = 'Send Feedback';
+        }, 300);
+      }, 3500);
+    } else {
+      btn.disabled = false; btn.textContent = 'Send Feedback';
+      alert('Something went wrong — please try again.');
+    }
+  } catch {
+    btn.disabled = false; btn.textContent = 'Send Feedback';
+    alert('Network error — please check your connection and try again.');
+  }
+}
 </script>
+
+<button id="feedbackBtn" onclick="openFeedback()">✏️ Something wrong?</button>
+
+<div class="fb-overlay" id="fbOverlay" onclick="closeFeedbackOnOverlay(event)">
+  <div class="fb-panel">
+    <div class="fb-header">
+      <span class="fb-title">Send Feedback</span>
+      <button class="fb-close" onclick="closeFeedback()">✕</button>
+    </div>
+    <p class="fb-desc">Spotted an error, outdated protocol, or broken link? Let us know.</p>
+    <div id="fbForm">
+      <div class="fb-row-2">
+        <div>
+          <label class="fb-label" for="fbName">Your name <span style="font-weight:400;text-transform:none">(optional)</span></label>
+          <input class="fb-input" id="fbName" type="text" placeholder="Dr. Smith">
+        </div>
+        <div>
+          <label class="fb-label" for="fbType">Feedback type</label>
+          <select class="fb-select" id="fbType">
+            <option>Protocol error / outdated info</option>
+            <option>Missing protocol or guideline</option>
+            <option>Link / PDF not working</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="fb-row">
+        <label class="fb-label" for="fbMessage">Message <span style="color:var(--accent)">*</span></label>
+        <textarea class="fb-textarea" id="fbMessage" placeholder="Describe the issue or suggestion…"></textarea>
+      </div>
+      <button class="fb-submit" id="fbSubmitBtn" onclick="submitFeedback()">Send Feedback</button>
+    </div>
+    <div class="fb-success" id="fbSuccess">
+      <div class="fb-success-icon">✅</div>
+      <strong>Thanks for your feedback!</strong>
+      <p>We'll review it and update the guidelines as needed.</p>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
