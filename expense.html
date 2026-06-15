@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARI Expense Reimbursement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* ── CONFIG: paste your Supabase values into the JS below ── */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #edf1f7;
+      --surface:   #f5f8fc;
+      --surface2:  #dce6f0;
+      --border:    #b4c8dd;
+      --header:    #1c3a58;
+      --accent:    #e8622a;
+      --blue:      #1e7ab8;
+      --text:      #1c3348;
+      --text-muted:#6080a0;
+      --text-bright:#0c1f30;
+      --green:     #2e9e7a;
+      --yellow:    #c8900a;
+      --red:       #c93535;
+      --shadow:    0 2px 8px rgba(0,0,0,0.10);
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg); color: var(--text);
+      font-size: 14px; line-height: 1.6; min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--header); color: #fff;
+      padding: 12px 24px; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.18);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600; }
+    .logo span { color: var(--accent); }
+    .header-user { font-size: 13px; color: rgba(255,255,255,0.75); }
+    #logoutBtn {
+      background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3);
+      color: #fff; font-family: 'Nunito', sans-serif; font-size: 12px;
+      font-weight: 600; padding: 5px 14px; border-radius: 20px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    #logoutBtn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── LOGIN PAGE ── */
+    .login-wrap {
+      max-width: 420px; margin: 60px auto;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 36px 32px;
+      box-shadow: var(--shadow);
+    }
+    .login-title {
+      font-family: 'Fredoka', sans-serif; font-size: 22px;
+      color: var(--text-bright); margin-bottom: 4px;
+    }
+    .login-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 9px 12px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--bg); color: var(--text);
+      font-family: 'Nunito', sans-serif; font-size: 14px;
+      outline: none; transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue); }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 20px; border-radius: 8px; border: none;
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; text-decoration: none;
+    }
+    .btn-primary { background: var(--blue); color: #fff; width: 100%; }
+    .btn-primary:hover { background: #1a6aa0; }
+    .btn-accent  { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #d05520; }
+    .btn-ghost   { background: var(--surface2); color: var(--text); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-danger  { background: var(--red); color: #fff; }
+    .btn-danger:hover { background: #b02020; }
+    .btn-green   { background: var(--green); color: #fff; }
+    .btn-green:hover { background: #267e61; }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--text-muted); font-size: 12px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .btn-google {
+      width: 100%; padding: 10px; border: 1.5px solid var(--border);
+      background: #fff; color: var(--text-bright); font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all 0.15s;
+    }
+    .btn-google:hover { border-color: var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    .btn-google img { width: 18px; height: 18px; }
+    .auth-toggle { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); }
+    .auth-toggle a { color: var(--blue); font-weight: 700; cursor: pointer; text-decoration: none; }
+    .auth-toggle a:hover { text-decoration: underline; }
+    .error-msg { background: rgba(201,53,53,0.1); border: 1px solid rgba(201,53,53,0.3); color: var(--red); padding: 9px 12px; border-radius: 7px; font-size: 13px; font-weight: 600; margin-bottom: 14px; display: none; }
+
+    /* ── DASHBOARD HEADER ROW ── */
+    .dash-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .dash-title { font-family: 'Fredoka', sans-serif; font-size: 22px; color: var(--text-bright); }
+    .dash-sub { font-size: 13px; color: var(--text-muted); }
+
+    /* ── STAT CARDS ── */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 14px 18px; box-shadow: var(--shadow);
+    }
+    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value { font-family: 'Fredoka', sans-serif; font-size: 26px; color: var(--text-bright); }
+    .stat-value.green  { color: var(--green); }
+    .stat-value.yellow { color: var(--yellow); }
+    .stat-value.blue   { color: var(--blue); }
+    .stat-value.red    { color: var(--red); }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; overflow: hidden; box-shadow: var(--shadow);
+    }
+    .table-toolbar {
+      padding: 14px 18px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .table-toolbar select, .table-toolbar input {
+      padding: 7px 11px; border: 1.5px solid var(--border); border-radius: 7px;
+      background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif;
+      font-size: 13px; outline: none;
+    }
+    .table-toolbar select:focus, .table-toolbar input:focus { border-color: var(--blue); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      background: var(--surface2); text-align: left; padding: 10px 14px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border);
+    }
+    td { padding: 11px 14px; border-bottom: 1px solid var(--surface2); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+    .empty-row td { text-align: center; padding: 32px; color: var(--text-muted); font-style: italic; }
+
+    /* ── STATUS BADGES ── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .badge-pending   { background: rgba(200,144,10,0.12);  color: var(--yellow); }
+    .badge-approved  { background: rgba(46,158,122,0.12);  color: var(--green); }
+    .badge-processed { background: rgba(30,122,184,0.12);  color: var(--blue); }
+    .badge-rejected  { background: rgba(201,53,53,0.12);   color: var(--red); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      z-index: 300; display: none; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border-radius: 14px; width: 100%;
+      max-width: 520px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+    }
+    .modal-header {
+      padding: 20px 24px 14px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title { font-family: 'Fredoka', sans-serif; font-size: 18px; color: var(--text-bright); }
+    .modal-close { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
+    .modal-close:hover { background: var(--surface2); color: var(--text-bright); }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+    /* ── FILE UPLOAD ── */
+    .file-drop {
+      border: 2px dashed var(--border); border-radius: 9px;
+      padding: 20px; text-align: center; cursor: pointer;
+      background: var(--bg); transition: all 0.15s;
+    }
+    .file-drop:hover, .file-drop.dragover { border-color: var(--blue); background: rgba(30,122,184,0.05); }
+    .file-drop-icon { font-size: 28px; margin-bottom: 6px; }
+    .file-drop-text { font-size: 13px; color: var(--text-muted); }
+    .file-drop-text strong { color: var(--blue); cursor: pointer; }
+    #fileInput { display: none; }
+    .file-preview { margin-top: 10px; display: none; align-items: center; gap: 10px; padding: 8px 12px; background: var(--surface2); border-radius: 7px; font-size: 13px; }
+    .file-preview-name { font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-clear { background: none; border: none; color: var(--red); cursor: pointer; font-size: 16px; }
+
+    /* ── RECEIPT THUMBNAIL ── */
+    .receipt-link { color: var(--blue); font-size: 12px; font-weight: 700; text-decoration: none; }
+    .receipt-link:hover { text-decoration: underline; }
+
+    /* ── NOTES BLOCK ── */
+    .notes-block { background: rgba(201,53,53,0.08); border-left: 3px solid var(--red); padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: var(--red); margin-top: 4px; }
+
+    /* ── ACTION BUTTONS IN TABLE ── */
+    .action-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--text-bright); color: var(--bg);
+      padding: 9px 22px; border-radius: 24px;
+      font-size: 13px; font-weight: 700; opacity: 0;
+      transition: all 0.2s; z-index: 500; pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── LOADING ── */
+    .loading { text-align: center; padding: 48px; color: var(--text-muted); font-size: 15px; }
+
+    /* ── REVIEW MODAL ── */
+    .submission-detail { background: var(--surface2); border-radius: 9px; padding: 14px 16px; margin-bottom: 16px; }
+    .detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--text-muted); font-weight: 600; }
+
+    @media (max-width: 600px) {
+      main { padding: 16px 12px; }
+      .login-wrap { padding: 24px 18px; }
+      th, td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="appHeader" style="display:none">
+  <div class="header-left">
+    <div class="logo">ARI <span>Expenses</span></div>
+    <div class="header-user" id="headerUser"></div>
+  </div>
+  <button id="logoutBtn">Sign out</button>
+</header>
+
+<!-- ── LOGIN PAGE ── -->
+<div class="page active" id="page-login">
+  <div class="login-wrap">
+    <div class="login-title">ARI Expense Portal</div>
+    <div class="login-sub">Sign in to submit or track reimbursements</div>
+    <div class="error-msg" id="authError"></div>
+
+    <div id="signInForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="siEmail" placeholder="you@ari.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="siPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" onclick="signIn()">Sign In</button>
+      <div class="divider">or</div>
+      <button class="btn-google" onclick="signInGoogle()">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+        Continue with Google
+      </button>
+      <div class="auth-toggle">Don't have an account? <a onclick="toggleAuth()">Create one</a></div>
+    </div>
+
+    <div id="signUpForm" style="display:none">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="suName" placeholder="Dr. Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="suEmail" placeholder="you@ari.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="suPassword" placeholder="Min. 8 characters" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" onclick="signUp()">Create Account</button>
+      <div class="divider">or</div>
+      <button class="btn-google" onclick="signInGoogle()">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+        Continue with Google
+      </button>
+      <div class="auth-toggle">Already have an account? <a onclick="toggleAuth()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EMPLOYEE DASHBOARD ── -->
+<div class="page" id="page-employee">
+  <main>
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">My Reimbursements</div>
+        <div class="dash-sub">Submit receipts and track your reimbursement status</div>
+      </div>
+      <button class="btn btn-accent" onclick="openSubmitModal()">+ New Submission</button>
+    </div>
+
+    <div class="stat-row" id="empStats">
+      <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value yellow" id="eStat-pending">—</div></div>
+      <div class="stat-card"><div class="stat-label">Approved</div><div class="stat-value green" id="eStat-approved">—</div></div>
+      <div class="stat-card"><div class="stat-label">Processed</div><div class="stat-value blue" id="eStat-processed">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total Submitted</div><div class="stat-value" id="eStat-total">—</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <select id="empFilter" onchange="loadEmployeeSubmissions()">
+          <option value="all">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="processed">Processed</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div id="empTableWrap">
+        <div class="loading">Loading submissions…</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── MANAGER DASHBOARD ── -->
+<div class="page" id="page-manager">
+  <main>
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">Reimbursement Manager</div>
+        <div class="dash-sub">Review, approve, and process employee submissions</div>
+      </div>
+      <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+
+    <div class="stat-row" id="mgrStats">
+      <div class="stat-card"><div class="stat-label">Awaiting Review</div><div class="stat-value yellow" id="mStat-pending">—</div></div>
+      <div class="stat-card"><div class="stat-label">Approved</div><div class="stat-value green" id="mStat-approved">—</div></div>
+      <div class="stat-card"><div class="stat-label">Processed</div><div class="stat-value blue" id="mStat-processed">—</div></div>
+      <div class="stat-card"><div class="stat-label">This Month $</div><div class="stat-value" id="mStat-amount">—</div></div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <select id="mgrFilter" onchange="loadManagerSubmissions()">
+          <option value="pending">Pending review</option>
+          <option value="approved">Approved</option>
+          <option value="processed">Processed</option>
+          <option value="rejected">Rejected</option>
+          <option value="all">All</option>
+        </select>
+        <input type="text" id="mgrSearch" placeholder="Search by name…" oninput="loadManagerSubmissions()">
+      </div>
+      <div id="mgrTableWrap">
+        <div class="loading">Loading submissions…</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── SUBMIT MODAL ── -->
+<div class="modal-overlay" id="submitModal" onclick="closeOnOverlay(event,'submitModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Expense Submission</div>
+      <button class="modal-close" onclick="closeModal('submitModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-msg" id="submitError"></div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="subCategory">
+          <option>Meals &amp; Entertainment</option>
+          <option>Travel</option>
+          <option>CME / Education</option>
+          <option>Office Supplies</option>
+          <option>Equipment</option>
+          <option>Licensing &amp; Fees</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Amount ($)</label>
+          <input type="number" id="subAmount" min="0.01" step="0.01" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Date of Expense</label>
+          <input type="date" id="subDate">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="subDesc" placeholder="Brief description of the expense…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Receipt</label>
+        <div class="file-drop" id="fileDrop" onclick="document.getElementById('fileInput').click()"
+             ondragover="fileDragOver(event)" ondragleave="fileDragLeave(event)" ondrop="fileDrop(event)">
+          <div class="file-drop-icon">📎</div>
+          <div class="file-drop-text">Drop your receipt here or <strong>browse</strong></div>
+          <div class="file-drop-text" style="font-size:11px;margin-top:4px">JPG, PNG, or PDF · Max 10 MB</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="fileSelected(this)">
+        <div class="file-preview" id="filePreview">
+          <span>📄</span>
+          <span class="file-preview-name" id="fileName"></span>
+          <button class="file-clear" onclick="clearFile()">✕</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('submitModal')">Cancel</button>
+      <button class="btn btn-accent" id="submitBtn" onclick="submitExpense()">Submit Expense</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── REVIEW MODAL (Manager) ── -->
+<div class="modal-overlay" id="reviewModal" onclick="closeOnOverlay(event,'reviewModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Review Submission</div>
+      <button class="modal-close" onclick="closeModal('reviewModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="submission-detail" id="reviewDetail"></div>
+      <div class="form-group">
+        <label>Notes (optional for approval, required for rejection)</label>
+        <textarea id="reviewNotes" placeholder="Add a note for the employee…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('reviewModal')">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="submitReview('rejected')">✗ Reject</button>
+      <button class="btn btn-green btn-sm" onclick="submitReview('approved')">✓ Approve</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIG — replace with your Supabase project values
+// ══════════════════════════════════════════════════════
+const SUPABASE_URL      = 'https://ztltqtytmhbviexmtrmb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_24y8tmn8_xQwB03a3gJXOw_j0bW6JaN';
+// ══════════════════════════════════════════════════════
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let reviewingId = null;
+let selectedFile = null;
+
+// ── AUTH ──
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    currentUser = session.user;
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+    currentProfile = profile;
+    document.getElementById('appHeader').style.display = 'flex';
+    document.getElementById('headerUser').textContent =
+      (profile?.full_name || currentUser.email) + (profile?.role === 'manager' ? ' · Manager' : '');
+    if (profile?.role === 'manager') {
+      showPage('manager');
+      loadManagerSubmissions();
+      loadManagerStats();
+    } else {
+      showPage('employee');
+      loadEmployeeSubmissions();
+      loadEmployeeStats();
+    }
+  } else {
+    currentUser = null; currentProfile = null;
+    document.getElementById('appHeader').style.display = 'none';
+    showPage('login');
+  }
+});
+
+async function signIn() {
+  clearError('authError');
+  const { error } = await sb.auth.signInWithPassword({
+    email: document.getElementById('siEmail').value.trim(),
+    password: document.getElementById('siPassword').value
+  });
+  if (error) showError('authError', error.message);
+}
+
+async function signUp() {
+  clearError('authError');
+  const name  = document.getElementById('suName').value.trim();
+  const email = document.getElementById('suEmail').value.trim();
+  const pass  = document.getElementById('suPassword').value;
+  if (!name) return showError('authError', 'Please enter your full name.');
+  const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name } } });
+  if (error) showError('authError', error.message);
+  else showError('authError', 'Check your email to confirm your account!', 'success');
+}
+
+async function signInGoogle() {
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  });
+}
+
+async function logout() {
+  await sb.auth.signOut();
+}
+
+document.getElementById('logoutBtn').addEventListener('click', logout);
+
+function toggleAuth() {
+  const si = document.getElementById('signInForm');
+  const su = document.getElementById('signUpForm');
+  si.style.display = si.style.display === 'none' ? '' : 'none';
+  su.style.display = su.style.display === 'none' ? '' : 'none';
+  clearError('authError');
+}
+
+// ── EMPLOYEE: LOAD SUBMISSIONS ──
+async function loadEmployeeSubmissions() {
+  const filter = document.getElementById('empFilter').value;
+  let q = sb.from('submissions').select('*').eq('user_id', currentUser.id).order('submitted_at', { ascending: false });
+  if (filter !== 'all') q = q.eq('status', filter);
+  const { data, error } = await q;
+  renderEmployeeTable(data || []);
+}
+
+async function loadEmployeeStats() {
+  const { data } = await sb.from('submissions').select('status, amount').eq('user_id', currentUser.id);
+  if (!data) return;
+  const counts = { pending:0, approved:0, processed:0, rejected:0 };
+  let total = 0;
+  data.forEach(r => { counts[r.status]++; total++; });
+  document.getElementById('eStat-pending').textContent   = counts.pending;
+  document.getElementById('eStat-approved').textContent  = counts.approved;
+  document.getElementById('eStat-processed').textContent = counts.processed;
+  document.getElementById('eStat-total').textContent     = total;
+}
+
+function renderEmployeeTable(rows) {
+  const wrap = document.getElementById('empTableWrap');
+  if (!rows.length) {
+    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="6">No submissions found. Click "+ New Submission" to get started.</td></tr></tbody></table>';
+    return;
+  }
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th>Date</th><th>Category</th><th>Description</th>
+      <th>Amount</th><th>Status</th><th>Receipt</th>
+    </tr></thead>
+    <tbody>${rows.map(r => `
+      <tr>
+        <td>${fmtDate(r.expense_date)}</td>
+        <td>${r.category}</td>
+        <td>${esc(r.description)}${r.manager_notes ? `<div class="notes-block">Note: ${esc(r.manager_notes)}</div>` : ''}</td>
+        <td><strong>$${parseFloat(r.amount).toFixed(2)}</strong></td>
+        <td>${badge(r.status)}</td>
+        <td>${r.receipt_url ? `<a class="receipt-link" href="${r.receipt_url}" target="_blank">View 📄</a>` : '<span style="color:var(--text-muted)">—</span>'}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+// ── MANAGER: LOAD SUBMISSIONS ──
+async function loadManagerSubmissions() {
+  const filter = document.getElementById('mgrFilter').value;
+  const search = (document.getElementById('mgrSearch').value || '').toLowerCase();
+  let q = sb.from('submissions').select('*').order('submitted_at', { ascending: false });
+  if (filter !== 'all') q = q.eq('status', filter);
+  const { data } = await q;
+  const rows = (data || []).filter(r =>
+    !search || (r.full_name || '').toLowerCase().includes(search)
+  );
+  renderManagerTable(rows);
+}
+
+async function loadManagerStats() {
+  const { data } = await sb.from('submissions').select('status, amount, submitted_at');
+  if (!data) return;
+  const now = new Date();
+  let pending=0, approved=0, processed=0, monthTotal=0;
+  data.forEach(r => {
+    if (r.status === 'pending')   pending++;
+    if (r.status === 'approved')  approved++;
+    if (r.status === 'processed') processed++;
+    const d = new Date(r.submitted_at);
+    if (d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth())
+      monthTotal += parseFloat(r.amount || 0);
+  });
+  document.getElementById('mStat-pending').textContent   = pending;
+  document.getElementById('mStat-approved').textContent  = approved;
+  document.getElementById('mStat-processed').textContent = processed;
+  document.getElementById('mStat-amount').textContent    = '$' + monthTotal.toFixed(2);
+}
+
+function renderManagerTable(rows) {
+  const wrap = document.getElementById('mgrTableWrap');
+  if (!rows.length) {
+    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="7">No submissions match this filter.</td></tr></tbody></table>';
+    return;
+  }
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th>Submitted</th><th>Employee</th><th>Category</th>
+      <th>Description</th><th>Amount</th><th>Status</th><th>Actions</th>
+    </tr></thead>
+    <tbody>${rows.map(r => `
+      <tr>
+        <td style="white-space:nowrap">${fmtDate(r.submitted_at)}</td>
+        <td><strong>${esc(r.full_name || '—')}</strong></td>
+        <td>${r.category}</td>
+        <td>${esc(r.description)}</td>
+        <td><strong>$${parseFloat(r.amount).toFixed(2)}</strong></td>
+        <td>${badge(r.status)}</td>
+        <td>
+          <div class="action-row">
+            ${r.receipt_url ? `<a class="btn btn-ghost btn-sm" href="${r.receipt_url}" target="_blank">📄 Receipt</a>` : ''}
+            ${r.status === 'pending' ? `<button class="btn btn-ghost btn-sm" onclick="openReview('${r.id}')">Review</button>` : ''}
+            ${r.status === 'approved' ? `<button class="btn btn-primary btn-sm" onclick="markProcessed('${r.id}')">✓ Mark Processed</button>` : ''}
+            ${r.status === 'processed' ? `<span style="color:var(--blue);font-size:12px;font-weight:700">✓ Done</span>` : ''}
+          </div>
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+// ── SUBMIT EXPENSE ──
+function openSubmitModal() {
+  document.getElementById('subDate').value = new Date().toISOString().slice(0,10);
+  clearError('submitError');
+  openModal('submitModal');
+}
+
+async function submitExpense() {
+  const category    = document.getElementById('subCategory').value;
+  const amount      = parseFloat(document.getElementById('subAmount').value);
+  const date        = document.getElementById('subDate').value;
+  const description = document.getElementById('subDesc').value.trim();
+
+  if (!amount || amount <= 0) return showError('submitError', 'Please enter a valid amount.');
+  if (!date)        return showError('submitError', 'Please select the expense date.');
+  if (!description) return showError('submitError', 'Please describe the expense.');
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Submitting…';
+
+  let receipt_url = null, receipt_filename = null;
+
+  if (selectedFile) {
+    const ext  = selectedFile.name.split('.').pop();
+    const path = `${currentUser.id}/${Date.now()}.${ext}`;
+    const { error: upErr } = await sb.storage.from('receipts').upload(path, selectedFile);
+    if (upErr) {
+      btn.disabled = false; btn.textContent = 'Submit Expense';
+      return showError('submitError', 'Receipt upload failed: ' + upErr.message);
+    }
+    const { data: urlData } = await sb.storage.from('receipts').createSignedUrl(path, 60 * 60 * 24 * 365);
+    receipt_url = urlData?.signedUrl;
+    receipt_filename = selectedFile.name;
+  }
+
+  const { error } = await sb.from('submissions').insert({
+    user_id: currentUser.id,
+    full_name: currentProfile?.full_name || currentUser.email,
+    category, amount, expense_date: date, description,
+    receipt_url, receipt_filename
+  });
+
+  btn.disabled = false; btn.textContent = 'Submit Expense';
+
+  if (error) return showError('submitError', error.message);
+  closeModal('submitModal');
+  clearFile();
+  document.getElementById('subAmount').value = '';
+  document.getElementById('subDesc').value   = '';
+  showToast('✅ Submission received!');
+  loadEmployeeSubmissions();
+  loadEmployeeStats();
+}
+
+// ── MANAGER REVIEW ──
+async function openReview(id) {
+  reviewingId = id;
+  const { data: r } = await sb.from('submissions').select('*').eq('id', id).single();
+  document.getElementById('reviewDetail').innerHTML = `
+    <div class="detail-row"><span class="detail-label">Employee</span><span>${esc(r.full_name || '—')}</span></div>
+    <div class="detail-row"><span class="detail-label">Date</span><span>${fmtDate(r.expense_date)}</span></div>
+    <div class="detail-row"><span class="detail-label">Category</span><span>${r.category}</span></div>
+    <div class="detail-row"><span class="detail-label">Amount</span><strong>$${parseFloat(r.amount).toFixed(2)}</strong></div>
+    <div class="detail-row"><span class="detail-label">Description</span><span>${esc(r.description)}</span></div>
+    ${r.receipt_url ? `<div class="detail-row"><span class="detail-label">Receipt</span><a class="receipt-link" href="${r.receipt_url}" target="_blank">View PDF/Image 📄</a></div>` : ''}
+  `;
+  document.getElementById('reviewNotes').value = '';
+  openModal('reviewModal');
+}
+
+async function submitReview(status) {
+  const notes = document.getElementById('reviewNotes').value.trim();
+  if (status === 'rejected' && !notes)
+    return showToast('Please add a reason for rejection.', true);
+
+  const update = { status, manager_notes: notes || null, reviewed_at: new Date().toISOString() };
+  const { error } = await sb.from('submissions').update(update).eq('id', reviewingId);
+  if (error) return showToast('Error: ' + error.message, true);
+
+  closeModal('reviewModal');
+  showToast(status === 'approved' ? '✅ Submission approved' : '✗ Submission rejected');
+  loadManagerSubmissions();
+  loadManagerStats();
+}
+
+async function markProcessed(id) {
+  const { error } = await sb.from('submissions').update({
+    status: 'processed', processed_at: new Date().toISOString()
+  }).eq('id', id);
+  if (error) return showToast('Error: ' + error.message, true);
+  showToast('✅ Marked as processed');
+  loadManagerSubmissions();
+  loadManagerStats();
+}
+
+// ── CSV EXPORT ──
+async function exportCSV() {
+  const { data } = await sb.from('submissions').select('*').order('submitted_at', { ascending: false });
+  if (!data?.length) return showToast('No data to export.', true);
+  const headers = ['Submitted','Employee','Category','Description','Amount','Expense Date','Status','Manager Notes'];
+  const rows = data.map(r => [
+    fmtDate(r.submitted_at), r.full_name || '', r.category,
+    `"${(r.description||'').replace(/"/g,'""')}"`,
+    r.amount, r.expense_date, r.status,
+    `"${(r.manager_notes||'').replace(/"/g,'""')}"`
+  ].join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `expenses-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ── FILE HANDLING ──
+function fileSelected(input) {
+  const f = input.files[0];
+  if (!f) return;
+  if (f.size > 10 * 1024 * 1024) { showToast('File too large (max 10 MB).', true); return; }
+  selectedFile = f;
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('filePreview').style.display = 'flex';
+}
+function clearFile() {
+  selectedFile = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('filePreview').style.display = 'none';
+}
+function fileDragOver(e)  { e.preventDefault(); document.getElementById('fileDrop').classList.add('dragover'); }
+function fileDragLeave()  { document.getElementById('fileDrop').classList.remove('dragover'); }
+function fileDrop(e) {
+  e.preventDefault(); fileDragLeave();
+  const f = e.dataTransfer.files[0];
+  if (f) { document.getElementById('fileInput').files = e.dataTransfer.files; fileSelected(document.getElementById('fileInput')); }
+}
+
+// ── UI HELPERS ──
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+}
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeOnOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+function badge(status) {
+  const map = { pending:'badge-pending', approved:'badge-approved', processed:'badge-processed', rejected:'badge-rejected' };
+  return `<span class="badge ${map[status]||''}">${status}</span>`;
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+function esc(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function showError(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background   = type === 'success' ? 'rgba(46,158,122,0.1)' : '';
+  el.style.borderColor  = type === 'success' ? 'rgba(46,158,122,0.3)' : '';
+  el.style.color        = type === 'success' ? 'var(--green)' : '';
+}
+function clearError(id) { const el = document.getElementById(id); el.style.display='none'; el.textContent=''; }
+
+function showToast(msg, err) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = err ? 'var(--red)' : 'var(--text-bright)';
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
