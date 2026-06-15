@@ -305,13 +305,11 @@
   .copy-report-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
   .copy-row { cursor: pointer; transition: background 0.12s; }
   .copy-row:hover td { background: var(--surface2) !important; }
-  .copy-row td.row-copy-cell { width: 32px; text-align: center; padding: 0 4px; }
-  .row-copy-btn {
-    background: none; border: none; cursor: pointer; color: var(--accent);
-    font-size: 15px; opacity: 0.6; transition: all 0.15s; padding: 2px 4px;
-    border-radius: 4px; line-height: 1; pointer-events: none;
+  .row-copy-cell, .row-copy-btn { display: none; }
+  .copy-row-hint {
+    font-size: 12px; font-weight: 700; color: var(--accent);
+    padding: 2px 0 8px; display: block; letter-spacing: 0.2px;
   }
-  .copy-row:hover .row-copy-btn { opacity: 1; }
   /* ── COPY TOAST ── */
   #copyToast {
     position: fixed; bottom: 80px; left: 50%;
@@ -1419,7 +1417,7 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">SRU 2022 — Morphology-Based Risk Stratification</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Risk tier</th><th>Morphology</th><th>Management</th><th></th></tr></thead>
       <tbody>
@@ -1489,7 +1487,7 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">ESVS 2024 — Surveillance Intervals</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Diameter</th><th>Interval</th><th>Action</th><th></th></tr></thead>
       <tbody>
@@ -1537,7 +1535,7 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">Low-Risk Patient (No Known or Suspected Malignancy)</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Size</th><th>CT Features</th><th>Recommendation</th><th></th></tr></thead>
       <tbody>
@@ -1585,7 +1583,7 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">O-RADS US v2022 — Risk Categories &amp; Management</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Category</th><th>Risk of Malignancy</th><th>Typical Findings</th><th>Management</th><th></th></tr></thead>
       <tbody>
@@ -1613,7 +1611,7 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">Step 1 — Non-Contrast CT Density (HU)</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Non-contrast HU</th><th>Interpretation</th><th>Action</th><th></th></tr></thead>
       <tbody>
@@ -1659,7 +1657,7 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">High-Risk Stigmata — Refer / Operate</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any row to copy that recommendation (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
       <thead><tr><th>Feature</th><th>Action</th><th></th></tr></thead>
       <tbody>
