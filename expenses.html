@@ -690,7 +690,7 @@ async function submitExpense() {
     }
     const { data: urlData } = await sb.storage.from('receipts').createSignedUrl(path, 60 * 60 * 24 * 365);
     receipt_url = urlData?.signedUrl;
-    receipt_filename = selectedFile.name;
+    receipt_filename = path;
   }
 
   const { error } = await sb.from('submissions').insert({
@@ -722,15 +722,27 @@ async function submitExpense() {
 async function openReview(id) {
   reviewingId = id;
   const { data: r } = await sb.from('submissions').select('*').eq('id', id).single();
+
+  let receiptHtml = '';
+  if (r.receipt_filename) {
+    const { data: urlData } = await sb.storage.from('receipts').createSignedUrl(r.receipt_filename, 60 * 60 * 2);
+    const viewUrl = urlData?.signedUrl || r.receipt_url;
+    if (viewUrl) {
+      receiptHtml = `<div class="detail-row"><span class="detail-label">Receipt</span><a class="receipt-link" href="${viewUrl}" target="_blank">View receipt 📄</a></div>`;
+    }
+  } else if (r.receipt_url) {
+    receiptHtml = `<div class="detail-row"><span class="detail-label">Receipt</span><a class="receipt-link" href="${r.receipt_url}" target="_blank">View receipt 📄</a></div>`;
+  }
+
   document.getElementById('reviewDetail').innerHTML = `
     <div class="detail-row"><span class="detail-label">Employee</span><span>${esc(r.full_name || '—')}</span></div>
     <div class="detail-row"><span class="detail-label">Date</span><span>${fmtDate(r.expense_date)}</span></div>
     <div class="detail-row"><span class="detail-label">Category</span><span>${r.category}</span></div>
     <div class="detail-row"><span class="detail-label">Amount</span><strong>$${parseFloat(r.amount).toFixed(2)}</strong></div>
     <div class="detail-row"><span class="detail-label">Description</span><span>${esc(r.description)}</span></div>
-    ${r.receipt_url ? `<div class="detail-row"><span class="detail-label">Receipt</span><a class="receipt-link" href="${r.receipt_url}" target="_blank">View PDF/Image 📄</a></div>` : ''}
+    ${receiptHtml}
   `;
-  document.getElementById('reviewNotes').value = '';
+  document.getElementById('reviewNotes').value = r.manager_notes || '';
   openModal('reviewModal');
 }
 
