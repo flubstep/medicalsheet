@@ -240,6 +240,9 @@
     .balance-card.cme .balance-amount { color: #1a6aa0; }
     .balance-card.corporate .balance-amount { color: var(--accent); }
 
+    /* ── SECTION LABEL ── */
+    .section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:10px; }
+
     /* ── POOL BADGE ── */
     .pool-hra   { background: rgba(42,125,79,0.12); color: #2a7d4f; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
     .pool-cme   { background: rgba(26,106,160,0.12); color: #1a6aa0; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
@@ -491,14 +494,50 @@
 
 <!-- ── BALANCES MODAL (Manager) ── -->
 <div class="modal-overlay" id="balancesModal" onclick="closeOnOverlay(event,'balancesModal')">
-  <div class="modal" style="max-width:600px">
+  <div class="modal" style="max-width:680px">
     <div class="modal-header">
-      <div class="modal-title">Manage Pool Balances</div>
+      <div class="modal-title">Pool Ledger</div>
       <button class="modal-close" onclick="closeModal('balancesModal')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Edit HRA and CME allocations per employee. Corporate expenses are reimbursed by the group and do not draw from a pool.</p>
       <div id="balancesTableWrap"><div class="loading">Loading…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADD FUNDS MODAL (Manager) ── -->
+<div class="modal-overlay" id="addFundsModal" onclick="closeOnOverlay(event,'addFundsModal')">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <div class="modal-title">Add Funds</div>
+      <button class="modal-close" onclick="closeModal('addFundsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-msg" id="addFundsError"></div>
+      <p id="addFundsTarget" style="font-size:13px;font-weight:700;color:var(--text-bright);background:var(--surface2);border-radius:7px;padding:8px 12px;margin-bottom:16px"></p>
+      <div class="form-group">
+        <label>Pool</label>
+        <select id="addFundsPool">
+          <option value="HRA">HRA</option>
+          <option value="CME">CME</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount ($)</label>
+        <input type="number" id="addFundsAmount" min="0.01" step="0.01" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Note <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+        <input type="text" id="addFundsNote" placeholder="e.g. Q3 2026 allocation">
+      </div>
+      <label style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;cursor:pointer;padding:10px 12px;background:var(--surface2);border-radius:7px;margin-top:4px">
+        <input type="checkbox" id="addFundsAll" onchange="toggleAddFundsAll()" style="width:auto">
+        Apply this amount to <strong style="color:var(--blue)">all employees</strong>
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('addFundsModal')">Cancel</button>
+      <button class="btn btn-green" id="addFundsBtn" onclick="submitAddFunds()">Add Funds</button>
     </div>
   </div>
 </div>
@@ -526,6 +565,9 @@ let currentUser = null;
 let currentProfile = null;
 let reviewingId = null;
 let selectedFile = null;
+let allEmployees = [];
+let addFundsUserId = null;
+let addFundsUserName = null;
 
 // ── AUTH ──
 sb.auth.onAuthStateChange(async (event, session) => {
@@ -646,13 +688,21 @@ function renderEmployeeTable(rows) {
 }
 
 async function loadEmployeeBalances() {
-  const { data } = await sb.from('pool_balances').select('hra_balance, cme_balance').eq('user_id', currentUser.id).single();
+  const { data } = await sb.from('pool_transactions')
+    .select('pool, amount, type')
+    .eq('user_id', currentUser.id)
+    .eq('voided', false);
   const row = document.getElementById('empBalanceRow');
-  if (data) {
-    document.getElementById('empHraBalance').textContent = '$' + parseFloat(data.hra_balance || 0).toFixed(2);
-    document.getElementById('empCmeBalance').textContent = '$' + parseFloat(data.cme_balance || 0).toFixed(2);
-    row.style.display = 'flex';
-  }
+  if (!data || !data.length) { row.style.display = 'none'; return; }
+  let hra = 0, cme = 0;
+  data.forEach(t => {
+    const sign = t.type === 'deposit' ? 1 : -1;
+    if (t.pool === 'HRA') hra += sign * parseFloat(t.amount);
+    if (t.pool === 'CME') cme += sign * parseFloat(t.amount);
+  });
+  document.getElementById('empHraBalance').textContent = '$' + hra.toFixed(2);
+  document.getElementById('empCmeBalance').textContent = '$' + cme.toFixed(2);
+  row.style.display = 'flex';
 }
 
 // ── MANAGER: LOAD SUBMISSIONS ──
@@ -791,41 +841,136 @@ async function openBalancesModal() {
 
   const { data: profiles, error: pErr } = await sb.from('profiles').select('id, full_name, role');
   if (pErr) { wrap.innerHTML = `<p style="color:red">${pErr.message}</p>`; return; }
-  const employees = (profiles || []).filter(p => p.role !== 'manager');
 
-  const { data: balances } = await sb.from('pool_balances').select('user_id, hra_balance, cme_balance');
+  const employees = (profiles || [])
+    .filter(p => p.role !== 'manager')
+    .sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
+  allEmployees = employees;
+
+  const nameMap = {};
+  (profiles || []).forEach(p => nameMap[p.id] = p.full_name || p.id);
+
+  const { data: txns, error: txErr } = await sb.from('pool_transactions')
+    .select('id, user_id, pool, amount, type, note, voided, created_at')
+    .order('created_at', { ascending: false });
+  if (txErr) { wrap.innerHTML = `<p style="color:red">${txErr.message}</p>`; return; }
+
+  // Compute balances from non-voided transactions
   const balMap = {};
-  (balances || []).forEach(b => balMap[b.user_id] = b);
+  (txns || []).filter(t => !t.voided).forEach(t => {
+    if (!balMap[t.user_id]) balMap[t.user_id] = { hra: 0, cme: 0 };
+    const sign = t.type === 'deposit' ? 1 : -1;
+    if (t.pool === 'HRA') balMap[t.user_id].hra += sign * parseFloat(t.amount);
+    if (t.pool === 'CME') balMap[t.user_id].cme += sign * parseFloat(t.amount);
+  });
 
-  if (!employees.length) {
-    wrap.innerHTML = '<p style="color:var(--text-muted);padding:16px">No employees found.</p>';
-    return;
-  }
+  const employeeRows = employees.length ? employees.map(e => {
+    const b = balMap[e.id] || { hra: 0, cme: 0 };
+    const safeName = (e.full_name || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<tr>
+      <td><strong>${esc(e.full_name || '—')}</strong></td>
+      <td style="color:#2a7d4f;font-weight:700">$${b.hra.toFixed(2)}</td>
+      <td style="color:#1a6aa0;font-weight:700">$${b.cme.toFixed(2)}</td>
+      <td>
+        <div class="action-row">
+          <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}','HRA')">+ HRA</button>
+          <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}','CME')">+ CME</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('') : `<tr class="empty-row"><td colspan="4">No employees found.</td></tr>`;
 
-  wrap.innerHTML = `<table>
-    <thead><tr><th>Employee</th><th>HRA ($)</th><th>CME ($)</th><th></th></tr></thead>
-    <tbody>${employees.map(e => {
-      const b = balMap[e.id] || { hra_balance: 0, cme_balance: 0 };
-      return `<tr>
-        <td><strong>${esc(e.full_name || e.id)}</strong></td>
-        <td><input type="number" id="hra-${e.id}" value="${parseFloat(b.hra_balance||0).toFixed(2)}" min="0" step="0.01" style="width:100px"></td>
-        <td><input type="number" id="cme-${e.id}" value="${parseFloat(b.cme_balance||0).toFixed(2)}" min="0" step="0.01" style="width:100px"></td>
-        <td><button class="btn btn-primary btn-sm" onclick="saveBalance('${e.id}')">Save</button></td>
-      </tr>`;
-    }).join('')}
-    </tbody>
-  </table>`;
+  const recentRows = (txns || []).slice(0, 25).map(t => {
+    const name = nameMap[t.user_id] || '—';
+    const isDeposit = t.type === 'deposit';
+    const amtColor = t.voided ? 'var(--text-muted)' : isDeposit ? 'var(--green)' : 'var(--red)';
+    const rowStyle = t.voided ? 'opacity:0.45' : '';
+    const undoCell = t.voided
+      ? '<span style="font-size:11px;color:var(--text-muted);font-style:italic">Undone</span>'
+      : isDeposit
+        ? `<button class="btn btn-ghost btn-sm" onclick="voidTransaction('${t.id}')">↩ Undo</button>`
+        : '';
+    return `<tr style="${rowStyle}">
+      <td style="white-space:nowrap;font-size:12px">${fmtDate(t.created_at)}</td>
+      <td>${esc(name)}</td>
+      <td>${poolBadge(t.pool)}</td>
+      <td style="font-weight:700;color:${amtColor}">${isDeposit ? '+' : '−'}$${Math.abs(parseFloat(t.amount)).toFixed(2)}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${esc(t.note || (t.type === 'deduction' ? 'Expense deduction' : ''))}</td>
+      <td>${undoCell}</td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <p class="section-label">Current Balances</p>
+    <div style="margin-bottom:24px;border:1px solid var(--border);border-radius:9px;overflow:hidden">
+      <table>
+        <thead><tr><th>Employee</th><th>HRA</th><th>CME</th><th>Add Funds</th></tr></thead>
+        <tbody>${employeeRows}</tbody>
+      </table>
+    </div>
+    <p class="section-label">Recent Activity</p>
+    <div style="border:1px solid var(--border);border-radius:9px;overflow:hidden">
+      <table>
+        <thead><tr><th>Date</th><th>Employee</th><th>Pool</th><th>Amount</th><th>Note</th><th></th></tr></thead>
+        <tbody>${recentRows || '<tr class="empty-row"><td colspan="6">No transactions yet.</td></tr>'}</tbody>
+      </table>
+    </div>`;
 }
 
-async function saveBalance(userId) {
-  const hra = parseFloat(document.getElementById('hra-' + userId).value) || 0;
-  const cme = parseFloat(document.getElementById('cme-' + userId).value) || 0;
-  const { error } = await sb.from('pool_balances').upsert(
-    { user_id: userId, hra_balance: hra, cme_balance: cme, updated_at: new Date().toISOString() },
-    { onConflict: 'user_id' }
-  );
+function openAddFundsModal(userId, userName, pool) {
+  addFundsUserId = userId;
+  addFundsUserName = userName;
+  document.getElementById('addFundsPool').value   = pool || 'HRA';
+  document.getElementById('addFundsAmount').value = '';
+  document.getElementById('addFundsNote').value   = '';
+  document.getElementById('addFundsAll').checked  = false;
+  document.getElementById('addFundsTarget').textContent = 'Employee: ' + userName;
+  document.getElementById('addFundsBtn').textContent = 'Add Funds';
+  clearError('addFundsError');
+  openModal('addFundsModal');
+}
+
+function toggleAddFundsAll() {
+  const all = document.getElementById('addFundsAll').checked;
+  document.getElementById('addFundsTarget').textContent = all
+    ? 'Applying to: All Employees (' + allEmployees.length + ')'
+    : 'Employee: ' + addFundsUserName;
+  document.getElementById('addFundsBtn').textContent = all ? 'Add to All Employees' : 'Add Funds';
+}
+
+async function submitAddFunds() {
+  const pool     = document.getElementById('addFundsPool').value;
+  const amount   = parseFloat(document.getElementById('addFundsAmount').value);
+  const note     = document.getElementById('addFundsNote').value.trim();
+  const applyAll = document.getElementById('addFundsAll').checked;
+
+  if (!amount || amount <= 0) return showError('addFundsError', 'Please enter a valid amount.');
+
+  const btn = document.getElementById('addFundsBtn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  const targets = applyAll ? allEmployees : [{ id: addFundsUserId }];
+  const rows = targets.map(e => ({
+    user_id: e.id, pool, amount, type: 'deposit',
+    note: note || null, created_by: currentUser.id
+  }));
+
+  const { error } = await sb.from('pool_transactions').insert(rows);
+  btn.disabled = false;
+
+  if (error) { toggleAddFundsAll(); return showError('addFundsError', error.message); }
+  closeModal('addFundsModal');
+  showToast('✅ ' + pool + ' funds added' + (applyAll ? ' for all employees' : ''));
+  openBalancesModal();
+}
+
+async function voidTransaction(txId) {
+  const { error } = await sb.from('pool_transactions').update({
+    voided: true, voided_by: currentUser.id, voided_at: new Date().toISOString()
+  }).eq('id', txId);
   if (error) return showToast('Error: ' + error.message, true);
-  showToast('✅ Balance saved');
+  showToast('↩ Transaction undone');
+  openBalancesModal();
 }
 
 // ── MANAGER REVIEW ──
@@ -872,18 +1017,18 @@ async function submitReview(status) {
   const { error } = await sb.from('submissions').update(update).eq('id', reviewingId);
   if (error) return showToast('Error: ' + error.message, true);
 
-  // Deduct from HRA or CME balance on approval
+  // Record deduction transaction on approval
   if (status === 'approved' && (pool === 'HRA' || pool === 'CME')) {
-    const { data: sub } = await sb.from('submissions').select('user_id, amount').eq('id', reviewingId).single();
+    const { data: sub, error: subErr } = await sb.from('submissions')
+      .select('user_id, amount, category').eq('id', reviewingId).single();
+    if (subErr) { showToast('⚠️ Approved but could not read submission: ' + subErr.message, true); return; }
     if (sub) {
-      const col = pool === 'HRA' ? 'hra_balance' : 'cme_balance';
-      const { data: bal } = await sb.from('pool_balances').select(col).eq('user_id', sub.user_id).single();
-      const current  = parseFloat(bal?.[col] || 0);
-      const deducted = Math.max(0, current - parseFloat(sub.amount));
-      await sb.from('pool_balances').upsert(
-        { user_id: sub.user_id, [col]: deducted, updated_at: new Date().toISOString() },
-        { onConflict: 'user_id' }
-      );
+      const { error: txErr } = await sb.from('pool_transactions').insert({
+        user_id: sub.user_id, pool, amount: parseFloat(sub.amount),
+        type: 'deduction', note: sub.category,
+        submission_id: reviewingId, created_by: currentUser.id
+      });
+      if (txErr) { showToast('⚠️ Approved but deduction not recorded: ' + txErr.message, true); return; }
     }
   }
 
