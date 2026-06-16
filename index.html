@@ -1708,23 +1708,26 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">Solid Pulmonary Nodules</div>
-    <p class="gp-note" style="margin-bottom:6px">📋 Click the clipboard icon on any recommendation to copy it (with citation) to your clipboard.</p>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
-      <thead><tr><th>Size (diameter)</th><th>Low Risk*</th><th>High Risk†</th></tr></thead>
+      <thead><tr><th>Size (diameter)</th><th>Low Risk*</th><th>High Risk†</th><th></th></tr></thead>
       <tbody>
-        <tr>
+        <tr class="copy-row">
           <td><strong>&lt;6 mm</strong> (&lt;100 mm³)</td>
-          <td><span class="gp-tag gp-green">No routine follow-up</span> <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule <6 mm, low-risk patient. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
-          <td><span class="gp-tag gp-yellow">Optional CT at 12 months</span> <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule <6 mm, high-risk patient. Recommendation: optional CT at 12 months per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+          <td><span class="gp-tag gp-yellow">Optional CT at 12 months</span></td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule &lt;6 mm. Low-risk patient: no routine follow-up required. High-risk patient: optional CT at 12 months per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
-        <tr>
+        <tr class="copy-row">
           <td><strong>6–8 mm</strong> (100–250 mm³)</td>
-          <td><span class="gp-tag gp-yellow">CT at 6–12 m</span>, then 18–24 m if no change <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule 6–8 mm, low-risk patient. Recommendation: CT at 6–12 months, then at 18–24 months if no change per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
-          <td><span class="gp-tag gp-orange">CT at 6–12 m</span>, then 18–24 m <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule 6–8 mm, high-risk patient. Recommendation: CT at 6–12 months, then at 18–24 months per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-yellow">CT at 6–12 m</span>, then 18–24 m if no change</td>
+          <td><span class="gp-tag gp-orange">CT at 6–12 m</span>, then 18–24 m</td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule 6–8 mm. Low-risk: CT at 6–12 months, then 18–24 months if no change. High-risk: CT at 6–12 months, then 18–24 months per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
-        <tr>
+        <tr class="copy-row">
           <td><strong>&gt;8 mm</strong> (&gt;250 mm³)</td>
-          <td colspan="2" style="text-align:center"><span class="gp-tag gp-red">CT at 3 months, PET/CT, and/or tissue sampling</span> <button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule >8 mm. Recommendation: CT at 3 months, PET/CT, and/or tissue sampling per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td colspan="2" style="text-align:center"><span class="gp-tag gp-red">CT at 3 months, PET/CT, and/or tissue sampling</span></td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental solid pulmonary nodule &gt;8 mm. Recommendation: CT at 3 months, PET/CT, and/or tissue sampling per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
       </tbody>
     </table>
@@ -1733,26 +1736,33 @@ const panelContent = {
 
   <div class="gp-section">
     <div class="gp-section-title">Subsolid Pulmonary Nodules</div>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
     <table class="gp-table">
-      <thead><tr><th>Type</th><th>Size</th><th>Recommendation</th></tr></thead>
+      <thead><tr><th>Type</th><th>Size</th><th>Recommendation</th><th></th></tr></thead>
       <tbody>
-        <tr>
-          <td rowspan="2"><strong>Pure GGO</strong></td>
+        <tr class="copy-row">
+          <td><strong>Pure GGO</strong></td>
           <td>&lt;6 mm</td>
-          <td><span class="gp-tag gp-green">No routine follow-up</span> <button class="row-copy-btn" onclick="copySnippet('Incidental pure ground-glass opacity (GGO) <6 mm. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pure ground-glass opacity (GGO) &lt;6 mm. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
-        <tr>
+        <tr class="copy-row">
+          <td><strong>Pure GGO</strong></td>
           <td>≥6 mm</td>
-          <td><span class="gp-tag gp-yellow">CT at 6–12 m to confirm persistence</span>, then CT every 2 years × 5 years <button class="row-copy-btn" onclick="copySnippet('Incidental pure ground-glass opacity (GGO) ≥6 mm. Recommendation: CT at 6–12 months to confirm persistence, then CT every 2 years for 5 years per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-yellow">CT at 6–12 m to confirm persistence</span>, then CT every 2 years × 5 years</td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental pure ground-glass opacity (GGO) ≥6 mm. Recommendation: CT at 6–12 months to confirm persistence, then CT every 2 years for 5 years per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
-        <tr>
-          <td rowspan="2"><strong>Part-Solid</strong></td>
+        <tr class="copy-row">
+          <td><strong>Part-Solid</strong></td>
           <td>&lt;6 mm total</td>
-          <td><span class="gp-tag gp-green">No routine follow-up</span> <button class="row-copy-btn" onclick="copySnippet('Incidental part-solid pulmonary nodule <6 mm total size. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-green">No routine follow-up</span></td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental part-solid pulmonary nodule &lt;6 mm total size. Recommendation: no routine follow-up required per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
-        <tr>
+        <tr class="copy-row">
+          <td><strong>Part-Solid</strong></td>
           <td>≥6 mm total</td>
-          <td><span class="gp-tag gp-yellow">CT at 3–6 m to confirm persistence</span><br>If persistent: annual CT × 5 yrs if solid component &lt;6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm <button class="row-copy-btn" onclick="copySnippet('Incidental part-solid pulmonary nodule ≥6 mm total size. Recommendation: CT at 3–6 months to confirm persistence. If persistent: annual CT for 5 years if solid component <6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')" title="Copy recommendation">📋</button></td>
+          <td><span class="gp-tag gp-yellow">CT at 3–6 m to confirm persistence</span><br>If persistent: annual CT × 5 yrs if solid component &lt;6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm</td>
+          <td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental part-solid pulmonary nodule ≥6 mm total size. Recommendation: CT at 3–6 months to confirm persistence. If persistent: annual CT for 5 years if solid component &lt;6 mm; consider PET/CT, biopsy, or resection if solid component ≥6 mm per 2017 Fleischner Society guidelines.',this,'MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659')">📋</button></td>
         </tr>
       </tbody>
     </table>
