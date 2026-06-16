@@ -342,7 +342,10 @@
         <div class="dash-title">Reimbursement Manager</div>
         <div class="dash-sub">Review, approve, and process employee submissions</div>
       </div>
-      <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-accent" onclick="openSubmitModal()">+ New Submission</button>
+        <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+      </div>
     </div>
 
     <div class="stat-row" id="mgrStats">
