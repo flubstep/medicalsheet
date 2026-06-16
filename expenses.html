@@ -459,7 +459,14 @@ const SUPABASE_URL      = 'https://ztltqtytmhbviexmtrmb.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_24y8tmn8_xQwB03a3gJXOw_j0bW6JaN';
 // ══════════════════════════════════════════════════════
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storageKey: 'ari-expenses-auth'
+  }
+});
 
 let currentUser = null;
 let currentProfile = null;
