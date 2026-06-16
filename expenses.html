@@ -270,11 +270,6 @@
         <input type="password" id="siPassword" placeholder="••••••••" autocomplete="current-password">
       </div>
       <button class="btn btn-primary" onclick="signIn()">Sign In</button>
-      <div class="divider">or</div>
-      <button class="btn-google" onclick="signInGoogle()">
-        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-        Continue with Google
-      </button>
       <div class="auth-toggle">Don't have an account? <a onclick="toggleAuth()">Create one</a></div>
     </div>
 
@@ -292,11 +287,6 @@
         <input type="password" id="suPassword" placeholder="Min. 8 characters" autocomplete="new-password">
       </div>
       <button class="btn btn-primary" onclick="signUp()">Create Account</button>
-      <div class="divider">or</div>
-      <button class="btn-google" onclick="signInGoogle()">
-        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-        Continue with Google
-      </button>
       <div class="auth-toggle">Already have an account? <a onclick="toggleAuth()">Sign in</a></div>
     </div>
   </div>
@@ -405,7 +395,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label>Description</label>
+        <label>Description <span style="font-weight:400;opacity:0.6;">(optional)</span></label>
         <textarea id="subDesc" placeholder="Brief description of the expense…"></textarea>
       </div>
       <div class="form-group">
@@ -660,7 +650,6 @@ async function submitExpense() {
 
   if (!amount || amount <= 0) return showError('submitError', 'Please enter a valid amount.');
   if (!date)        return showError('submitError', 'Please select the expense date.');
-  if (!description) return showError('submitError', 'Please describe the expense.');
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Submitting…';
