@@ -6,6 +6,7 @@
   <title>ARI Expense Reimbursement</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     /* ── CONFIG: paste your Supabase values into the JS below ── */
 
@@ -230,6 +231,20 @@
     /* ── LOADING ── */
     .loading { text-align: center; padding: 48px; color: var(--text-muted); font-size: 15px; }
 
+    /* ── BALANCE ROW ── */
+    .balance-row { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
+    .balance-card { flex: 1; min-width: 140px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+    .balance-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 6px; }
+    .balance-amount { font-size: 26px; font-weight: 700; }
+    .balance-card.hra .balance-amount { color: #2a7d4f; }
+    .balance-card.cme .balance-amount { color: #1a6aa0; }
+    .balance-card.corporate .balance-amount { color: var(--accent); }
+
+    /* ── POOL BADGE ── */
+    .pool-hra   { background: rgba(42,125,79,0.12); color: #2a7d4f; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .pool-cme   { background: rgba(26,106,160,0.12); color: #1a6aa0; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .pool-corp  { background: rgba(232,98,42,0.12); color: var(--accent); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+
     /* ── REVIEW MODAL ── */
     .submission-detail { background: var(--surface2); border-radius: 9px; padding: 14px 16px; margin-bottom: 16px; }
     .detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
@@ -317,6 +332,17 @@
       <div class="stat-card"><div class="stat-label">Total Submitted</div><div class="stat-value" id="eStat-total">—</div></div>
     </div>
 
+    <div class="balance-row" id="empBalanceRow" style="display:none">
+      <div class="balance-card hra">
+        <div class="balance-label">HRA Balance</div>
+        <div class="balance-amount" id="empHraBalance">—</div>
+      </div>
+      <div class="balance-card cme">
+        <div class="balance-label">CME Balance</div>
+        <div class="balance-amount" id="empCmeBalance">—</div>
+      </div>
+    </div>
+
     <div class="table-wrap">
       <div class="table-toolbar">
         <select id="empFilter" onchange="loadEmployeeSubmissions()">
@@ -344,7 +370,8 @@
       </div>
       <div style="display:flex;gap:10px">
         <button class="btn btn-accent" onclick="openSubmitModal()">+ New Submission</button>
-        <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+        <button class="btn btn-ghost" onclick="openBalancesModal()">💰 Manage Balances</button>
+        <button class="btn btn-ghost" onclick="exportExcel()">⬇ Export Excel</button>
       </div>
     </div>
 
@@ -441,6 +468,15 @@
     <div class="modal-body">
       <div class="submission-detail" id="reviewDetail"></div>
       <div class="form-group">
+        <label>Reimbursement Pool <span style="color:var(--accent)">*</span> <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(required for approval)</span></label>
+        <select id="reviewPool">
+          <option value="">— Select pool —</option>
+          <option value="HRA">HRA</option>
+          <option value="CME">CME</option>
+          <option value="Corporate">Corporate (no pool deduction)</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label>Notes (optional for approval, required for rejection)</label>
         <textarea id="reviewNotes" placeholder="Add a note for the employee…"></textarea>
       </div>
@@ -449,6 +485,20 @@
       <button class="btn btn-ghost" onclick="closeModal('reviewModal')">Cancel</button>
       <button class="btn btn-danger btn-sm" onclick="submitReview('rejected')">✗ Reject</button>
       <button class="btn btn-green btn-sm" onclick="submitReview('approved')">✓ Approve</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── BALANCES MODAL (Manager) ── -->
+<div class="modal-overlay" id="balancesModal" onclick="closeOnOverlay(event,'balancesModal')">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title">Manage Pool Balances</div>
+      <button class="modal-close" onclick="closeModal('balancesModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Edit HRA and CME allocations per employee. Corporate expenses are reimbursed by the group and do not draw from a pool.</p>
+      <div id="balancesTableWrap"><div class="loading">Loading…</div></div>
     </div>
   </div>
 </div>
@@ -494,6 +544,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
       showPage('employee');
       loadEmployeeSubmissions();
       loadEmployeeStats();
+      loadEmployeeBalances();
     }
   } else {
     currentUser = null; currentProfile = null;
@@ -594,6 +645,16 @@ function renderEmployeeTable(rows) {
   </table>`;
 }
 
+async function loadEmployeeBalances() {
+  const { data } = await sb.from('pool_balances').select('hra_balance, cme_balance').eq('user_id', currentUser.id).single();
+  const row = document.getElementById('empBalanceRow');
+  if (data) {
+    document.getElementById('empHraBalance').textContent = '$' + parseFloat(data.hra_balance || 0).toFixed(2);
+    document.getElementById('empCmeBalance').textContent = '$' + parseFloat(data.cme_balance || 0).toFixed(2);
+    row.style.display = 'flex';
+  }
+}
+
 // ── MANAGER: LOAD SUBMISSIONS ──
 async function loadManagerSubmissions() {
   const filter = document.getElementById('mgrFilter').value;
@@ -633,13 +694,13 @@ async function loadManagerStats() {
 function renderManagerTable(rows) {
   const wrap = document.getElementById('mgrTableWrap');
   if (!rows.length) {
-    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="7">No submissions match this filter.</td></tr></tbody></table>';
+    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="8">No submissions match this filter.</td></tr></tbody></table>';
     return;
   }
   wrap.innerHTML = `<table>
     <thead><tr>
       <th>Submitted</th><th>Employee</th><th>Category</th>
-      <th>Description</th><th>Amount</th><th>Status</th><th>Actions</th>
+      <th>Description</th><th>Amount</th><th>Pool</th><th>Status</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows.map(r => `
       <tr>
@@ -648,6 +709,7 @@ function renderManagerTable(rows) {
         <td>${r.category}</td>
         <td>${esc(r.description)}</td>
         <td><strong>$${parseFloat(r.amount).toFixed(2)}</strong></td>
+        <td>${poolBadge(r.pool)}</td>
         <td>${badge(r.status)}</td>
         <td>
           <div class="action-row">
@@ -721,6 +783,51 @@ async function submitExpense() {
   loadEmployeeStats();
 }
 
+// ── BALANCES MODAL ──
+async function openBalancesModal() {
+  openModal('balancesModal');
+  const wrap = document.getElementById('balancesTableWrap');
+  wrap.innerHTML = '<div class="loading">Loading…</div>';
+
+  const { data: profiles, error: pErr } = await sb.from('profiles').select('id, full_name, role');
+  if (pErr) { wrap.innerHTML = `<p style="color:red">${pErr.message}</p>`; return; }
+  const employees = (profiles || []).filter(p => p.role !== 'manager');
+
+  const { data: balances } = await sb.from('pool_balances').select('user_id, hra_balance, cme_balance');
+  const balMap = {};
+  (balances || []).forEach(b => balMap[b.user_id] = b);
+
+  if (!employees.length) {
+    wrap.innerHTML = '<p style="color:var(--text-muted);padding:16px">No employees found.</p>';
+    return;
+  }
+
+  wrap.innerHTML = `<table>
+    <thead><tr><th>Employee</th><th>HRA ($)</th><th>CME ($)</th><th></th></tr></thead>
+    <tbody>${employees.map(e => {
+      const b = balMap[e.id] || { hra_balance: 0, cme_balance: 0 };
+      return `<tr>
+        <td><strong>${esc(e.full_name || e.id)}</strong></td>
+        <td><input type="number" id="hra-${e.id}" value="${parseFloat(b.hra_balance||0).toFixed(2)}" min="0" step="0.01" style="width:100px"></td>
+        <td><input type="number" id="cme-${e.id}" value="${parseFloat(b.cme_balance||0).toFixed(2)}" min="0" step="0.01" style="width:100px"></td>
+        <td><button class="btn btn-primary btn-sm" onclick="saveBalance('${e.id}')">Save</button></td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>`;
+}
+
+async function saveBalance(userId) {
+  const hra = parseFloat(document.getElementById('hra-' + userId).value) || 0;
+  const cme = parseFloat(document.getElementById('cme-' + userId).value) || 0;
+  const { error } = await sb.from('pool_balances').upsert(
+    { user_id: userId, hra_balance: hra, cme_balance: cme, updated_at: new Date().toISOString() },
+    { onConflict: 'user_id' }
+  );
+  if (error) return showToast('Error: ' + error.message, true);
+  showToast('✅ Balance saved');
+}
+
 // ── MANAGER REVIEW ──
 async function openReview(id) {
   reviewingId = id;
@@ -746,17 +853,39 @@ async function openReview(id) {
     ${receiptHtml}
   `;
   document.getElementById('reviewNotes').value = r.manager_notes || '';
+  document.getElementById('reviewPool').value  = r.pool || '';
   openModal('reviewModal');
 }
 
 async function submitReview(status) {
   const notes = document.getElementById('reviewNotes').value.trim();
+  const pool  = document.getElementById('reviewPool').value;
+
   if (status === 'rejected' && !notes)
     return showToast('Please add a reason for rejection.', true);
+  if (status === 'approved' && !pool)
+    return showToast('Please select a reimbursement pool before approving.', true);
 
   const update = { status, manager_notes: notes || null, reviewed_at: new Date().toISOString() };
+  if (status === 'approved') update.pool = pool;
+
   const { error } = await sb.from('submissions').update(update).eq('id', reviewingId);
   if (error) return showToast('Error: ' + error.message, true);
+
+  // Deduct from HRA or CME balance on approval
+  if (status === 'approved' && (pool === 'HRA' || pool === 'CME')) {
+    const { data: sub } = await sb.from('submissions').select('user_id, amount').eq('id', reviewingId).single();
+    if (sub) {
+      const col = pool === 'HRA' ? 'hra_balance' : 'cme_balance';
+      const { data: bal } = await sb.from('pool_balances').select(col).eq('user_id', sub.user_id).single();
+      const current  = parseFloat(bal?.[col] || 0);
+      const deducted = Math.max(0, current - parseFloat(sub.amount));
+      await sb.from('pool_balances').upsert(
+        { user_id: sub.user_id, [col]: deducted, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' }
+      );
+    }
+  }
 
   closeModal('reviewModal');
   showToast(status === 'approved' ? '✅ Submission approved' : '✗ Submission rejected');
@@ -775,21 +904,44 @@ async function markProcessed(id) {
 }
 
 // ── CSV EXPORT ──
-async function exportCSV() {
+async function exportExcel() {
   const { data } = await sb.from('submissions').select('*').order('submitted_at', { ascending: false });
   if (!data?.length) return showToast('No data to export.', true);
-  const headers = ['Submitted','Employee','Category','Description','Amount','Expense Date','Status','Manager Notes'];
-  const rows = data.map(r => [
-    fmtDate(r.submitted_at), r.full_name || '', r.category,
-    `"${(r.description||'').replace(/"/g,'""')}"`,
-    r.amount, r.expense_date, r.status,
-    `"${(r.manager_notes||'').replace(/"/g,'""')}"`
-  ].join(','));
-  const csv = [headers.join(','), ...rows].join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = `expenses-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
+
+  const rows = data.map(r => ({
+    'Submitted':      fmtDate(r.submitted_at),
+    'Employee':       r.full_name || '',
+    'Category':       r.category || '',
+    'Description':    r.description || '',
+    'Amount':         parseFloat(r.amount || 0),
+    'Expense Date':   r.expense_date || '',
+    'Pool':           r.pool || '',
+    'Status':         r.status || '',
+    'Manager Notes':  r.manager_notes || '',
+    'Reviewed At':    r.reviewed_at ? fmtDate(r.reviewed_at) : '',
+    'Processed At':   r.processed_at ? fmtDate(r.processed_at) : ''
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+
+  // Column widths
+  ws['!cols'] = [
+    { wch: 14 }, // Submitted
+    { wch: 22 }, // Employee
+    { wch: 20 }, // Category
+    { wch: 36 }, // Description
+    { wch: 10 }, // Amount
+    { wch: 14 }, // Expense Date
+    { wch: 12 }, // Pool
+    { wch: 12 }, // Status
+    { wch: 36 }, // Manager Notes
+    { wch: 14 }, // Reviewed At
+    { wch: 14 }  // Processed At
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Expenses');
+  XLSX.writeFile(wb, `ARI-expenses-${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 // ── FILE HANDLING ──
@@ -826,6 +978,11 @@ function closeOnOverlay(e, id) { if (e.target === document.getElementById(id)) c
 function badge(status) {
   const map = { pending:'badge-pending', approved:'badge-approved', processed:'badge-processed', rejected:'badge-rejected' };
   return `<span class="badge ${map[status]||''}">${status}</span>`;
+}
+function poolBadge(pool) {
+  if (!pool) return '<span style="color:var(--text-muted)">—</span>';
+  const cls = pool === 'HRA' ? 'pool-hra' : pool === 'CME' ? 'pool-cme' : 'pool-corp';
+  return `<span class="${cls}">${pool}</span>`;
 }
 function fmtDate(d) {
   if (!d) return '—';
