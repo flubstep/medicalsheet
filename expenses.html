@@ -703,7 +703,13 @@ async function submitExpense() {
   document.getElementById('subAmount').value = '';
   document.getElementById('subDesc').value   = '';
   showToast('✅ Submission received!');
-  loadEmployeeSubmissions();
+  if (currentProfile?.role === 'manager') {
+    loadManagerSubmissions();
+    loadManagerStats();
+  } else {
+    loadEmployeeSubmissions();
+    loadEmployeeStats();
+  }
   loadEmployeeStats();
 }
 
