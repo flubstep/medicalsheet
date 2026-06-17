@@ -254,6 +254,13 @@
     .detail-row:last-child { border-bottom: none; }
     .detail-label { color: var(--text-muted); font-weight: 600; }
 
+    /* ── POLICY MODAL ── */
+    .policy-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .policy-heading { font-family: 'Fredoka', sans-serif; font-size: 15px; color: var(--text-bright); margin-bottom: 10px; }
+    .policy-list { list-style: none; padding: 0; margin: 0; }
+    .policy-list li { padding: 3px 0 3px 16px; position: relative; color: var(--text); }
+    .policy-list li::before { content: '·'; position: absolute; left: 4px; color: var(--accent); font-weight: 700; }
+
     @media (max-width: 600px) {
       main { padding: 16px 12px; }
       .login-wrap { padding: 24px 18px; }
@@ -268,7 +275,10 @@
     <div class="logo">ARI <span>Expenses</span></div>
     <div class="header-user" id="headerUser"></div>
   </div>
-  <button id="logoutBtn">Sign out</button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button onclick="openModal('policyModal')" style="background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">📋 Policy</button>
+    <button id="logoutBtn">Sign out</button>
+  </div>
 </header>
 
 <!-- ── LOGIN PAGE ── -->
@@ -538,6 +548,91 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('addFundsModal')">Cancel</button>
       <button class="btn btn-green" id="addFundsBtn" onclick="submitAddFunds()">Add Funds</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── POLICY MODAL ── -->
+<div class="modal-overlay" id="policyModal" onclick="closeOnOverlay(event,'policyModal')">
+  <div class="modal" style="max-width:660px">
+    <div class="modal-header">
+      <div class="modal-title">ARI Reimbursement Policy</div>
+      <button class="modal-close" onclick="closeModal('policyModal')">✕</button>
+    </div>
+    <div class="modal-body" style="font-size:13px;line-height:1.7">
+
+      <div style="background:rgba(201,53,53,0.08);border:1px solid rgba(201,53,53,0.25);border-radius:8px;padding:11px 14px;margin-bottom:18px">
+        <strong style="color:var(--red)">⚠ Receipt Requirement (IRS Mandatory)</strong><br>
+        All receipts must show: <strong>date of service, provider name, service performed, and amount.</strong> Payment confirmation receipts alone are not accepted.
+      </div>
+
+      <div class="policy-section">
+        <div class="policy-heading">🏥 HRA Pool — Dental, Vision &amp; HSA</div>
+        <p style="color:var(--text-muted);margin-bottom:8px">ARI funds your HSA account 4× per year via your HRA allowance. Total HRA allowance is <strong>$20,000/year</strong>. After the HSA contribution is made, the remainder covers dental and vision.</p>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:10px">
+          <tr><td style="padding:4px 8px;color:var(--text-muted)">HSA max — Single plan (2026)</td><td style="padding:4px 8px;font-weight:700;text-align:right">$4,400</td></tr>
+          <tr style="background:var(--surface2)"><td style="padding:4px 8px;color:var(--text-muted)">HSA max — Family plan (2026)</td><td style="padding:4px 8px;font-weight:700;text-align:right">$8,750</td></tr>
+          <tr><td style="padding:4px 8px;color:var(--text-muted)">Remaining for dental &amp; vision (family example)</td><td style="padding:4px 8px;font-weight:700;text-align:right;color:var(--green)">~$11,250</td></tr>
+        </table>
+        <p style="color:var(--text-muted);font-size:12px;margin-bottom:6px"><strong>HSA contribution schedule:</strong> 2nd payroll in February · Q1 bonus · Q2 bonus · Q3 bonus</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-muted);margin-bottom:4px">Dental</div>
+            <ul class="policy-list">
+              <li>Exams &amp; x-rays</li><li>Crowns &amp; fillings</li>
+              <li>Braces (ortho)</li><li>Mouth guards</li><li>Root canals</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-muted);margin-bottom:4px">Vision</div>
+            <ul class="policy-list">
+              <li>Exams &amp; testing</li><li>Glasses</li>
+              <li>Contact lenses &amp; solution</li>
+              <li>Specialty services (confirm with Melissa)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-section">
+        <div class="policy-heading">📚 CME Pool — Business &amp; Education Allowance</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-muted);margin-bottom:4px">Flat-Rate Reimbursements</div>
+            <ul class="policy-list">
+              <li><strong>Cell phone:</strong> $90/mo ($270/qtr) — submit 1 invoice/yr</li>
+              <li><strong>Home internet:</strong> $100/mo ($300/qtr) — submit 1 invoice/yr</li>
+              <li><strong>Cell/tablet equipment:</strong> 1 device per 2 years</li>
+              <li><strong>Computer/laptop:</strong> up to $2,000, every 3 years</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-muted);margin-bottom:4px">Other Eligible Expenses</div>
+            <ul class="policy-list">
+              <li>NORS, OSMA, RSNA, ARRS, Summit County Medical Society dues</li>
+              <li>Home office equipment (desk, chair, lighting, keyboard, headphones, etc.)</li>
+              <li>Generator or UPS battery backup</li>
+              <li>Campus parking (paid lots)</li>
+              <li>Disability insurance premiums</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-section" style="margin-bottom:0">
+        <div class="policy-heading">🏛 Corporate Expenses — Billed directly to ARI</div>
+        <p style="color:var(--text-muted);margin-bottom:8px">These required expenses are covered by ARI and do <em>not</em> come out of your HRA or CME pools.</p>
+        <ul class="policy-list" style="columns:2;gap:16px">
+          <li>DEA License renewal</li>
+          <li>Hospital Staff Privileges</li>
+          <li>Ohio State Medical License</li>
+          <li>Identity Theft Protection (up to $250/yr)</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="modal-footer" style="justify-content:flex-start;padding-top:12px">
+      <span style="font-size:11px;color:var(--text-muted)">Policy approved Nov 17, 2016 · updated June 2026. Questions? Contact Melissa.</span>
     </div>
   </div>
 </div>
