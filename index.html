@@ -530,6 +530,12 @@
             <div class="card-sub">AGA · IAP/Kyoto 2024</div>
           </div>
         </a>
+        <a class="card new-item" data-panel-id="bp-thyroid" href="#">
+          <div class="card-body">
+            <div class="card-title">Incidental Thyroid Nodule — Management</div>
+            <div class="card-sub">ACR White Paper 2015 · Hoang et al.</div>
+          </div>
+        </a>
       </div>
     </div>
 
@@ -1772,6 +1778,54 @@ const panelContent = {
   </div>
 </div>`,
 
+'bp-thyroid': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">Incidental Thyroid Nodule — Management</div>
+    <div class="gp-meta">Hoang JK et al. ACR Incidental Thyroid Findings Committee &nbsp;·&nbsp; JACR 2015;12:143–150</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('bp-thyroid',this)">📋 Copy full recommendation sheet</button>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">CT and MRI — Size and Age Criteria</div>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Size</th><th>Patient Age</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;1.0 cm</td><td>Any</td><td>No further workup needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule measuring less than 1.0 cm. No further imaging workup recommended per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.0 cm</td><td>&lt;35 years</td><td>Thyroid ultrasound</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule measuring 1.0 cm or greater in patient less than 35 years of age. Recommend thyroid ultrasound for further evaluation per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.0 cm</td><td>≥35 years</td><td>Ultrasound at clinician discretion</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule measuring 1.0 cm or greater in patient 35 years of age or older. Thyroid ultrasound may be considered at clinician discretion; risk of clinically significant malignancy is low per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Any size</td><td>Any</td><td>Ultrasound if suspicious features present (see below)</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule with suspicious imaging features. Recommend thyroid ultrasound for further evaluation regardless of nodule size or patient age per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">For multinodular goiter, apply these criteria to the dominant (largest) nodule only.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">FDG-PET — Incidental Thyroid Uptake</div>
+    <table class="gp-table">
+      <thead><tr><th>Uptake Pattern</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td><strong>Focal</strong></td><td>Thyroid ultrasound recommended (~30% malignancy risk)</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Focal FDG uptake in the thyroid gland. Recommend thyroid ultrasound for further evaluation; focal thyroid FDG uptake carries approximately 30% risk of malignancy per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td><strong>Diffuse</strong></td><td>Usually thyroiditis; clinical correlation, no dedicated imaging needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Diffuse FDG uptake in the thyroid gland, most consistent with thyroiditis. Clinical correlation recommended; no dedicated thyroid imaging follow-up typically required per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Suspicious Features — Ultrasound Warranted Regardless of Size or Age</div>
+    <ul class="gp-ul">
+      <li>Microcalcifications</li>
+      <li>Irregular or lobulated margins</li>
+      <li>Extrathyroidal extension</li>
+      <li>Suspicious cervical lymphadenopathy</li>
+    </ul>
+    <p class="gp-note">For thyroid nodules found incidentally on ultrasound performed for another indication, apply ACR TI-RADS criteria instead.</p>
+  </div>
+</div>`,
+
 'fleischner': `
 <div class="guideline-panel">
   <div class="gp-header">
@@ -2390,6 +2444,40 @@ const panelContent = {
       </tbody>
     </table>
     <p class="gp-note"><span class="gp-tag gp-blue">NEW</span> = new for 2026. Macro names refer to PowerScribe voice macros — see your macro list for exact phrasing.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Incidental Liver Lesion — Report Phrases</div>
+    <p class="copy-row-hint">👆 Click any row to copy that recommendation to your clipboard.</p>
+    <table class="gp-table">
+      <thead><tr><th>Size</th><th>CT Features</th><th>Patient Risk</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;0.5 cm</td><td>Any</td><td>Low</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion less than 0.5 cm, low-risk patient. Recommendation: no follow-up required per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>0.5–1.0 cm</td><td>Homogeneous hypodensity (probable cyst)</td><td>Low</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion 0.5-1.0 cm with homogeneous hypodensity consistent with a simple cyst, low-risk patient. Recommendation: no follow-up required per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>0.5–1.0 cm</td><td>Indeterminate / suboptimal exam</td><td>Low</td><td>US or MRI in 6 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental indeterminate hepatic lesion 0.5-1.0 cm, low-risk patient. Recommendation: follow-up ultrasound or MRI in 6 months per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>1.0–1.5 cm</td><td>Definite benign features (cyst, hemangioma)</td><td>Low</td><td>No follow-up needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion 1.0-1.5 cm with definite benign imaging features (simple cyst or hemangioma), low-risk patient. Recommendation: no follow-up required per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>1.0–1.5 cm</td><td>Indeterminate features</td><td>Low</td><td>MRI in 3–6 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental indeterminate hepatic lesion 1.0-1.5 cm, low-risk patient. Recommendation: MRI liver with and without contrast in 3-6 months per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.5 cm</td><td>Indeterminate features</td><td>Low</td><td>MRI promptly</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental indeterminate hepatic lesion 1.5 cm or greater, low-risk patient. Recommendation: MRI liver with and without contrast promptly for further characterization per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>&lt;1.0 cm</td><td>Any</td><td>High</td><td>MRI or CT in 3–6 months</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion less than 1.0 cm, high-risk patient (known malignancy or cirrhosis). Recommendation: short-interval follow-up MRI or CT in 3-6 months per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.0 cm</td><td>Any</td><td>High</td><td>MRI promptly; LI-RADS if cirrhosis</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental hepatic lesion 1.0 cm or greater, high-risk patient (known malignancy or cirrhosis). Recommendation: MRI liver promptly for characterization; LI-RADS assessment if cirrhotic per ACR Incidental Findings Committee guidelines.',this,'Berland LL et al. Management of Incidental Liver Lesions on CT: A White Paper of the ACR Incidental Findings Committee. JACR 2017. https://www.jacr.org/article/S1546-1440(17)30889-X/fulltext')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">High-risk = known or suspected malignancy, or cirrhosis. Low-risk = no known malignancy or cirrhosis.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Incidental Thyroid Nodule — Report Phrases</div>
+    <table class="gp-table">
+      <thead><tr><th>Size</th><th>Patient Age / Context</th><th>Recommendation</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>&lt;1.0 cm</td><td>Any</td><td>No further workup needed</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule measuring less than 1.0 cm. No further imaging workup recommended per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.0 cm</td><td>&lt;35 years</td><td>Thyroid ultrasound</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule measuring 1.0 cm or greater in patient less than 35 years of age. Recommend thyroid ultrasound for further evaluation per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>≥1.0 cm</td><td>≥35 years</td><td>Ultrasound at clinician discretion</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule measuring 1.0 cm or greater in patient 35 years of age or older. Thyroid ultrasound may be considered at clinician discretion; risk of clinically significant malignancy is low per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Any size</td><td>Suspicious features present</td><td>Ultrasound regardless of size or age</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Incidental thyroid nodule with suspicious imaging features. Recommend thyroid ultrasound for further evaluation regardless of nodule size or patient age per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+        <tr class="copy-row"><td>Focal FDG uptake</td><td>PET scan</td><td>Ultrasound (~30% malignancy risk)</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Focal FDG uptake in the thyroid gland. Recommend thyroid ultrasound for further evaluation; focal thyroid FDG uptake carries approximately 30% risk of malignancy per ACR Incidental Thyroid Findings Committee guidelines.',this,'Hoang JK et al. Managing Incidental Thyroid Nodules Detected on Imaging: White Paper of the ACR Incidental Thyroid Findings Committee. JACR 2015;12:143-150. https://www.jacr.org/article/S1546-1440(14)00627-9/abstract')" title="Copy recommendation">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">Suspicious features: microcalcifications, irregular margins, extrathyroidal extension, suspicious cervical lymphadenopathy. For multinodular goiter, evaluate the dominant nodule.</p>
   </div>
 </div>`
 
