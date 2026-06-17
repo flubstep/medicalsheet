@@ -276,7 +276,7 @@
     <div class="header-user" id="headerUser"></div>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
-    <button onclick="openModal('policyModal')" style="background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">📋 Policy</button>
+    <button onclick="openModal('policyModal')" style="background:var(--accent);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:7px 16px;border-radius:20px;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 6px rgba(232,98,42,0.4)" onmouseover="this.style.background='#d05520'" onmouseout="this.style.background='var(--accent)'">📋 Reimbursement Policies</button>
     <button id="logoutBtn">Sign out</button>
   </div>
 </header>
@@ -665,7 +665,20 @@ let addFundsUserId = null;
 let addFundsUserName = null;
 
 // ── AUTH ──
+function clearAuthState() {
+  localStorage.removeItem('ari-expenses-auth');
+  currentUser = null; currentProfile = null;
+  document.getElementById('appHeader').style.display = 'none';
+  showPage('login');
+}
+
 sb.auth.onAuthStateChange(async (event, session) => {
+  // Automatically wipe stale session data on any refresh failure
+  if (event === 'TOKEN_REFRESH_FAILED') {
+    clearAuthState();
+    return;
+  }
+
   if (session?.user) {
     currentUser = session.user;
     const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
@@ -684,6 +697,8 @@ sb.auth.onAuthStateChange(async (event, session) => {
       loadEmployeeBalances();
     }
   } else {
+    // Clear any stale localStorage so the login form always works cleanly
+    localStorage.removeItem('ari-expenses-auth');
     currentUser = null; currentProfile = null;
     document.getElementById('appHeader').style.display = 'none';
     showPage('login');

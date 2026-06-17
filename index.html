@@ -128,6 +128,7 @@
     .tab[data-cat="interventional"].active{ color: var(--accent4); }
     .tab[data-cat="protocols"].active     { color: var(--accent2); }
     .tab[data-cat="links"].active         { color: #c0952a; }
+    .tab[data-cat="documents"].active     { color: #2a7d9e; }
 
     /* MAIN */
     main { max-width: 100%; margin: 0; padding: 16px 48px 60px; }
@@ -424,7 +425,8 @@
   <a class="quick-link" href="/static/summa_telephone_directory.html">📖 Phone Directory</a>
   <a class="quick-link" href="/static/PhonedirectoryforTechareas.pdf">📞 Tech Area Phones</a>
   <a class="quick-link" href="static/PIT phone numbers.png">📋 Core Wall Numbers</a>
-  <a class="quick-link" href="/expenses.html">💰 Expense Reimbursement</a>
+  <a class="quick-link" href="/expenses.html" target="_blank">💰 Expense Reimbursement</a>
+  <a class="quick-link urgent" href="static/2026 ARI Quality Reporting Measures.pdf" target="_blank">📊 Quality Reporting</a>
 </div>
 
 <nav class="tabs" id="tabs">
@@ -433,6 +435,7 @@
   <button class="tab" data-cat="interventional">🩸 Interventional</button>
   <button class="tab" data-cat="protocols">📋 Protocols</button>
   <button class="tab" data-cat="links">🔗 Links &amp; Info</button>
+  <button class="tab" data-cat="documents">📁 Documents</button>
 </nav>
 
 <main>
@@ -1385,6 +1388,79 @@
         <div class="card-body"><div class="card-title">Dr. Unger — CTA Abdominal Wall for Flaps (DIEP)</div></div>
       </a>
     </div>
+  </section>
+
+  <section class="section" data-cat="documents">
+    <div class="section-title">📁 ARI Documents</div>
+
+    <!-- Quality Reporting — featured -->
+    <div class="sub-section">
+      <div class="sub-section-title">📊 Quality &amp; Compliance</div>
+      <a class="card" href="static/2026 ARI Quality Reporting Measures.pdf" target="_blank" style="background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;max-width:520px;box-shadow:var(--card-shadow)">
+        <div style="font-size:32px;flex-shrink:0">📊</div>
+        <div>
+          <div style="font-family:'Fredoka',sans-serif;font-size:16px;color:#2a7d9e;font-weight:600">2026 ARI Quality Reporting Measures</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Opens in browser · PDF</div>
+        </div>
+        <div style="margin-left:auto;font-size:11px;font-weight:700;color:#2a7d9e;background:rgba(42,125,158,0.1);padding:3px 10px;border-radius:20px;flex-shrink:0">VIEW →</div>
+      </a>
+    </div>
+
+    <!-- Reading Room Guides -->
+    <div class="sub-section">
+      <div class="sub-section-title">🖥 Reading Room Guides</div>
+      <div class="card-grid">
+        <a class="card" href="static/Haiku quick reference.pdf" target="_blank">
+          <div class="card-body">
+            <div class="card-title">Haiku Quick Reference</div>
+            <div class="card-sub">Epic mobile app · PDF</div>
+          </div>
+        </a>
+        <a class="card" href="static/Hawaii Primer.pdf" target="_blank">
+          <div class="card-body">
+            <div class="card-title">Hawaii Site Primer</div>
+            <div class="card-sub">Orientation guide · PDF</div>
+          </div>
+        </a>
+        <a class="card" href="static/2025 Hawaii Workstation Updates and Tips.pdf" target="_blank">
+          <div class="card-body">
+            <div class="card-title">Hawaii Workstation Tips 2025</div>
+            <div class="card-sub">Setup &amp; updates · PDF</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Policies & HR — collapsed by default -->
+    <div class="sub-section">
+      <details>
+        <summary style="font-family:'Fredoka',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.04em;color:var(--text-muted);padding:2px 6px 6px;border-bottom:1px dashed var(--border);margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:6px;list-style:none">
+          <span>▶</span> 📄 Policies &amp; HR <span style="font-size:11px;font-weight:400">(click to expand)</span>
+        </summary>
+        <div class="card-grid" style="margin-top:8px">
+          <a class="card" href="static/Handbook - Akron Radiology Inc Employee Handbook v 2024-09-01.pdf" target="_blank">
+            <div class="card-body">
+              <div class="card-title">ARI Employee Handbook</div>
+              <div class="card-sub">v2024 · PDF</div>
+            </div>
+          </a>
+          <a class="card" href="static/Moonlighting Policy ARI.pdf" target="_blank">
+            <div class="card-body">
+              <div class="card-title">Moonlighting Policy</div>
+              <div class="card-sub">PDF</div>
+            </div>
+          </a>
+          <a class="card" href="/expenses.html" target="_blank">
+            <div class="card-body">
+              <div class="card-title">Reimbursement Policy</div>
+              <div class="card-sub">View in Expense Portal</div>
+            </div>
+          </a>
+        </div>
+      </details>
+    </div>
+
+    <p style="font-size:11px;color:var(--text-muted);margin-top:16px">⚠ Note: Hawaii Primer and Workstation Tips need to be converted to PDF before uploading to GitHub. RTF and DOCX files will download rather than open in the browser.</p>
   </section>
 </main>
 
@@ -2370,6 +2446,7 @@ document.addEventListener('click', e => {
   const href = link.getAttribute('href');
   const hasPanelId = !!link.closest('.card')?.dataset.panelId;
   if (!href || /^https?:\/\//.test(href) || (href === '#' && !hasPanelId)) return;
+  if (link.getAttribute('target') === '_blank') return;
   if (!link.closest('main') && !link.closest('.quick-bar')) return;
   e.preventDefault();
 
