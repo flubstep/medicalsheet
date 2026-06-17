@@ -426,7 +426,7 @@
   <a class="quick-link" href="/static/PhonedirectoryforTechareas.pdf">📞 Tech Area Phones</a>
   <a class="quick-link" href="static/PIT phone numbers.png">📋 Core Wall Numbers</a>
   <a class="quick-link" href="/expenses.html" target="_blank">💰 Expense Reimbursement</a>
-  <a class="quick-link urgent" href="static/2026 ARI Quality Reporting Measures.pdf">📊 Quality Reporting 2026</a>
+  <a class="quick-link urgent" href="#" onclick="openPanelInline(panelContent['quality-reporting-2026'],'2026 Quality Reporting Measures','static/2026 ARI Quality Reporting Measures.pdf');return false;">📊 Quality Reporting 2026</a>
 </div>
 
 <nav class="tabs" id="tabs">
@@ -1396,11 +1396,11 @@
     <!-- Quality Reporting — featured -->
     <div class="sub-section">
       <div class="sub-section-title">📊 Quality &amp; Compliance</div>
-      <a class="card" href="static/2026 ARI Quality Reporting Measures.pdf" target="_blank" style="background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;max-width:520px;box-shadow:var(--card-shadow)">
+      <a class="card" href="static/2026 ARI Quality Reporting Measures.pdf" data-panel-id="quality-reporting-2026" style="background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;max-width:520px;box-shadow:var(--card-shadow)">
         <div style="font-size:32px;flex-shrink:0">📊</div>
         <div>
-          <div style="font-family:'Fredoka',sans-serif;font-size:16px;color:#2a7d9e;font-weight:600">2026 ARI Quality Reporting Measures</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Opens in browser · PDF</div>
+          <div class="card-title" style="font-family:'Fredoka',sans-serif;font-size:16px;color:#2a7d9e;font-weight:600">2026 ARI Quality Reporting Measures</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Summa &amp; MIPS measures · 2026</div>
         </div>
         <div style="margin-left:auto;font-size:11px;font-weight:700;color:#2a7d9e;background:rgba(42,125,158,0.1);padding:3px 10px;border-radius:20px;flex-shrink:0">VIEW →</div>
       </a>
@@ -2309,6 +2309,87 @@ const panelContent = {
       </tbody>
     </table>
     <p class="gp-note">UE = urinary extravasation. Advance one grade for multiple injuries to the same organ (up to Grade III).</p>
+  </div>
+</div>`
+
+'quality-reporting-2026': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">2026 ARI Quality Reporting Measures</div>
+    <div class="gp-meta">Akron Radiology Inc. &nbsp;·&nbsp; Effective January 2026</div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Summa Quality Measures</div>
+    <table class="gp-table">
+      <thead><tr><th>Measure</th><th>Modality / Context</th><th>What to Document</th><th>Macro</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Incidental Liver Lesions</strong> <span class="gp-tag gp-blue">NEW</span><br><small style="color:var(--text-muted)">Also a MIPS measure</small></td>
+          <td>CT / MRI</td>
+          <td>Follow-up recommendation based on patient risk status and lesion size</td>
+          <td>reference liver</td>
+        </tr>
+        <tr>
+          <td><strong>Carotid / ICA Calcification</strong> <span class="gp-tag gp-blue">NEW</span></td>
+          <td>CT cervical spine or CT neck w/o contrast</td>
+          <td>Presence or absence of calcification in carotid bifurcation region; pick-list default "No carotid calcification"</td>
+          <td>Pick list</td>
+        </tr>
+        <tr>
+          <td><strong>Incidental Thyroid Nodules</strong></td>
+          <td>CT / MRI</td>
+          <td>Ultrasound follow-up recommendation for incidentally detected thyroid nodules</td>
+          <td>reference thyroid</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">MIPS Quality Measures</div>
+    <table class="gp-table">
+      <thead><tr><th>Measure</th><th>Modality / Context</th><th>What to Document</th><th>Macro</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Breast Arterial Calcification</strong> <span class="gp-tag gp-blue">NEW</span></td>
+          <td>Screening mammogram</td>
+          <td>Presence or absence of arterial calcifications; default "no arterial calcifications"</td>
+          <td>breast arterial</td>
+        </tr>
+        <tr>
+          <td><strong>Emphysema</strong> <span class="gp-tag gp-blue">NEW</span></td>
+          <td>Chest CT</td>
+          <td>Referral to lung cancer screening program — unless patient is already enrolled, has a known nodule/mass, or does not meet Lung-RADS criteria</td>
+          <td>reference emphysema<br>reference emphysema NOT</td>
+        </tr>
+        <tr>
+          <td><strong>Pancreatic Cyst Follow-Up</strong> <span class="gp-tag gp-blue">NEW</span></td>
+          <td>CT / MRI</td>
+          <td>Appropriate follow-up recommendation per guidelines</td>
+          <td>reference pancreatic cyst</td>
+        </tr>
+        <tr>
+          <td><strong>Breast Cancer Risk Assessment</strong></td>
+          <td>Screening mammogram</td>
+          <td>Lifetime risk assessment documented in report</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Lung Nodules</strong></td>
+          <td>Chest CT</td>
+          <td>Fleischner Society criteria for incidental pulmonary nodules</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Fluoroscopy</strong></td>
+          <td>Fluoroscopy</td>
+          <td>Radiation exposure dose documented in report</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="gp-note"><span class="gp-tag gp-blue">NEW</span> = new for 2026. Macro names refer to PowerScribe voice macros — see your macro list for exact phrasing.</p>
   </div>
 </div>`
 
