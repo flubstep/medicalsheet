@@ -385,6 +385,7 @@
         <button class="btn btn-accent" onclick="openSubmitModal()">+ New Submission</button>
         <button class="btn btn-ghost" onclick="openBalancesModal()">💰 Manage Balances</button>
         <button class="btn btn-ghost" onclick="exportExcel()">⬇ Export Excel</button>
+        <button class="btn btn-ghost" onclick="exportAccountingExcel()">⬇ Export Accounting</button>
       </div>
     </div>
 
@@ -949,7 +950,7 @@ async function openBalancesModal() {
   const wrap = document.getElementById('balancesTableWrap');
   wrap.innerHTML = '<div class="loading">Loading…</div>';
 
-  const { data: profiles, error: pErr } = await sb.from('profiles').select('id, full_name, role');
+  const { data: profiles, error: pErr } = await sb.from('profiles').select('id, full_name, role, class, cashout_election');
   if (pErr) { wrap.innerHTML = `<p style="color:red">${pErr.message}</p>`; return; }
 
   const employees = (profiles || [])
@@ -977,18 +978,35 @@ async function openBalancesModal() {
   const employeeRows = employees.length ? employees.map(e => {
     const b = balMap[e.id] || { hra: 0, cme: 0 };
     const safeName = (e.full_name || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const cls = e.class || 'Physician';
+    const co  = e.cashout_election || '';
+    const selStyle = 'font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text)';
     return `<tr>
       <td><strong>${esc(e.full_name || '—')}</strong></td>
       <td style="color:#2a7d4f;font-weight:700">$${b.hra.toFixed(2)}</td>
       <td style="color:#1a6aa0;font-weight:700">$${b.cme.toFixed(2)}</td>
       <td>
+        <select id="cls_${e.id}" style="${selStyle}">
+          <option value="Physician" ${cls==='Physician'?'selected':''}>Physician</option>
+          <option value="Admin"     ${cls==='Admin'?'selected':''}>Admin</option>
+        </select>
+      </td>
+      <td>
+        <select id="co_${e.id}" style="${selStyle}">
+          <option value=""  ${co===''?'selected':''}>—</option>
+          <option value="Q" ${co==='Q'?'selected':''}>Q – Quarterly</option>
+          <option value="Y" ${co==='Y'?'selected':''}>Y – Year-End</option>
+        </select>
+      </td>
+      <td>
         <div class="action-row">
+          <button class="btn btn-ghost btn-sm" onclick="saveEmployeeSettings('${e.id}')">Save</button>
           <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}','HRA')">+ HRA</button>
           <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}','CME')">+ CME</button>
         </div>
       </td>
     </tr>`;
-  }).join('') : `<tr class="empty-row"><td colspan="4">No employees found.</td></tr>`;
+  }).join('') : `<tr class="empty-row"><td colspan="6">No employees found.</td></tr>`;
 
   const recentRows = (txns || []).slice(0, 25).map(t => {
     const name = nameMap[t.user_id] || '—';
@@ -1014,7 +1032,7 @@ async function openBalancesModal() {
     <p class="section-label">Current Balances</p>
     <div style="margin-bottom:24px;border:1px solid var(--border);border-radius:9px;overflow:hidden">
       <table>
-        <thead><tr><th>Employee</th><th>HRA</th><th>CME</th><th>Add Funds</th></tr></thead>
+        <thead><tr><th>Employee</th><th>HRA</th><th>CME</th><th>Class</th><th>Cash-out</th><th>Actions</th></tr></thead>
         <tbody>${employeeRows}</tbody>
       </table>
     </div>
@@ -1197,6 +1215,89 @@ async function exportExcel() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Expenses');
   XLSX.writeFile(wb, `ARI-expenses-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+async function saveEmployeeSettings(userId) {
+  const cls = document.getElementById('cls_' + userId)?.value;
+  const co  = document.getElementById('co_'  + userId)?.value || null;
+  const { error } = await sb.from('profiles').update({ class: cls, cashout_election: co }).eq('id', userId);
+  if (error) return showToast('Error saving: ' + error.message, true);
+  const emp = allEmployees.find(e => e.id === userId);
+  if (emp) { emp.class = cls; emp.cashout_election = co; }
+  showToast('Settings saved.');
+}
+
+function getQuarter(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const q  = Math.ceil((d.getMonth() + 1) / 3);
+  const yr = String(d.getFullYear()).slice(-2);
+  return `${q}Q${yr}`;
+}
+
+function getGLCode(pool, cls, category) {
+  if (pool === 'HRA') return cls === 'Admin' ? '6030 Admin - HRA Reimbursement' : '5030 Phys - HRA Reimbursement';
+  if (pool === 'CME') return cls === 'Admin' ? '6020 Admin - Admin Bus/CPE'      : '5020 Phys - Bus/CME';
+  const cat = (category || '').toLowerCase();
+  if (cat.includes('cell') || cat.includes('phone'))                                        return '7285 Corp - Telephone';
+  if (cat.includes('internet'))                                                              return '7215 Corp - Internet';
+  if (cat.includes('office') || cat.includes('supplies'))                                   return '7230 Corp - Office Supplies';
+  if (cat.includes('software') || cat.includes('subscription'))                             return '7216 Corporate Expenses:Computer Software & Licenses';
+  if (cat.includes('hawaii') || cat.includes('travel'))                                     return '7306 Corp - Hawaii Travel (100%)';
+  if (cat.includes('dea') || cat.includes('license') || cat.includes('privilege') ||
+      cat.includes('abr') || cat.includes('moc') || cat.includes('membership') ||
+      cat.includes('identity') || cat.includes('dues'))                                     return '5415 Phys - Corp Dues (deductible)';
+  return '7307 Corp - Travel';
+}
+
+async function exportAccountingExcel() {
+  const { data: subs } = await sb.from('submissions')
+    .select('*').in('status', ['approved', 'processed'])
+    .order('expense_date', { ascending: true });
+  if (!subs?.length) return showToast('No approved expenses to export.', true);
+
+  const { data: profiles } = await sb.from('profiles').select('id, class, cashout_election');
+  const profMap = {};
+  (profiles || []).forEach(p => profMap[p.id] = p);
+
+  const rows = subs.map(r => {
+    const prof = profMap[r.user_id] || {};
+    const cls  = prof.class || 'Physician';
+    const co   = prof.cashout_election || '';
+    const pool = r.pool || '';
+    const amt  = parseFloat(r.amount || 0);
+    const expType = pool === 'CME' ? 'Bus/CME' : pool === 'HRA' ? 'HRA' : 'Corp';
+    return {
+      'Cash Out Option':              co,
+      'Name':                         (r.full_name || '').split(',')[0].trim(),
+      'Class':                        cls,
+      'Date':                         r.expense_date || '',
+      'Qtr':                          getQuarter(r.expense_date),
+      'Exp Type':                     expType,
+      'G/L Acct #':                   getGLCode(pool, cls, r.category),
+      'Description':                  r.category || '',
+      'Allowance':                    '',
+      'Expense Amt':                  amt,
+      'Bus/CME Qrtly Cash Out':       0,
+      'Bus/CME Y/E Cash Out':         0,
+      'Physician HRA Reimbursement':  pool === 'HRA' && cls === 'Physician' ? amt : 0,
+      'Admin HRA Reimbursement':      pool === 'HRA' && cls === 'Admin'     ? amt : 0,
+      'HRA (Admin)':                  0,
+      'Y/E HRA Cash Out':             0,
+      'Corp Exp':                     pool === 'Corporate' || pool === 'Corp' ? amt : 0,
+      'BUS/CME':                      pool === 'CME' ? amt : 0,
+    };
+  });
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [
+    {wch:14},{wch:20},{wch:12},{wch:12},{wch:7},{wch:10},
+    {wch:40},{wch:28},{wch:10},{wch:12},{wch:22},{wch:20},
+    {wch:28},{wch:26},{wch:12},{wch:16},{wch:10},{wch:10}
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Data Entry');
+  XLSX.writeFile(wb, `ARI-accounting-${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 // ── FILE HANDLING ──
