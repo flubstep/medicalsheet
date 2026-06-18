@@ -2375,25 +2375,22 @@ const panelContent = {
   <div class="gp-section">
     <div class="gp-section-title">Summa Quality Measures</div>
     <table class="gp-table">
-      <thead><tr><th>Measure</th><th>Modality / Context</th><th>What to Document</th><th>Macro</th></tr></thead>
+      <thead><tr><th>Measure</th><th>Modality / Context</th><th>What to Document</th></tr></thead>
       <tbody>
         <tr>
           <td><strong>Incidental Liver Lesions</strong> <span class="gp-tag gp-blue">NEW</span><br><small style="color:var(--text-muted)">Also a MIPS measure</small></td>
           <td>CT / MRI</td>
           <td>Follow-up recommendation based on patient risk status and lesion size</td>
-          <td>reference liver</td>
         </tr>
         <tr>
           <td><strong>Carotid / ICA Calcification</strong> <span class="gp-tag gp-blue">NEW</span></td>
           <td>CT cervical spine or CT neck w/o contrast</td>
           <td>Presence or absence of calcification in carotid bifurcation region; pick-list default "No carotid calcification"</td>
-          <td>Pick list</td>
         </tr>
         <tr>
           <td><strong>Incidental Thyroid Nodules</strong></td>
           <td>CT / MRI</td>
           <td>Ultrasound follow-up recommendation for incidentally detected thyroid nodules</td>
-          <td>reference thyroid</td>
         </tr>
       </tbody>
     </table>
@@ -2402,52 +2399,47 @@ const panelContent = {
   <div class="gp-section">
     <div class="gp-section-title">MIPS Quality Measures</div>
     <table class="gp-table">
-      <thead><tr><th>Measure</th><th>Modality / Context</th><th>What to Document</th><th>Macro</th></tr></thead>
+      <thead><tr><th>Measure</th><th>Modality / Context</th><th>What to Document</th></tr></thead>
       <tbody>
         <tr>
           <td><strong>Breast Arterial Calcification</strong> <span class="gp-tag gp-blue">NEW</span></td>
           <td>Screening mammogram</td>
           <td>Presence or absence of arterial calcifications; default "no arterial calcifications"</td>
-          <td>breast arterial</td>
         </tr>
         <tr>
           <td><strong>Emphysema</strong> <span class="gp-tag gp-blue">NEW</span></td>
           <td>Chest CT</td>
           <td>Referral to lung cancer screening program — unless patient is already enrolled, has a known nodule/mass, or does not meet Lung-RADS criteria
-            <div onclick="copySnippet('The presence of pulmonary emphysema on CT is an independent risk factor for lung cancer. Consideration should be given for annual low-dose screen CT.',this,'')" style="margin-top:7px;display:flex;align-items:flex-start;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;cursor:pointer;transition:background 0.12s" onmouseover="this.style.background='rgba(42,125,158,0.08)'" onmouseout="this.style.background='var(--surface2)'">
+            <small style="display:block;margin-top:5px;color:var(--text-muted)">Use text below ↓</small>
+            <div onclick="copySnippet('The presence of pulmonary emphysema on CT is an independent risk factor for lung cancer. Consideration should be given for annual low-dose screen CT.',this,'')" style="margin-top:4px;display:flex;align-items:flex-start;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;cursor:pointer;transition:background 0.12s" onmouseover="this.style.background='rgba(42,125,158,0.08)'" onmouseout="this.style.background='var(--surface2)'">
               <span style="flex-shrink:0;font-size:13px">📋</span>
               <span style="font-size:12px;line-height:1.5;font-style:italic;color:var(--text)">The presence of pulmonary emphysema on CT is an independent risk factor for lung cancer. Consideration should be given for annual low-dose screen CT.</span>
             </div>
           </td>
-          <td>reference emphysema<br>reference emphysema NOT</td>
         </tr>
         <tr>
           <td><strong>Pancreatic Cyst Follow-Up</strong> <span class="gp-tag gp-blue">NEW</span></td>
           <td>CT / MRI</td>
           <td>Appropriate follow-up recommendation per guidelines</td>
-          <td>reference pancreatic cyst</td>
         </tr>
         <tr>
           <td><strong>Breast Cancer Risk Assessment</strong></td>
           <td>Screening mammogram</td>
           <td>Lifetime risk assessment documented in report</td>
-          <td>—</td>
         </tr>
         <tr>
           <td><strong>Lung Nodules</strong></td>
           <td>Chest CT</td>
           <td>Fleischner Society criteria for incidental pulmonary nodules</td>
-          <td>—</td>
         </tr>
         <tr>
           <td><strong>Fluoroscopy</strong></td>
           <td>Fluoroscopy</td>
           <td>Radiation exposure dose documented in report</td>
-          <td>—</td>
         </tr>
       </tbody>
     </table>
-    <p class="gp-note"><span class="gp-tag gp-blue">NEW</span> = new for 2026. Macro names refer to PowerScribe voice macros — see your macro list for exact phrasing.</p>
+    <p class="gp-note"><span class="gp-tag gp-blue">NEW</span> = new for 2026.</p>
   </div>
 
   <div class="gp-section">
