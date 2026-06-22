@@ -832,6 +832,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 let currentUser = null;
 let currentProfile = null;
 let reviewingId = null;
+let editingSubmissionId = null;
+let editingMlId = null;
 let selectedFile = null;
 let allEmployees = [];
 let addFundsUserId = null;
@@ -949,13 +951,13 @@ async function loadEmployeeStats() {
 function renderEmployeeTable(rows) {
   const wrap = document.getElementById('empTableWrap');
   if (!rows.length) {
-    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="6">No submissions found. Click "+ New Submission" to get started.</td></tr></tbody></table>';
+    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="7">No submissions found. Click "+ New Submission" to get started.</td></tr></tbody></table>';
     return;
   }
   wrap.innerHTML = `<table>
     <thead><tr>
       <th>Date</th><th>Category</th><th>Description</th>
-      <th>Amount</th><th>Status</th><th>Receipt</th>
+      <th>Amount</th><th>Status</th><th>Receipt</th><th></th>
     </tr></thead>
     <tbody>${rows.map(r => `
       <tr>
@@ -965,6 +967,10 @@ function renderEmployeeTable(rows) {
         <td><strong>$${parseFloat(r.amount).toFixed(2)}</strong></td>
         <td>${badge(r.status)}</td>
         <td>${r.receipt_url ? `<a class="receipt-link" href="${r.receipt_url}" target="_blank">View 📄</a>` : '<span style="color:var(--text-muted)">—</span>'}</td>
+        <td>${r.status === 'pending' ? `<div class="action-row">
+          <button class="btn btn-ghost btn-sm" onclick="openEditSubmission('${r.id}')">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteSubmission('${r.id}')">🗑 Delete</button>
+        </div>` : ''}</td>
       </tr>`).join('')}
     </tbody>
   </table>`;
@@ -1059,9 +1065,40 @@ function renderManagerTable(rows) {
 
 // ── SUBMIT EXPENSE ──
 function openSubmitModal() {
-  document.getElementById('subDate').value = new Date().toISOString().slice(0,10);
+  editingSubmissionId = null;
+  document.getElementById('submitModal').querySelector('.modal-title').textContent = 'New Expense Submission';
+  document.getElementById('submitBtn').textContent = 'Submit Expense';
+  document.getElementById('subCategory').value = document.getElementById('subCategory').options[0].value;
+  document.getElementById('subAmount').value   = '';
+  document.getElementById('subDate').value     = new Date().toISOString().slice(0,10);
+  document.getElementById('subDesc').value     = '';
+  clearFile();
   clearError('submitError');
   openModal('submitModal');
+}
+
+async function openEditSubmission(id) {
+  const { data: r, error } = await sb.from('submissions').select('*').eq('id', id).single();
+  if (error || !r) return showToast('Could not load submission.', true);
+  editingSubmissionId = id;
+  document.getElementById('submitModal').querySelector('.modal-title').textContent = 'Edit Submission';
+  document.getElementById('submitBtn').textContent = 'Save Changes';
+  document.getElementById('subCategory').value = r.category || '';
+  document.getElementById('subAmount').value   = r.amount || '';
+  document.getElementById('subDate').value     = r.expense_date || '';
+  document.getElementById('subDesc').value     = r.description || '';
+  clearFile();
+  clearError('submitError');
+  openModal('submitModal');
+}
+
+async function deleteSubmission(id) {
+  if (!confirm('Delete this submission? This cannot be undone.')) return;
+  const { error } = await sb.from('submissions').delete().eq('id', id).eq('status', 'pending');
+  if (error) return showToast('Error: ' + error.message, true);
+  showToast('Submission deleted.');
+  loadEmployeeSubmissions();
+  loadEmployeeStats();
 }
 
 async function submitExpense() {
@@ -1071,10 +1108,10 @@ async function submitExpense() {
   const description = document.getElementById('subDesc').value.trim();
 
   if (!amount || amount <= 0) return showError('submitError', 'Please enter a valid amount.');
-  if (!date)        return showError('submitError', 'Please select the expense date.');
+  if (!date)                  return showError('submitError', 'Please select the expense date.');
 
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Submitting…';
+  btn.disabled = true; btn.textContent = editingSubmissionId ? 'Saving…' : 'Submitting…';
 
   let receipt_url = null, receipt_filename = null;
 
@@ -1083,7 +1120,7 @@ async function submitExpense() {
     const path = `${currentUser.id}/${Date.now()}.${ext}`;
     const { error: upErr } = await sb.storage.from('receipts').upload(path, selectedFile);
     if (upErr) {
-      btn.disabled = false; btn.textContent = 'Submit Expense';
+      btn.disabled = false; btn.textContent = editingSubmissionId ? 'Save Changes' : 'Submit Expense';
       return showError('submitError', 'Receipt upload failed: ' + upErr.message);
     }
     const { data: urlData } = await sb.storage.from('receipts').createSignedUrl(path, 60 * 60 * 24 * 365);
@@ -1091,28 +1128,29 @@ async function submitExpense() {
     receipt_filename = path;
   }
 
-  const { error } = await sb.from('submissions').insert({
-    user_id: currentUser.id,
-    full_name: currentProfile?.full_name || currentUser.email,
-    category, amount, expense_date: date, description,
-    receipt_url, receipt_filename
-  });
+  let error;
+  if (editingSubmissionId) {
+    const updates = { category, amount, expense_date: date, description };
+    if (receipt_url) { updates.receipt_url = receipt_url; updates.receipt_filename = receipt_filename; }
+    ({ error } = await sb.from('submissions').update(updates).eq('id', editingSubmissionId).eq('status', 'pending'));
+  } else {
+    ({ error } = await sb.from('submissions').insert({
+      user_id: currentUser.id,
+      full_name: currentProfile?.full_name || currentUser.email,
+      category, amount, expense_date: date, description,
+      receipt_url, receipt_filename
+    }));
+  }
 
-  btn.disabled = false; btn.textContent = 'Submit Expense';
-
+  btn.disabled = false; btn.textContent = editingSubmissionId ? 'Save Changes' : 'Submit Expense';
   if (error) return showError('submitError', error.message);
+
   closeModal('submitModal');
   clearFile();
-  document.getElementById('subAmount').value = '';
-  document.getElementById('subDesc').value   = '';
-  showToast('✅ Submission received!');
-  if (currentProfile?.role === 'manager') {
-    loadManagerSubmissions();
-    loadManagerStats();
-  } else {
-    loadEmployeeSubmissions();
-    loadEmployeeStats();
-  }
+  showToast(editingSubmissionId ? '✅ Submission updated!' : '✅ Submission received!');
+  editingSubmissionId = null;
+  if (currentProfile?.role === 'manager') { loadManagerSubmissions(); loadManagerStats(); }
+  loadEmployeeSubmissions();
   loadEmployeeStats();
 }
 
@@ -1490,45 +1528,83 @@ function switchMgrTab(name) {
 
 // ── MOONLIGHTING: EMPLOYEE ──
 function openMoonlightingModal() {
-  document.getElementById('mlDate').value    = new Date().toISOString().slice(0,10);
-  document.getElementById('mlHours').value   = '';
-  document.getElementById('mlMR').value      = '0';
-  document.getElementById('mlCT').value      = '0';
-  document.getElementById('mlUS').value      = '0';
-  document.getElementById('mlXR').value      = '0';
-  document.getElementById('mlDXA').value     = '0';
+  editingMlId = null;
+  document.getElementById('moonlightingModal').querySelector('.modal-title').textContent = 'Log Moonlighting Session';
+  document.getElementById('mlSubmitBtn').textContent = 'Submit Session';
+  document.getElementById('mlDate').value     = new Date().toISOString().slice(0,10);
+  document.getElementById('mlHours').value    = '';
+  document.getElementById('mlMR').value       = '0';
+  document.getElementById('mlCT').value       = '0';
+  document.getElementById('mlUS').value       = '0';
+  document.getElementById('mlXR').value       = '0';
+  document.getElementById('mlDXA').value      = '0';
   document.getElementById('mlComments').value = '';
   clearError('mlSubmitError');
   openModal('moonlightingModal');
 }
 
+async function openEditMoonlighting(id) {
+  const { data: r, error } = await sb.from('moonlighting_submissions').select('*').eq('id', id).single();
+  if (error || !r) return showToast('Could not load session.', true);
+  editingMlId = id;
+  document.getElementById('moonlightingModal').querySelector('.modal-title').textContent = 'Edit Session';
+  document.getElementById('mlSubmitBtn').textContent = 'Save Changes';
+  document.getElementById('mlDate').value     = r.session_date || '';
+  document.getElementById('mlHours').value    = r.hours || '';
+  document.getElementById('mlMR').value       = r.mr  || '0';
+  document.getElementById('mlCT').value       = r.ct  || '0';
+  document.getElementById('mlUS').value       = r.us  || '0';
+  document.getElementById('mlXR').value       = r.xray || '0';
+  document.getElementById('mlDXA').value      = r.dxa  || '0';
+  document.getElementById('mlComments').value = r.comments || '';
+  clearError('mlSubmitError');
+  openModal('moonlightingModal');
+}
+
+async function deleteMoonlighting(id) {
+  if (!confirm('Delete this session? This cannot be undone.')) return;
+  const { error } = await sb.from('moonlighting_submissions').delete().eq('id', id).eq('status', 'pending');
+  if (error) return showToast('Error: ' + error.message, true);
+  showToast('Session deleted.');
+  loadEmpMoonlighting();
+  loadEmpMoonlightingStats();
+}
+
 async function submitMoonlighting() {
-  const date    = document.getElementById('mlDate').value;
-  const hours   = parseFloat(document.getElementById('mlHours').value);
-  const mr      = parseInt(document.getElementById('mlMR').value)  || 0;
-  const ct      = parseInt(document.getElementById('mlCT').value)  || 0;
-  const us      = parseInt(document.getElementById('mlUS').value)  || 0;
-  const xray    = parseInt(document.getElementById('mlXR').value)  || 0;
-  const dxa     = parseInt(document.getElementById('mlDXA').value) || 0;
+  const date     = document.getElementById('mlDate').value;
+  const hours    = parseFloat(document.getElementById('mlHours').value);
+  const mr       = parseInt(document.getElementById('mlMR').value)  || 0;
+  const ct       = parseInt(document.getElementById('mlCT').value)  || 0;
+  const us       = parseInt(document.getElementById('mlUS').value)  || 0;
+  const xray     = parseInt(document.getElementById('mlXR').value)  || 0;
+  const dxa      = parseInt(document.getElementById('mlDXA').value) || 0;
   const comments = document.getElementById('mlComments').value.trim();
 
-  if (!date)            return showError('mlSubmitError', 'Please select a session date.');
+  if (!date)             return showError('mlSubmitError', 'Please select a session date.');
   if (!hours || hours <= 0) return showError('mlSubmitError', 'Please enter valid hours worked.');
 
   const btn = document.getElementById('mlSubmitBtn');
-  btn.disabled = true; btn.textContent = 'Submitting…';
+  btn.disabled = true; btn.textContent = editingMlId ? 'Saving…' : 'Submitting…';
 
-  const { error } = await sb.from('moonlighting_submissions').insert({
-    user_id:    currentUser.id,
-    full_name:  currentProfile?.full_name || currentUser.email,
-    session_date: date, hours, mr, ct, us, xray, dxa, comments: comments || null
-  });
+  let error;
+  if (editingMlId) {
+    ({ error } = await sb.from('moonlighting_submissions')
+      .update({ session_date: date, hours, mr, ct, us, xray, dxa, comments: comments || null })
+      .eq('id', editingMlId).eq('status', 'pending'));
+  } else {
+    ({ error } = await sb.from('moonlighting_submissions').insert({
+      user_id: currentUser.id,
+      full_name: currentProfile?.full_name || currentUser.email,
+      session_date: date, hours, mr, ct, us, xray, dxa, comments: comments || null
+    }));
+  }
 
-  btn.disabled = false; btn.textContent = 'Submit Session';
+  btn.disabled = false; btn.textContent = editingMlId ? 'Save Changes' : 'Submit Session';
   if (error) return showError('mlSubmitError', error.message);
 
   closeModal('moonlightingModal');
-  showToast('✅ Session submitted!');
+  showToast(editingMlId ? '✅ Session updated!' : '✅ Session submitted!');
+  editingMlId = null;
   loadEmpMoonlighting();
   loadEmpMoonlightingStats();
 }
@@ -1561,12 +1637,12 @@ function renderEmpMoonlighting(rows, error) {
   const wrap = document.getElementById('empMlTableWrap');
   if (error) { wrap.innerHTML = `<p style="color:var(--red);padding:16px">${error.message}</p>`; return; }
   if (!rows.length) {
-    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="7">No sessions found. Click "+ Log Session" to get started.</td></tr></tbody></table>';
+    wrap.innerHTML = '<table><tbody><tr class="empty-row"><td colspan="11">No sessions found. Click "+ Log Session" to get started.</td></tr></tbody></table>';
     return;
   }
   wrap.innerHTML = `<table>
     <thead><tr>
-      <th>Date</th><th>Hours</th><th>MR</th><th>CT</th><th>US</th><th>XR</th><th>DXA</th><th>Total Studies</th><th>Status</th><th>Notes</th>
+      <th>Date</th><th>Hours</th><th>MR</th><th>CT</th><th>US</th><th>XR</th><th>DXA</th><th>Total Studies</th><th>Status</th><th>Notes</th><th></th>
     </tr></thead>
     <tbody>${rows.map(r => {
       const total = (r.mr||0)+(r.ct||0)+(r.us||0)+(r.xray||0)+(r.dxa||0);
@@ -1577,6 +1653,10 @@ function renderEmpMoonlighting(rows, error) {
         <td><strong>${total}</strong></td>
         <td>${mlBadge(r.status)}</td>
         <td style="font-size:12px;color:var(--text-muted)">${esc(r.manager_notes||'')}</td>
+        <td>${r.status === 'pending' ? `<div class="action-row">
+          <button class="btn btn-ghost btn-sm" onclick="openEditMoonlighting('${r.id}')">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteMoonlighting('${r.id}')">🗑 Delete</button>
+        </div>` : ''}</td>
       </tr>`;
     }).join('')}
     </tbody></table>`;
