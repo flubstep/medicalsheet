@@ -1257,6 +1257,13 @@ const SECTIONS = [
     ["Green US Tech (Heritage)","330-899-2450"],["Green ER Tech","330-899-2468"],
     ["Green Main Number","330-899-5555"],
   ]},
+  { title: "Green — Internal Lines", location: "Green",
+    note: "These numbers cannot be dialed from an outside line. If you are calling from outside the hospital, call the operator and ask them to connect you.",
+    entries: [
+    ["Green CT","700-899-6227"],
+    ["Green MRI","700-899-6258"],
+    ["Green Tech Area","700-899-6234"],
+  ]},
 
   // ── MEDINA ───────────────────────────────────────────────────────────────
   { title: "Medina / Lake Medina", location: "Medina", entries: [
@@ -1398,6 +1405,7 @@ function renderSections() {
         </div>
         <div class="card-badge" style="background:${meta.color}20;color:${meta.color}">${entries.length}</div>
       </div>
+      ${sec.note ? `<div style="margin:0 10px 4px;padding:6px 10px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);border-radius:6px;font-size:11px;color:#92610a;line-height:1.5">⚠️ ${escapeHTML(sec.note)}</div>` : ''}
       ${entriesHTML}
     `;
 
