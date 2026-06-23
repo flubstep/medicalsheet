@@ -311,6 +311,7 @@
   </div>
   <div style="display:flex;align-items:center;gap:10px">
     <button onclick="openModal('policyModal')" style="background:var(--accent);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;padding:7px 16px;border-radius:20px;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 6px rgba(232,98,42,0.4)" onmouseover="this.style.background='#d05520'" onmouseout="this.style.background='var(--accent)'">📋 Reimbursement Policies</button>
+    <button onclick="openModal('changePwModal')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s">🔑 Change Password</button>
     <button id="logoutBtn">Sign out</button>
   </div>
 </header>
@@ -705,6 +706,34 @@
   </div>
 </div>
 
+<!-- ── CHANGE PASSWORD MODAL ── -->
+<div class="modal-overlay" id="changePwModal" onclick="closeOnOverlay(event,'changePwModal')">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-title">Change Password</div>
+      <button class="modal-close" onclick="closeModal('changePwModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="changePwError"></div>
+      <div class="form-group">
+        <label>New Password</label>
+        <div style="position:relative">
+          <input type="password" id="cpNewPassword" placeholder="Min. 8 characters" style="padding-right:44px;width:100%">
+          <button type="button" onclick="togglePw('cpNewPassword',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-muted)">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <div style="position:relative">
+          <input type="password" id="cpConfirmPassword" placeholder="Re-enter password" style="padding-right:44px;width:100%">
+          <button type="button" onclick="togglePw('cpConfirmPassword',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-muted)">👁</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="changePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── POLICY MODAL ── -->
 <div class="modal-overlay" id="policyModal" onclick="closeOnOverlay(event,'policyModal')">
   <div class="modal" style="max-width:660px">
@@ -907,6 +936,20 @@ async function signInGoogle() {
 
 async function logout() {
   await sb.auth.signOut();
+}
+
+async function changePassword() {
+  clearError('changePwError');
+  const newPw  = document.getElementById('cpNewPassword').value;
+  const confPw = document.getElementById('cpConfirmPassword').value;
+  if (newPw.length < 8) return showError('changePwError', 'Password must be at least 8 characters.');
+  if (newPw !== confPw) return showError('changePwError', 'Passwords do not match.');
+  const { error } = await sb.auth.updateUser({ password: newPw });
+  if (error) return showError('changePwError', error.message);
+  document.getElementById('cpNewPassword').value = '';
+  document.getElementById('cpConfirmPassword').value = '';
+  closeModal('changePwModal');
+  alert('Password updated successfully!');
 }
 
 document.getElementById('logoutBtn').addEventListener('click', logout);
