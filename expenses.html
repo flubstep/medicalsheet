@@ -335,28 +335,8 @@
         </div>
       </div>
       <button class="btn btn-primary" onclick="signIn()">Sign In</button>
-      <div class="auth-toggle">Don't have an account? <a onclick="toggleAuth()">Create one</a></div>
       <div style="text-align:center;margin-top:10px"><a onclick="localStorage.clear();location.reload()" style="font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline">Having trouble signing in? Click here to reset</a></div>
-    </div>
-
-    <div id="signUpForm" style="display:none">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="suName" placeholder="Dr. Jane Smith">
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="suEmail" placeholder="you@ari.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <div style="position:relative">
-          <input type="password" id="suPassword" placeholder="Min. 8 characters" autocomplete="new-password" style="padding-right:44px;width:100%">
-          <button type="button" onclick="togglePw('suPassword',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-muted)">👁</button>
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="signUp()">Create Account</button>
-      <div class="auth-toggle">Already have an account? <a onclick="toggleAuth()">Sign in</a></div>
+      <p style="text-align:center;margin-top:12px;font-size:11px;color:var(--text-muted)">No account? Contact the coordinator to receive an invitation.</p>
     </div>
   </div>
 </div>
