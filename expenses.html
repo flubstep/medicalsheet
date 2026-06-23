@@ -336,8 +336,8 @@
         </div>
       </div>
       <button class="btn btn-primary" onclick="signIn()">Sign In</button>
-      <div style="text-align:center;margin-top:10px"><a onclick="localStorage.clear();location.reload()" style="font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline">Having trouble signing in? Click here to reset</a></div>
-      <p style="text-align:center;margin-top:12px;font-size:11px;color:var(--text-muted)">No account? Contact the coordinator to receive an invitation.</p>
+      <div style="text-align:center;margin-top:10px"><a onclick="forgotPassword()" style="font-size:12px;color:var(--blue);cursor:pointer;text-decoration:underline">Forgot password?</a></div>
+      <p style="text-align:center;margin-top:8px;font-size:11px;color:var(--text-muted)">No account? Contact the coordinator to receive an invitation.</p>
     </div>
   </div>
 </div>
@@ -938,6 +938,16 @@ async function signInGoogle() {
 
 async function logout() {
   await sb.auth.signOut();
+}
+
+async function forgotPassword() {
+  const email = document.getElementById('siEmail').value.trim();
+  if (!email) return showError('authError', 'Enter your email address above first.');
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://www.radiologistic.com/expenses.html'
+  });
+  if (error) showError('authError', error.message);
+  else showError('authError', 'Password reset email sent — check your inbox!', 'success');
 }
 
 async function changePassword() {
