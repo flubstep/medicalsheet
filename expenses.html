@@ -897,6 +897,8 @@ function togglePw(id, btn) {
 
 async function signIn() {
   clearError('authError');
+  await sb.auth.signOut();
+  localStorage.removeItem('ari-expenses-auth');
   const { error } = await sb.auth.signInWithPassword({
     email: document.getElementById('siEmail').value.trim(),
     password: document.getElementById('siPassword').value
