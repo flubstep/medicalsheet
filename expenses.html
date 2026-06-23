@@ -857,9 +857,15 @@ function clearAuthState() {
 }
 
 sb.auth.onAuthStateChange(async (event, session) => {
-  // Automatically wipe stale session data on any refresh failure
   if (event === 'TOKEN_REFRESH_FAILED') {
     clearAuthState();
+    return;
+  }
+
+  if (event === 'PASSWORD_RECOVERY') {
+    document.getElementById('appHeader').style.display = 'flex';
+    showPage('employee');
+    setTimeout(() => openModal('changePwModal'), 300);
     return;
   }
 
