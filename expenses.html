@@ -902,8 +902,20 @@ async function signUp() {
   const pass  = document.getElementById('suPassword').value;
   if (!name) return showError('authError', 'Please enter your full name.');
   const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name } } });
-  if (error) showError('authError', error.message);
-  else showError('authError', 'Check your email to confirm your account!', 'success');
+  if (error) {
+    const msg = error.message || '';
+    if (msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already been registered') || msg.toLowerCase().includes('already exists')) {
+      showError('authError', 'An account with this email already exists. Please sign in instead.');
+    } else if (msg.toLowerCase().includes('invalid email')) {
+      showError('authError', 'Please enter a valid email address.');
+    } else if (msg.toLowerCase().includes('password') && msg.toLowerCase().includes('characters')) {
+      showError('authError', 'Password must be at least 8 characters.');
+    } else {
+      showError('authError', msg);
+    }
+  } else {
+    showError('authError', 'Check your email to confirm your account before signing in!', 'success');
+  }
 }
 
 async function signInGoogle() {
