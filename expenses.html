@@ -972,6 +972,17 @@ async function changePassword() {
 
 document.getElementById('logoutBtn').addEventListener('click', logout);
 
+// Detect password recovery link on page load
+if (window.location.hash.includes('type=recovery')) {
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      document.getElementById('appHeader').style.display = 'flex';
+      showPage('employee');
+      setTimeout(() => openModal('changePwModal'), 300);
+    }
+  });
+}
+
 function toggleAuth() {
   const si = document.getElementById('signInForm');
   const su = document.getElementById('signUpForm');
