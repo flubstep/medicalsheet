@@ -904,8 +904,8 @@ function togglePw(id, btn) {
 
 async function signIn() {
   clearError('authError');
-  await sb.auth.signOut();
   localStorage.removeItem('ari-expenses-auth');
+  localStorage.removeItem('sb-ztltqtytmhbviexmtrmb-auth-token');
   const { error } = await sb.auth.signInWithPassword({
     email: document.getElementById('siEmail').value.trim(),
     password: document.getElementById('siPassword').value
@@ -1884,6 +1884,8 @@ async function exportMoonlightingExcel() {
       sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0), 0),
       sessions.reduce((a, r) => a + (r.xray || 0), 0),
       sessions.reduce((a, r) => a + (r.dxa  || 0), 0),
+      '', '',
+      sessions.reduce((a, r) => a + parseFloat(r.hours || 0) * 325, 0),
     ];
     const aoa = [
       [name],
@@ -1902,7 +1904,7 @@ async function exportMoonlightingExcel() {
         r.xray || 0,
         r.dxa  || 0,
         '', '',
-        '', // Amt — calculated outside portal
+        parseFloat(r.hours || 0) * 325,
         r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
         '',
         r.comments || '',
