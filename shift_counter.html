@@ -51,6 +51,11 @@
   button.primary:hover{background:var(--accent3);border-color:var(--accent3);color:#fff}
   button.small{padding:4px 11px;font-size:12px}
   .status{color:var(--text-muted);font-style:italic;margin-top:10px}
+  .daterange{margin-top:12px;padding:9px 14px;border-radius:10px;font-family:'Fredoka',sans-serif;
+    font-size:13px;font-weight:500;display:none;align-items:center;gap:8px}
+  .daterange.show{display:inline-flex}
+  .daterange.ok{background:rgba(30,122,184,0.12);color:var(--accent5);border:2px solid var(--accent5)}
+  .daterange.na{background:var(--surface2);color:var(--text-muted);border:2px solid var(--border)}
   .tabs{display:flex;gap:6px;margin:18px 0 0;flex-wrap:wrap}
   .tab{font-family:'Fredoka',sans-serif;background:var(--surface2);border:2px solid var(--border);
        border-bottom:none;border-radius:12px 12px 0 0;color:var(--text-muted);cursor:pointer;
@@ -117,11 +122,11 @@
     </div>
     <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
     <div class="status" id="status">No schedule loaded.</div>
+    <div class="daterange" id="dateRange"></div>
   </div>
 
   <div class="tabs">
     <div class="tab active" data-tab="shift">Count by shift</div>
-    <div class="tab" data-tab="person">Count by person</div>
     <div class="tab" data-tab="config">Remote config</div>
   </div>
 
@@ -143,29 +148,6 @@
         </div>
         <table class="res"><thead><tr><th>Name</th><th class="c">Shift count</th></tr></thead>
           <tbody id="shiftResults"><tr><td colspan="2" class="empty">Load a schedule and select one or more shifts.</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Count by person -->
-  <div class="panel" data-panel="person">
-    <div class="two">
-      <div class="col">
-        <h3>People</h3>
-        <input type="text" id="personSearch" placeholder="Filter people…">
-        <select class="people" id="personList" style="margin-top:8px"></select>
-        <p class="hint">Click a name to see their full shift breakdown.</p>
-      </div>
-      <div class="col">
-        <div class="radios" id="personRadios">
-          <b>Show:</b>
-          <label><input type="radio" name="personMode" value="all" checked> All</label>
-          <label><input type="radio" name="personMode" value="remote"> Remote only</label>
-          <label><input type="radio" name="personMode" value="onsite"> On-site only</label>
-        </div>
-        <table class="res"><thead><tr><th>Shift type</th><th class="c">Count</th></tr></thead>
-          <tbody id="personResults"><tr><td colspan="2" class="empty">Load a schedule and click a name.</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -300,13 +282,6 @@ function countByShift(people,selected,cfg,mode){
   res.sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0]));
   return res;
 }
-function countByPerson(shifts,allTypes,cfg,mode){
-  const counts={};
-  for(const [s,d] of shifts) if(passesFilter(s,d,cfg,mode)) counts[s]=(counts[s]||0)+1;
-  const rows=allTypes.filter(s=>counts[s]>0).map(s=>[s,counts[s]]);
-  rows.sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0]));
-  return rows;
-}
 
 // ── State ───────────────────────────────────────────────────────────────────
 let PEOPLE={}, ALL_SHIFTS=[], ALL_PEOPLE=[];
@@ -326,6 +301,7 @@ document.getElementById("browseBtn").onclick=()=>fileInput.click();
 fileInput.onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
   document.getElementById("fileName").textContent=f.name;
+  showDateRange(f.name);
   const reader=new FileReader();
   reader.onload=ev=>{
     try{
@@ -345,7 +321,7 @@ fileInput.onchange=e=>{
       }
       if(added) saveRemoteConfig(REMOTE);
 
-      renderShiftList(); renderPersonList(); renderConfig();
+      renderShiftList(); renderConfig();
       setStatus(`✔  Loaded ${ALL_PEOPLE.length} people · ${ALL_SHIFTS.length} unique shift types found`);
     }catch(err){
       setStatus("Error loading file.");
@@ -355,6 +331,48 @@ fileInput.onchange=e=>{
   reader.readAsArrayBuffer(f);
 };
 function setStatus(t){ document.getElementById("status").textContent=t; }
+
+// ── Date range from filename ────────────────────────────────────────────────
+function mkDate(mo,day,yr){
+  if(yr<100) yr+=2000;
+  if(mo<1||mo>12||day<1||day>31||yr<2000||yr>2100) return null;
+  const d=new Date(yr,mo-1,day);
+  return (d.getMonth()===mo-1 && d.getDate()===day) ? d : null;
+}
+function parseDatesFromName(name){
+  const found=[];
+  let m, re;
+  // ISO: YYYY-MM-DD (separators: - / . _)
+  re=/(\d{4})[\/._\-](\d{1,2})[\/._\-](\d{1,2})/g;
+  while((m=re.exec(name))) { const d=mkDate(+m[2],+m[3],+m[1]); if(d) found.push(d); }
+  // US: M-D-Y(YYY) (separators: - / . _)
+  re=/(\d{1,2})[\/._\-](\d{1,2})[\/._\-](\d{2,4})/g;
+  while((m=re.exec(name))) { const d=mkDate(+m[1],+m[2],+m[3]); if(d) found.push(d); }
+  // dedupe by timestamp
+  const seen=new Set(), out=[];
+  for(const d of found){ const t=d.getTime(); if(!seen.has(t)){ seen.add(t); out.push(d); } }
+  out.sort((a,b)=>a-b);
+  return out;
+}
+function fmtDate(d){ return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+function showDateRange(name){
+  const el=document.getElementById("dateRange");
+  const dates=parseDatesFromName(name);
+  el.className="daterange show";
+  if(dates.length===0){
+    el.classList.add("na");
+    el.innerHTML="📅 Date range not available — no dates found in file name.";
+    return;
+  }
+  el.classList.add("ok");
+  const lo=dates[0], hi=dates[dates.length-1];
+  if(lo.getTime()===hi.getTime()){
+    el.innerHTML=`📅 Counting shifts for: <span>${fmtDate(lo)}</span>`;
+  }else{
+    const days=Math.round((hi-lo)/86400000)+1;
+    el.innerHTML=`📅 Counting shifts for: <span>${fmtDate(lo)} – ${fmtDate(hi)}</span> (${days} days)`;
+  }
+}
 
 // ── Tab 1: by shift ─────────────────────────────────────────────────────────
 const shiftSearch=document.getElementById("shiftSearch");
@@ -378,29 +396,7 @@ function runShift(){
     || `<tr><td colspan="2" class="empty">No matches.</td></tr>`;
 }
 
-// ── Tab 2: by person ────────────────────────────────────────────────────────
-const personSearch=document.getElementById("personSearch");
-const personListEl=document.getElementById("personList");
-let filteredPeople=[];
-function renderPersonList(){
-  const q=personSearch.value.toLowerCase();
-  filteredPeople=ALL_PEOPLE.filter(p=>p.toLowerCase().includes(q));
-  personListEl.innerHTML=filteredPeople.map(p=>`<option>${esc(p)}</option>`).join("");
-}
-personSearch.oninput=renderPersonList;
-personListEl.onchange=runPerson;
-document.getElementById("personRadios").onchange=runPerson;
-function runPerson(){
-  const name=personListEl.value;
-  const mode=document.querySelector('input[name=personMode]:checked').value;
-  if(!name || !PEOPLE[name]) return;
-  const rows=countByPerson(PEOPLE[name],ALL_SHIFTS,REMOTE,mode);
-  document.getElementById("personResults").innerHTML =
-    rows.map(([s,c])=>`<tr><td>${esc(s)}</td><td class="c">${c}</td></tr>`).join("")
-    || `<tr><td colspan="2" class="empty">No shifts for this filter.</td></tr>`;
-}
-
-// ── Tab 3: remote config ────────────────────────────────────────────────────
+// ── Remote config ───────────────────────────────────────────────────────────
 const configSearch=document.getElementById("configSearch");
 const configBody=document.getElementById("configBody");
 document.getElementById("cfgHead").innerHTML =
@@ -448,7 +444,7 @@ importInput.onchange=e=>{
       const data=JSON.parse(ev.target.result);
       REMOTE={}; for(const k in data) REMOTE[k]=new Set(data[k]);
       saveRemoteConfig(REMOTE); renderConfig();
-      runShift(); runPerson();
+      runShift();
     }catch(err){ alert("Could not read config file:\n"+err.message); }
   };
   r.readAsText(f);
