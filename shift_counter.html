@@ -101,6 +101,9 @@
   table.cfg tr:nth-child(even) td{background:var(--surface2)}
   table.cfg input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
   .empty{color:var(--text-muted);font-style:italic;padding:16px}
+  .disclaimer{margin-top:18px;padding:12px 16px;border:2px solid var(--accent3);border-radius:12px;
+    background:rgba(201,53,53,0.08);color:var(--text-muted);font-size:12px;line-height:1.6}
+  .disclaimer strong{color:var(--accent3);font-weight:600}
 </style>
 </head>
 <body>
@@ -169,6 +172,14 @@
         <tbody id="configBody"><tr><td class="empty">Load a schedule to configure remote shifts.</td></tr></tbody>
       </table>
     </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>⚠️ For informational purposes only.</strong>
+    This tool counts shifts automatically from the uploaded schedule and may misread cells,
+    name variants, or remote-day settings. It is not an official record. Always verify the
+    numbers against the original schedule before relying on them for pay, scheduling, or any
+    other decision.
   </div>
 </div>
 
