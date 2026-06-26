@@ -686,6 +686,18 @@
     <div class="section-title">🩸 Interventional Radiology</div>
 
     <div class="sub-section">
+      <div class="sub-section-title">📝 Documentation &amp; Coding</div>
+      <div class="card-grid">
+        <a class="card new-item" data-panel-id="ir-doc-audit" href="#">
+          <div class="card-body">
+            <div class="card-title">IR Op-Note Documentation Requirements</div>
+            <div class="card-sub">2026 ARI audit · diagnostic angio · US guidance · sedation · selective cath</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sub-section">
       <div class="sub-section-title">💊 Medications &amp; Prep</div>
       <div class="card-grid">
         <a class="card" href="/static/ARI 2019 Anticoagulation guidelines.pdf">
@@ -1563,6 +1575,85 @@ const panelContent = {
       <li><strong>CEUS</strong> may be used for problem-solving when US is equivocal (sensitivity ~85%, specificity ~87% for adenoma vs. cholesterol polyp)</li>
       <li>If polyp disappears on follow-up, surveillance can be discontinued</li>
     </ul>
+  </div>
+</div>`,
+
+'ir-doc-audit': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">IR Operative Note Documentation Requirements</div>
+    <div class="gp-meta">2026 ARI IR Documentation Audit · AMA/CPT&#xAE; &amp; CMS/NCCI requirements</div>
+  </div>
+  <div class="gp-copy-row">
+    <button class="copy-report-btn" onclick="copyToReport('ir-doc-audit',this)">📋 Copy full documentation sheet</button>
+  </div>
+
+  <p class="gp-note">No significant compliance concerns were identified in the Q1&#8211;2026 audit. The four areas below are documentation improvements that reduce provider queries, denials, and audit risk. &#128072; Click any template row to copy it to your clipboard, then fill the {bracketed} fields.</p>
+
+  <div class="gp-section">
+    <div class="gp-section-title">1 &middot; Diagnostic Angiography with a Therapeutic Intervention</div>
+    <p>Diagnostic angiography is bundled into intravascular interventions (embolization, angioplasty, stent) <strong>unless</strong> medical necessity for a separate diagnostic study is documented. The note must state <strong>one of the four criteria</strong> below <strong>and</strong> that the decision to treat was based on the angiographic findings.</p>
+    <p class="gp-note" style="margin-bottom:6px">Applies to diagnostic angiography CPTs 75710, 75716, 75726, 75774, 75820, and others.</p>
+    <table class="gp-table">
+      <thead><tr><th>Criterion &amp; template</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td><strong>No prior study.</strong> Diagnostic angiography of {vessel} was performed because no prior study was available. The decision to treat was based on the angiographic findings of {___}.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Diagnostic angiography of {vessel} was performed because no prior study was available. The decision to treat was based on the angiographic findings of {___}.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+        <tr class="copy-row"><td><strong>Interval change.</strong> Diagnostic angiography of {vessel} was performed because of an interval change in the patient condition since the prior study. The decision to treat was based on the angiographic findings of {___}.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Diagnostic angiography of {vessel} was performed because of an interval change in the patient condition since the prior study. The decision to treat was based on the angiographic findings of {___}.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+        <tr class="copy-row"><td><strong>Inadequate visualization.</strong> Diagnostic angiography of {vessel} was performed because of inadequate visualization of the anatomy or pathology requiring further delineation. The decision to treat was based on the angiographic findings of {___}.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Diagnostic angiography of {vessel} was performed because of inadequate visualization of the anatomy or pathology requiring further delineation. The decision to treat was based on the angiographic findings of {___}.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+        <tr class="copy-row"><td><strong>Clinical change during procedure.</strong> Diagnostic angiography of {vessel} was performed because of a clinical change in the patient during the procedure. The decision to treat was based on the angiographic findings of {___}.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Diagnostic angiography of {vessel} was performed because of a clinical change in the patient during the procedure. The decision to treat was based on the angiographic findings of {___}.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">NCCI: a repeat angiogram on the same date as the intervention is not separately reportable unless it is medically reasonable and necessary to repeat the study to further define the anatomy and pathology.</p>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">2 &middot; Vascular Ultrasound Guidance for Access &nbsp;<span class="gp-tag gp-orange">CPT 76937</span></div>
+    <p>All four elements must be documented, or the service is frequently denied. If an image is not saved (equipment or operator), state so explicitly to avoid inappropriate billing.</p>
+    <ul class="gp-ul">
+      <li>Evaluation of potential access site(s)</li>
+      <li>Vessel patency</li>
+      <li>Real-time ultrasound visualization of vascular needle entry</li>
+      <li>A permanently saved image</li>
+    </ul>
+    <table class="gp-table">
+      <thead><tr><th>Template</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>The {RT/LT} {access vessel} was prepped and draped in the usual sterile fashion. The {access vessel} was evaluated by ultrasound for a potential access location and confirmed to be patent. Real-time ultrasound guidance was used to visualize vascular needle entry into the {access vessel}. An image was captured and permanently archived.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('The {RT/LT} {access vessel} was prepped and draped in the usual sterile fashion. The {access vessel} was evaluated by ultrasound for a potential access location and confirmed to be patent. Real-time ultrasound guidance was used to visualize vascular needle entry into the {access vessel}. An image was captured and permanently archived.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">3 &middot; Moderate (Conscious) Sedation &nbsp;<span class="gp-tag gp-orange">CPT 99152</span></div>
+    <p>Document the performing physician personal supervision and continuous face-to-face involvement &#8212; monitoring time by a nurse alone does not support 99152.</p>
+    <ul class="gp-ul">
+      <li>A qualified, independent trained observer with no other procedural duties</li>
+      <li>Physician present at the time of initial drug administration (if not, the service is not billable)</li>
+      <li>Intraservice face-to-face sedation time, distinct from total procedure time, ending when the patient is stable in recovery</li>
+    </ul>
+    <table class="gp-table">
+      <thead><tr><th>Template</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>Moderate sedation was administered using {medications}. The performing physician was personally responsible for the administration and supervision of moderate sedation during the procedure. The patient was continuously monitored by an independent trained nurse using automated blood pressure, EKG, and pulse oximetry monitoring. Total intraservice face-to-face sedation time was {XX} minutes.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Moderate sedation was administered using {medications}. The performing physician was personally responsible for the administration and supervision of moderate sedation during the procedure. The patient was continuously monitored by an independent trained nurse using automated blood pressure, EKG, and pulse oximetry monitoring. Total intraservice face-to-face sedation time was {XX} minutes.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">4 &middot; Selective Catheter Placement Documentation</div>
+    <p>Document the vessels selected in a clear, sequential narrative. <strong>Avoid catheter order designations</strong> (first-, second-, third-order) in the narrative &#8212; a mismatch between the described pathway and the stated order causes denials and audits.</p>
+    <ul class="gp-ul">
+      <li>Access site</li>
+      <li>Vessels traversed</li>
+      <li>Vessels selectively catheterized (in order)</li>
+      <li>Work performed through the catheter</li>
+    </ul>
+    <table class="gp-table">
+      <thead><tr><th>Template</th><th></th></tr></thead>
+      <tbody>
+        <tr class="copy-row"><td>Selective catheterization was performed from a {access site} approach, traversing the {vessels traversed}, with selective catheterization of the {target vessel}. Through the catheter, {work performed} was performed.</td><td class="row-copy-cell"><button class="row-copy-btn" onclick="copySnippet('Selective catheterization was performed from a {access site} approach, traversing the {vessels traversed}, with selective catheterization of the {target vessel}. Through the catheter, {work performed} was performed.',this,'ARI IR Documentation Audit, May 2026. Per AMA/CPT and CMS/NCCI documentation requirements.')" title="Copy template">📋</button></td></tr>
+      </tbody>
+    </table>
   </div>
 </div>`,
 
@@ -2948,6 +3039,30 @@ High risk: smoking, occupational exposure, prior cancer, emphysema, family histo
 Note: Does not apply to patients <35 years, immunocompromised, or with known/suspected malignancy. For screening LDCT, use Lung-RADS.
 
 Reference: MacMahon H et al. Guidelines for Management of Incidental Pulmonary Nodules Detected on CT Images: From the Fleischner Society 2017. Radiology 2017;284(1):228-243. https://pubs.rsna.org/doi/10.1148/radiol.2017161659`,
+
+  'ir-doc-audit': `IR OPERATIVE NOTE — DOCUMENTATION TEMPLATES
+(Per 2026 ARI IR Documentation Audit; AMA/CPT and CMS/NCCI requirements)
+
+1. DIAGNOSTIC ANGIOGRAPHY WITH A THERAPEUTIC INTERVENTION
+Bundled into the intervention unless one of these criteria AND decision-to-treat is documented:
+  - No prior study available
+  - Interval change in patient condition since the prior study
+  - Inadequate visualization of anatomy/pathology
+  - Clinical change in the patient during the procedure
+Template: Diagnostic angiography of {vessel} was performed because {criterion}. The decision to treat was based on the angiographic findings of {___}.
+(NCCI: a same-day repeat angiogram is not separately reportable unless medically necessary to further define anatomy/pathology.)
+
+2. VASCULAR ULTRASOUND GUIDANCE FOR ACCESS (CPT 76937)
+Required: evaluation of access site, vessel patency, real-time visualization of needle entry, permanently saved image.
+Template: The {RT/LT} {access vessel} was prepped and draped in the usual sterile fashion. The {access vessel} was evaluated by ultrasound for a potential access location and confirmed to be patent. Real-time ultrasound guidance was used to visualize vascular needle entry into the {access vessel}. An image was captured and permanently archived.
+
+3. MODERATE (CONSCIOUS) SEDATION (CPT 99152)
+Required: independent trained observer with no other duties; physician present at initial drug administration; intraservice face-to-face sedation time (distinct from procedure time).
+Template: Moderate sedation was administered using {medications}. The performing physician was personally responsible for the administration and supervision of moderate sedation during the procedure. The patient was continuously monitored by an independent trained nurse using automated blood pressure, EKG, and pulse oximetry monitoring. Total intraservice face-to-face sedation time was {XX} minutes.
+
+4. SELECTIVE CATHETER PLACEMENT
+Document access site, vessels traversed, vessels selectively catheterized (in order), and work performed. Avoid first/second/third-order labels in the narrative.
+Template: Selective catheterization was performed from a {access site} approach, traversing the {vessels traversed}, with selective catheterization of the {target vessel}. Through the catheter, {work performed} was performed.`,
 
   'bp-aaa': `INCIDENTAL ABDOMINAL AORTIC ANEURYSM — FOLLOW-UP RECOMMENDATION
 (Per ESVS 2024 Clinical Practice Guidelines and ACR Appropriateness Criteria 2025)
