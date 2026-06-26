@@ -1102,7 +1102,7 @@ const LOCATIONS = {
   "Wadsworth":      { color: "#5db4df", short: "WAD" },
   "Green":          { color: "#4ade80", short: "GRN" },
   "Medina":         { color: "#fb923c", short: "MED" },
-  "ARI Tech Areas": { color: "#f59e0b", short: "ARI" },
+  "Tech Areas": { color: "#f59e0b", short: "TECH" },
   "Satellite":      { color: "#94a3b8", short: "SAT" },
   "Stroke":         { color: "#a78bfa", short: "STR" },
   "Misc":           { color: "#64748b", short: "MSC" },
@@ -1130,40 +1130,40 @@ const STROKE_NEUROS = [
 
 const SECTIONS = [
   // ── ARI TECH AREAS ───────────────────────────────────────────────────────
-  { title: "Akron — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Akron — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-375-3496"],
     ["CT", "330-375-1690"],
     ["Ultrasound", "330-375-7728"],
     ["US Tech Pager", "330-971-4460"],
   ]},
-  { title: "Barberton — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Barberton — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-615-3331"],
     ["CT", "330-615-3336"],
     ["Ultrasound", "330-615-3346"],
   ]},
-  { title: "Green — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Green — Tech Areas", location: "Tech Areas", entries: [
     ["ED", "330-899-2468"],
     ["YMCA MRI", "330-379-9491"],
   ]},
-  { title: "Hudson — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Hudson — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-650-6710 *"],
   ]},
-  { title: "Medina — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Medina — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-723-5349"],
     ["Ultrasound", "330-723-9590"],
   ]},
-  { title: "State Road — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "State Road — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-922-4648 *"],
   ]},
-  { title: "Tallmadge — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Tallmadge — Tech Areas", location: "Tech Areas", entries: [
     ["CT", "234-867-7761"],
   ]},
-  { title: "Wadsworth — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "Wadsworth — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-331-1621"],
     ["Ultrasound", "330-331-1605"],
     ["CT", "330-331-1597"],
   ]},
-  { title: "White Pond — Tech Areas", location: "ARI Tech Areas", entries: [
+  { title: "White Pond — Tech Areas", location: "Tech Areas", entries: [
     ["Main Rad Area", "330-873-1518 *"],
   ]},
 
@@ -1321,7 +1321,7 @@ const SECTIONS = [
     ["Green US Tech (Heritage)","330-899-2450"],["Green ER Tech","330-899-2468"],
     ["Green Main Number","330-899-5555"],
   ]},
-  { title: "Green — Internal Lines", location: "Green",
+  { title: "Green — Internal Lines", location: "Green", altLocations: ["Tech Areas"],
     note: "These numbers cannot be dialed from an outside line. If you are calling from outside the hospital, call the operator and ask them to connect you.",
     entries: [
     ["Green CT","700-899-6227"],
@@ -1394,7 +1394,16 @@ function setFilter(val, btn) {
   currentFilter = val;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  updateQuickStrips();
   renderSections();
+}
+
+// Quick-dial strips (Emergency + Stroke) only make sense across all sites,
+// so show them only when the "All" filter is active.
+function updateQuickStrips() {
+  const show = currentFilter === 'all';
+  document.getElementById('priorityStrip').style.display = show ? '' : 'none';
+  document.getElementById('neuroStrip').style.display = show ? '' : 'none';
 }
 
 // Build priority strip
@@ -1438,7 +1447,8 @@ function renderSections() {
   let visibleEntries = 0;
 
   SECTIONS.forEach(sec => {
-    const locMatch = currentFilter === 'all' || sec.location === currentFilter;
+    const locMatch = currentFilter === 'all' || sec.location === currentFilter
+      || (sec.altLocations && sec.altLocations.includes(currentFilter));
 
     // Filter entries by query
     const entries = sec.entries.filter(([name, phone]) => {
