@@ -101,6 +101,18 @@
   table.cfg tr:nth-child(even) td{background:var(--surface2)}
   table.cfg input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
   .empty{color:var(--text-muted);font-style:italic;padding:16px}
+  .qg-help{margin-top:14px;border:2px solid var(--border);border-radius:10px;background:var(--bg);overflow:hidden}
+  .qg-help summary{cursor:pointer;padding:10px 14px;font-family:'Fredoka',sans-serif;font-weight:500;
+    font-size:13px;color:var(--text-bright);list-style:none}
+  .qg-help summary::-webkit-details-marker{display:none}
+  .qg-help summary:hover{color:var(--accent)}
+  .qg-help[open] summary{border-bottom:2px solid var(--border)}
+  .qg-help .qg-body{padding:10px 16px 4px}
+  .qg-help .qg-intro{margin:0 0 8px;font-size:13px;color:var(--text)}
+  .qg-help ol{margin:0 0 6px;padding-left:20px;line-height:1.7;font-size:13px}
+  .qg-help li{margin-bottom:4px}
+  .qg-help li strong{color:var(--text-bright);font-weight:600}
+  .qg-help .qg-tip{margin:8px 0 10px;font-size:12px;color:var(--text-muted);font-style:italic;line-height:1.5}
   .disclaimer{margin-top:18px;padding:12px 16px;border:2px solid var(--accent3);border-radius:12px;
     background:rgba(201,53,53,0.08);color:var(--text-muted);font-size:12px;line-height:1.6}
   .disclaimer strong{color:var(--accent3);font-weight:600}
@@ -126,6 +138,24 @@
     <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
     <div class="status" id="status">No schedule loaded.</div>
     <div class="daterange" id="dateRange"></div>
+
+    <details class="qg-help">
+      <summary>📥 How to export the schedule from QGenda</summary>
+      <div class="qg-body">
+        <p class="qg-intro">In QGenda, open <strong>Reports</strong> and match these settings so the counts come out right. <strong>These are usually the defaults</strong>, so in most cases you only need to set your dates and click Run Report &#8212; just confirm the rest matches:</p>
+        <ol>
+          <li><strong>Report Type:</strong> Grid By Staff</li>
+          <li><strong>Format:</strong> Excel</li>
+          <li><strong>Start Date</strong> / <strong>End Date:</strong> any range you want to count</li>
+          <li><strong>Show Staff By:</strong> Abbreviations</li>
+          <li><strong>Show Tasks By:</strong> Short Name</li>
+          <li>Turn <strong>on</strong> all four toggles: Show Notes, Show Times, Show Phone Numbers, Show Assignment Tags</li>
+          <li>Click <strong>Run Report</strong> to download the file.</li>
+          <li>Back here, click <strong>Choose .xlsx file</strong> above and select the downloaded file.</li>
+        </ol>
+        <p class="qg-tip">💡 Keep QGenda&#8217;s default file name &#8212; the date range shown above is read from it (e.g. &#8220;&#8230; 6_1_2026 to 6_21_2026&#8221;).</p>
+      </div>
+    </details>
   </div>
 
   <div class="tabs">
