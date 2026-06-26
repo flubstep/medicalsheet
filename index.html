@@ -437,7 +437,7 @@
   <span class="quick-label">⚡ Quick Access:</span>
   <a class="quick-link urgent" href="/static/Contrast Reaction - ACR.pdf">🚨 Contrast Reaction</a>
   <a class="quick-link" href="/static/summa_telephone_directory.html">📖 Phone Directory</a>
-  <a class="quick-link" href="/static/PhonedirectoryforTechareas.pdf">📞 Tech Area Phones</a>
+  <a class="quick-link" href="#" onclick="openPanelInline(panelContent['tech-area-phones'],'ARI Tech Area Phone Numbers','/static/PhonedirectoryforTechareas.pdf');return false;">📞 Tech Area Phones</a>
   <a class="quick-link" href="static/PIT phone numbers.png">📋 Core Wall Numbers</a>
   <a class="quick-link" href="/expenses.html" target="_blank">💰 Expense Reimbursement</a>
   <a class="quick-link" href="/shift_counter.html" target="_blank">📅 Shift Counter</a>
@@ -1575,6 +1575,60 @@ const panelContent = {
       <li><strong>CEUS</strong> may be used for problem-solving when US is equivocal (sensitivity ~85%, specificity ~87% for adenoma vs. cholesterol polyp)</li>
       <li>If polyp disappears on follow-up, surveillance can be discontinued</li>
     </ul>
+  </div>
+</div>`,
+
+'tech-area-phones': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">ARI Tech Area Phone Numbers</div>
+    <div class="gp-meta">Reading &amp; technical areas by site &nbsp;&middot;&nbsp; tap a number to dial</div>
+  </div>
+  <div class="gp-section">
+    <table class="gp-table">
+      <thead><tr><th>Area</th><th>Number</th></tr></thead>
+      <tbody>
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Akron</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3303753496">330-375-3496</a></td></tr>
+        <tr><td>CT</td><td><a href="tel:3303751690">330-375-1690</a></td></tr>
+        <tr><td>Ultrasound</td><td><a href="tel:3303757728">330-375-7728</a></td></tr>
+        <tr><td>US Tech Pager</td><td><a href="tel:3309714460">330-971-4460</a></td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Barberton</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3306153331">330-615-3331</a></td></tr>
+        <tr><td>CT</td><td><a href="tel:3306153336">330-615-3336</a></td></tr>
+        <tr><td>Ultrasound</td><td><a href="tel:3306153346">330-615-3346</a></td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Green</td></tr>
+        <tr><td>ED</td><td><a href="tel:3308992468">330-899-2468</a></td></tr>
+        <tr><td>YMCA MRI</td><td><a href="tel:3303799491">330-379-9491</a></td></tr>
+        <tr><td>CT <span style="color:var(--text-muted);font-size:11px">(internal)</span></td><td><a href="tel:7008996227">700-899-6227</a></td></tr>
+        <tr><td>MRI <span style="color:var(--text-muted);font-size:11px">(internal)</span></td><td><a href="tel:7008996258">700-899-6258</a></td></tr>
+        <tr><td>Tech Area <span style="color:var(--text-muted);font-size:11px">(internal)</span></td><td><a href="tel:7008996234">700-899-6234</a></td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Hudson</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3306506710">330-650-6710</a> *</td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Medina</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3307235349">330-723-5349</a></td></tr>
+        <tr><td>Ultrasound</td><td><a href="tel:3307239590">330-723-9590</a></td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">State Road</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3309224648">330-922-4648</a> *</td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Tallmadge</td></tr>
+        <tr><td>CT</td><td><a href="tel:2348677761">234-867-7761</a></td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">Wadsworth</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3303311621">330-331-1621</a></td></tr>
+        <tr><td>Ultrasound</td><td><a href="tel:3303311605">330-331-1605</a></td></tr>
+        <tr><td>CT</td><td><a href="tel:3303311597">330-331-1597</a></td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;background:var(--surface2);color:var(--text-bright)">White Pond</td></tr>
+        <tr><td>Main Rad Area</td><td><a href="tel:3308731518">330-873-1518</a> *</td></tr>
+      </tbody>
+    </table>
+    <p class="gp-note">* = no official after-hours number. Green <strong>internal</strong> lines (700&#8211;) cannot be dialed from an outside line &#8212; call the operator to be connected.</p>
   </div>
 </div>`,
 
