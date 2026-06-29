@@ -438,10 +438,9 @@
 
 <div class="quick-bar">
   <span class="quick-label">⚡ Quick Access:</span>
-  <a class="quick-link urgent" href="/static/Contrast Reaction - ACR.pdf">🚨 Contrast Reaction</a>
+  <a class="quick-link urgent" href="#" onclick="openPanelInline(panelContent['contrast-reaction'],'Contrast Reaction Protocol','/static/Contrast Reaction - ACR.pdf');return false;">🚨 Contrast Reaction</a>
   <a class="quick-link" href="/static/summa_telephone_directory.html">📖 Phone Directory</a>
   <a class="quick-link" href="#" onclick="openPanelInline(panelContent['tech-area-phones'],'ARI Tech Area Phone Numbers','/static/PhonedirectoryforTechareas.pdf');return false;">📞 Tech Area Phones</a>
-  <a class="quick-link" href="static/PIT phone numbers.png">📋 Core Wall Numbers</a>
   <a class="quick-link" href="/expenses.html" target="_blank">💰 Expense Reimbursement</a>
   <a class="quick-link" href="/shift_counter.html" target="_blank">📅 Shift Counter</a>
   <a class="quick-link urgent" href="#" onclick="openPanelInline(panelContent['quality-reporting-2026'],'2026 Quality Reporting Measures','static/2026 ARI Quality Reporting Measures.pdf');return false;">📊 Quality Reporting 2026</a>
@@ -1319,7 +1318,7 @@
   <section class="section" data-cat="links">
     <div class="section-title">🔗 Helpful Links &amp; Info</div>
     <div class="card-grid">
-      <a class="card" href="/static/Contrast Reaction - ACR.pdf">
+      <a class="card" href="#" onclick="openPanelInline(panelContent['contrast-reaction'],'Contrast Reaction Protocol','/static/Contrast Reaction - ACR.pdf');return false;">
         <div class="card-body">
           <div class="card-title" style="color:var(--accent3);">ACR Contrast Reaction Protocol</div>
           <div class="card-sub">Emergency reference</div>
@@ -1331,9 +1330,7 @@
       <a class="card" href="/static/PhonedirectoryforTechareas.pdf">
         <div class="card-body"><div class="card-title">Phone Directory for Tech Areas</div></div>
       </a>
-      <a class="card" href="static/PIT phone numbers.png">
-        <div class="card-body"><div class="card-title">Phone Numbers — Core Wall</div></div>
-      </a>
+
       <a class="card" href="static/Neurologist phone numbers.pdf">
         <div class="card-body"><div class="card-title">Phone Numbers for Neurologists</div></div>
       </a>
@@ -1451,6 +1448,114 @@
 <script>
 // ── GUIDELINE CONTENT ──────────────────────────────────────────────────────
 const panelContent = {
+
+'contrast-reaction': `
+<div class="guideline-panel">
+  <div class="gp-header">
+    <div class="gp-title">🚨 Contrast Reaction Management</div>
+    <div class="gp-meta">ACR Manual on Contrast Media 2023 · Emergency reference</div>
+  </div>
+  <div style="background:#dc2626;color:#fff;padding:10px 16px;font-size:12.5px;font-weight:600;margin:12px 16px 4px;border-radius:6px">⚠️ CALL CODE for: severe dyspnea · hemodynamic instability · loss of consciousness · cardiac arrest</div>
+
+  <div class="gp-section">
+    <div class="gp-section-title" style="color:#16a34a">🟢 Mild — Observe; usually self-limiting</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #16a34a">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Urticaria / Hives</div>
+        <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>Usually resolves spontaneously</li>
+          <li><strong>Diphenhydramine</strong> 25–50 mg IV/IM/PO if bothersome</li>
+          <li>Observe 30 min before discharge</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #16a34a">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Nausea / Vomiting</div>
+        <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>Supportive care; usually self-limited</li>
+          <li><strong>Ondansetron</strong> 4 mg IV or <strong>Metoclopramide</strong> 10 mg IV if needed</li>
+          <li>Ensure hydration</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #16a34a">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Vasovagal (mild) / Anxiety</div>
+        <ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>Calm and reassure patient</li>
+          <li>Supine, elevate legs</li>
+          <li>Observe; monitor vitals</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title" style="color:#d97706">🟠 Moderate — Treat promptly; observe ≥1 hour; call for help</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #d97706">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Bronchospasm</div>
+        <ol style="margin:0;padding-left:18px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>O₂ by mask 6–10 L/min</li>
+          <li><strong>Albuterol MDI</strong> 2–3 puffs; repeat prn</li>
+          <li>IV access</li>
+          <li>If severe: <strong>Epinephrine 0.3 mg IM (1:1,000)</strong> lateral thigh</li>
+        </ol>
+      </div>
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #d97706">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Facial / Laryngeal Edema</div>
+        <ol style="margin:0;padding-left:18px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>O₂ by mask 6–10 L/min</li>
+          <li><strong>Epinephrine 0.3 mg IM (1:1,000)</strong> immediately</li>
+          <li>IV access</li>
+          <li>Call code if worsening or stridor</li>
+        </ol>
+      </div>
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #d97706">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Hypotension + Bradycardia (Vasovagal)</div>
+        <ol style="margin:0;padding-left:18px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>Supine, legs elevated</li>
+          <li>O₂ by mask</li>
+          <li>IV <strong>NS 1–2 L</strong> rapid infusion</li>
+          <li><strong>Atropine 0.6–1 mg IV</strong> if HR &lt; 60 (max 3 mg)</li>
+        </ol>
+      </div>
+      <div style="background:var(--surface2);border-radius:6px;padding:10px 12px;border-left:3px solid #d97706">
+        <div style="font-weight:600;font-size:12px;margin-bottom:5px">Hypotension + Tachycardia (Anaphylactoid)</div>
+        <ol style="margin:0;padding-left:18px;font-size:12px;line-height:1.75;color:var(--text-muted)">
+          <li>O₂ by mask 6–10 L/min</li>
+          <li>IV <strong>NS 1–2 L</strong> rapid infusion</li>
+          <li><strong>Epinephrine 0.3 mg IM (1:1,000)</strong> if no improvement</li>
+          <li><strong>Diphenhydramine</strong> 25–50 mg IV</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title" style="color:#dc2626">🔴 Severe / Anaphylaxis — CALL CODE IMMEDIATELY</div>
+    <div style="background:var(--surface2);border-radius:6px;padding:12px 16px;border-left:4px solid #dc2626;margin-top:8px">
+      <ol style="margin:0;padding-left:18px;font-size:12.5px;line-height:2;color:var(--text)">
+        <li><strong>CALL CODE</strong> — activate emergency response now</li>
+        <li><strong>Epinephrine 0.3 mg IM (1:1,000)</strong> into lateral thigh — repeat q5–15 min ×2 prn</li>
+        <li>O₂ high-flow; support airway</li>
+        <li>IV access — <strong>NS 1–2 L bolus</strong></li>
+        <li><strong>Diphenhydramine</strong> 25–50 mg IV</li>
+        <li><strong>Methylprednisolone</strong> 125 mg IV (adjunct — not first-line)</li>
+        <li>Consider <strong>Famotidine</strong> 20 mg IV (H2 blocker)</li>
+        <li>Refractory hypotension → vasopressors per code team</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="gp-section">
+    <div class="gp-section-title">Hypertensive Crisis</div>
+    <div style="background:var(--surface2);border-radius:6px;padding:10px 14px;font-size:12px;line-height:1.9;color:var(--text-muted)">
+      <strong>Labetalol</strong> 20 mg IV slow push — repeat q10 min prn (max 300 mg total)<br>
+      Or <strong>Hydralazine</strong> 10 mg IV slow push<br>
+      Call medicine/code if persistent or MAP &gt;150 mmHg
+    </div>
+  </div>
+
+  <p class="gp-note">Epinephrine for IM use = 1:1,000 concentration (1 mg/mL). IV epinephrine (1:10,000) is reserved for cardiac arrest or code team situations only. ACR Manual on Contrast Media 2023.</p>
+</div>`,
 
 'bp-gb-polyp': `
 <div class="guideline-panel">
