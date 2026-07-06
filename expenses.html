@@ -481,7 +481,10 @@
           <div class="dash-title">Moonlighting Manager</div>
           <div class="dash-sub">Review and approve employee moonlighting sessions</div>
         </div>
-        <button class="btn btn-ghost" onclick="exportMoonlightingExcel()">⬇ Export Excel</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="openAdminMlModal()">＋ Add Entry for Employee</button>
+          <button class="btn btn-ghost" onclick="exportMoonlightingExcel()">⬇ Export Excel</button>
+        </div>
       </div>
 
       <div class="ml-summary">
@@ -704,6 +707,54 @@
       </div>
     </div>
     <div class="modal-footer" id="mlReviewFooter"></div>
+  </div>
+</div>
+
+<!-- ── ADMIN MOONLIGHTING ENTRY MODAL ── -->
+<div class="modal-overlay" id="adminMlModal" onclick="closeOnOverlay(event,'adminMlModal')">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <div class="modal-title">Add Session for Employee</div>
+      <button class="modal-close" onclick="closeModal('adminMlModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="error-msg" id="adminMlError"></div>
+      <div class="form-group">
+        <label>Employee</label>
+        <select id="adminMlEmployee">
+          <option value="">— Select employee —</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Session Date</label>
+          <input type="date" id="adminMlDate">
+        </div>
+        <div class="form-group">
+          <label>Hours Worked</label>
+          <input type="number" id="adminMlHours" min="0.5" step="0.5" placeholder="e.g. 4.5">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Exams Read <span style="font-weight:400;opacity:0.6">(enter 0 if none)</span></label>
+        <div class="ml-modality-grid">
+          <div class="ml-mod-cell"><label>MR</label><input type="number" id="adminMlMR" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>CT</label><input type="number" id="adminMlCT" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>CTA</label><input type="number" id="adminMlCTA" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>US</label><input type="number" id="adminMlUS" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>X-Ray</label><input type="number" id="adminMlXR" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>DXA</label><input type="number" id="adminMlDXA" min="0" step="1" value="0"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Admin Notes <span style="font-weight:400;opacity:0.6">(optional — e.g. "entered per email")</span></label>
+        <textarea id="adminMlNotes" placeholder="e.g. Entered by admin per email from employee…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('adminMlModal')">Cancel</button>
+      <button class="btn btn-accent" id="adminMlSubmitBtn" onclick="submitAdminMoonlighting()">Add Session</button>
+    </div>
   </div>
 </div>
 
@@ -1675,6 +1726,64 @@ async function submitMoonlighting() {
   editingMlId = null;
   loadEmpMoonlighting();
   loadEmpMoonlightingStats();
+}
+
+// ── ADMIN MOONLIGHTING ENTRY ──
+function openAdminMlModal() {
+  clearError('adminMlError');
+  const sel = document.getElementById('adminMlEmployee');
+  sel.innerHTML = '<option value="">— Select employee —</option>';
+  (allEmployees || []).forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.id;
+    opt.dataset.name = e.full_name || e.email;
+    opt.textContent = e.full_name || e.email;
+    sel.appendChild(opt);
+  });
+  document.getElementById('adminMlDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('adminMlHours').value = '';
+  ['MR','CT','CTA','US','XR','DXA'].forEach(m => document.getElementById('adminMl'+m).value = '0');
+  document.getElementById('adminMlNotes').value = '';
+  openModal('adminMlModal');
+}
+
+async function submitAdminMoonlighting() {
+  const empSel  = document.getElementById('adminMlEmployee');
+  const userId  = empSel.value;
+  const empName = empSel.options[empSel.selectedIndex]?.dataset.name || '';
+  const date    = document.getElementById('adminMlDate').value;
+  const hours   = parseFloat(document.getElementById('adminMlHours').value);
+  const mr      = parseInt(document.getElementById('adminMlMR').value)  || 0;
+  const ct      = parseInt(document.getElementById('adminMlCT').value)  || 0;
+  const cta     = parseInt(document.getElementById('adminMlCTA').value) || 0;
+  const us      = parseInt(document.getElementById('adminMlUS').value)  || 0;
+  const xray    = parseInt(document.getElementById('adminMlXR').value)  || 0;
+  const dxa     = parseInt(document.getElementById('adminMlDXA').value) || 0;
+  const notes   = document.getElementById('adminMlNotes').value.trim();
+
+  if (!userId)              return showError('adminMlError', 'Please select an employee.');
+  if (!date)                return showError('adminMlError', 'Please select a session date.');
+  if (!hours || hours <= 0) return showError('adminMlError', 'Please enter valid hours worked.');
+
+  const btn = document.getElementById('adminMlSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Adding…';
+
+  const { error } = await sb.from('moonlighting_submissions').insert({
+    user_id: userId,
+    full_name: empName,
+    session_date: date,
+    hours, mr, ct, cta, us, xray, dxa,
+    comments: notes || null,
+    status: 'approved'
+  });
+
+  btn.disabled = false; btn.textContent = 'Add Session';
+  if (error) return showError('adminMlError', error.message);
+
+  closeModal('adminMlModal');
+  showToast('✅ Session added for ' + empName);
+  loadMgrMoonlighting();
+  loadMgrMoonlightingStats();
 }
 
 async function loadEmpMoonlighting() {
