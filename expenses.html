@@ -1729,22 +1729,30 @@ async function submitMoonlighting() {
 }
 
 // ── ADMIN MOONLIGHTING ENTRY ──
-function openAdminMlModal() {
+async function openAdminMlModal() {
   clearError('adminMlError');
+  document.getElementById('adminMlDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('adminMlHours').value = '';
+  ['MR','CT','CTA','US','XR','DXA'].forEach(m => document.getElementById('adminMl'+m).value = '0');
+  document.getElementById('adminMlNotes').value = '';
+
   const sel = document.getElementById('adminMlEmployee');
+  sel.innerHTML = '<option value="">Loading…</option>';
+  openModal('adminMlModal');
+
+  if (!allEmployees || allEmployees.length === 0) {
+    const { data: profiles } = await sb.from('profiles').select('id, full_name, email, role').order('full_name');
+    allEmployees = (profiles || []).filter(p => p.role !== 'manager').sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
+  }
+
   sel.innerHTML = '<option value="">— Select employee —</option>';
-  (allEmployees || []).forEach(e => {
+  allEmployees.forEach(e => {
     const opt = document.createElement('option');
     opt.value = e.id;
     opt.dataset.name = e.full_name || e.email;
     opt.textContent = e.full_name || e.email;
     sel.appendChild(opt);
   });
-  document.getElementById('adminMlDate').value = new Date().toISOString().slice(0,10);
-  document.getElementById('adminMlHours').value = '';
-  ['MR','CT','CTA','US','XR','DXA'].forEach(m => document.getElementById('adminMl'+m).value = '0');
-  document.getElementById('adminMlNotes').value = '';
-  openModal('adminMlModal');
 }
 
 async function submitAdminMoonlighting() {
