@@ -1740,13 +1740,11 @@ async function openAdminMlModal() {
   sel.innerHTML = '<option value="">Loading…</option>';
   openModal('adminMlModal');
 
-  if (!allEmployees || allEmployees.length === 0) {
-    const { data: profiles } = await sb.from('profiles').select('id, full_name, email, role').order('full_name');
-    allEmployees = (profiles || []).filter(p => p.role !== 'manager').sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
-  }
+  const { data: allProfiles } = await sb.from('profiles').select('id, full_name, email, role').order('full_name');
+  const dropdownUsers = (allProfiles || []).sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
 
   sel.innerHTML = '<option value="">— Select employee —</option>';
-  allEmployees.forEach(e => {
+  dropdownUsers.forEach(e => {
     const opt = document.createElement('option');
     opt.value = e.id;
     opt.dataset.name = e.full_name || e.email;
