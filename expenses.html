@@ -1288,7 +1288,7 @@ async function openBalancesModal() {
   (profiles || []).forEach(p => nameMap[p.id] = p.full_name || p.id);
 
   const { data: txns, error: txErr } = await sb.from('pool_transactions')
-    .select('id, user_id, pool, amount, type, note, voided, created_at')
+    .select('id, user_id, pool, amount, type, note, voided, created_at, created_by')
     .order('created_at', { ascending: false });
   if (txErr) { wrap.innerHTML = `<p style="color:red">${txErr.message}</p>`; return; }
 
@@ -1344,12 +1344,14 @@ async function openBalancesModal() {
       : isDeposit
         ? `<button class="btn btn-ghost btn-sm" onclick="voidTransaction('${t.id}')">↩ Undo</button>`
         : '';
+    const addedBy = t.created_by && nameMap[t.created_by] ? nameMap[t.created_by] : '—';
     return `<tr style="${rowStyle}">
       <td style="white-space:nowrap;font-size:12px">${fmtDate(t.created_at)}</td>
       <td>${esc(name)}</td>
       <td>${poolBadge(t.pool)}</td>
       <td style="font-weight:700;color:${amtColor}">${isDeposit ? '+' : '−'}$${Math.abs(parseFloat(t.amount)).toFixed(2)}</td>
       <td style="font-size:12px;color:var(--text-muted)">${esc(t.note || (t.type === 'deduction' ? 'Expense deduction' : ''))}</td>
+      <td style="font-size:12px;color:var(--text-muted)">${esc(addedBy)}</td>
       <td>${undoCell}</td>
     </tr>`;
   }).join('');
@@ -1365,8 +1367,8 @@ async function openBalancesModal() {
     <p class="section-label">Recent Activity</p>
     <div style="border:1px solid var(--border);border-radius:9px;overflow:hidden">
       <table>
-        <thead><tr><th>Date</th><th>Employee</th><th>Pool</th><th>Amount</th><th>Note</th><th></th></tr></thead>
-        <tbody>${recentRows || '<tr class="empty-row"><td colspan="6">No transactions yet.</td></tr>'}</tbody>
+        <thead><tr><th>Date</th><th>Employee</th><th>Pool</th><th>Amount</th><th>Note</th><th>Added By</th><th></th></tr></thead>
+        <tbody>${recentRows || '<tr class="empty-row"><td colspan="7">No transactions yet.</td></tr>'}</tbody>
       </table>
     </div>`;
 }
