@@ -678,6 +678,7 @@
           <div class="ml-mod-cell"><label>US</label><input type="number" id="mlUS" min="0" step="1" value="0"></div>
           <div class="ml-mod-cell"><label>X-Ray</label><input type="number" id="mlXR" min="0" step="1" value="0"></div>
           <div class="ml-mod-cell"><label>DXA</label><input type="number" id="mlDXA" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>NM</label><input type="number" id="mlNM" min="0" step="1" value="0"></div>
         </div>
       </div>
       <div class="form-group">
@@ -744,6 +745,7 @@
           <div class="ml-mod-cell"><label>US</label><input type="number" id="adminMlUS" min="0" step="1" value="0"></div>
           <div class="ml-mod-cell"><label>X-Ray</label><input type="number" id="adminMlXR" min="0" step="1" value="0"></div>
           <div class="ml-mod-cell"><label>DXA</label><input type="number" id="adminMlDXA" min="0" step="1" value="0"></div>
+          <div class="ml-mod-cell"><label>NM</label><input type="number" id="adminMlNM" min="0" step="1" value="0"></div>
         </div>
       </div>
       <div class="form-group">
@@ -1657,6 +1659,7 @@ function openMoonlightingModal() {
   document.getElementById('mlUS').value       = '0';
   document.getElementById('mlXR').value       = '0';
   document.getElementById('mlDXA').value      = '0';
+  document.getElementById('mlNM').value       = '0';
   document.getElementById('mlComments').value = '';
   clearError('mlSubmitError');
   openModal('moonlightingModal');
@@ -1676,6 +1679,7 @@ async function openEditMoonlighting(id) {
   document.getElementById('mlUS').value       = r.us  || '0';
   document.getElementById('mlXR').value       = r.xray || '0';
   document.getElementById('mlDXA').value      = r.dxa  || '0';
+  document.getElementById('mlNM').value       = r.nm   || '0';
   document.getElementById('mlComments').value = r.comments || '';
   clearError('mlSubmitError');
   openModal('moonlightingModal');
@@ -1699,6 +1703,7 @@ async function submitMoonlighting() {
   const us       = parseInt(document.getElementById('mlUS').value)   || 0;
   const xray     = parseInt(document.getElementById('mlXR').value)  || 0;
   const dxa      = parseInt(document.getElementById('mlDXA').value) || 0;
+  const nm       = parseInt(document.getElementById('mlNM').value)  || 0;
   const comments = document.getElementById('mlComments').value.trim();
 
   if (!date)             return showError('mlSubmitError', 'Please select a session date.');
@@ -1710,13 +1715,13 @@ async function submitMoonlighting() {
   let error;
   if (editingMlId) {
     ({ error } = await sb.from('moonlighting_submissions')
-      .update({ session_date: date, hours, mr, ct, cta, us, xray, dxa, comments: comments || null })
+      .update({ session_date: date, hours, mr, ct, cta, us, xray, dxa, nm, comments: comments || null })
       .eq('id', editingMlId).eq('status', 'pending'));
   } else {
     ({ error } = await sb.from('moonlighting_submissions').insert({
       user_id: currentUser.id,
       full_name: currentProfile?.full_name || currentUser.email,
-      session_date: date, hours, mr, ct, cta, us, xray, dxa, comments: comments || null
+      session_date: date, hours, mr, ct, cta, us, xray, dxa, nm, comments: comments || null
     }));
   }
 
@@ -1735,7 +1740,7 @@ async function openAdminMlModal() {
   clearError('adminMlError');
   document.getElementById('adminMlDate').value = new Date().toISOString().slice(0,10);
   document.getElementById('adminMlHours').value = '';
-  ['MR','CT','CTA','US','XR','DXA'].forEach(m => document.getElementById('adminMl'+m).value = '0');
+  ['MR','CT','CTA','US','XR','DXA','NM'].forEach(m => document.getElementById('adminMl'+m).value = '0');
   document.getElementById('adminMlNotes').value = '';
 
   const sel = document.getElementById('adminMlEmployee');
@@ -1767,6 +1772,7 @@ async function submitAdminMoonlighting() {
   const us      = parseInt(document.getElementById('adminMlUS').value)  || 0;
   const xray    = parseInt(document.getElementById('adminMlXR').value)  || 0;
   const dxa     = parseInt(document.getElementById('adminMlDXA').value) || 0;
+  const nm      = parseInt(document.getElementById('adminMlNM').value)  || 0;
   const notes   = document.getElementById('adminMlNotes').value.trim();
 
   if (!userId)              return showError('adminMlError', 'Please select an employee.');
@@ -1780,7 +1786,7 @@ async function submitAdminMoonlighting() {
     user_id: userId,
     full_name: empName,
     session_date: date,
-    hours, mr, ct, cta, us, xray, dxa,
+    hours, mr, ct, cta, us, xray, dxa, nm,
     comments: notes || null,
     status: 'approved',
     entered_by_admin: true,
@@ -1805,14 +1811,14 @@ async function loadEmpMoonlighting() {
 }
 
 async function loadEmpMoonlightingStats() {
-  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, us, xray, dxa').eq('user_id', currentUser.id);
+  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, cta, us, xray, dxa, nm').eq('user_id', currentUser.id);
   if (!data) return;
   let pending = 0, approved = 0, paid = 0, studies = 0;
   data.forEach(r => {
     if (r.status === 'pending')  pending  += parseFloat(r.hours || 0);
     if (r.status === 'approved') approved += parseFloat(r.hours || 0);
     if (r.status === 'paid')     paid     += parseFloat(r.hours || 0);
-    studies += (r.mr||0) + (r.ct||0) + (r.cta||0) + (r.us||0) + (r.xray||0) + (r.dxa||0);
+    studies += (r.mr||0) + (r.ct||0) + (r.cta||0) + (r.us||0) + (r.xray||0) + (r.dxa||0) + (r.nm||0);
   });
   document.getElementById('eML-pending').textContent  = pending.toFixed(1) + ' hrs';
   document.getElementById('eML-approved').textContent = approved.toFixed(1) + ' hrs';
@@ -1829,14 +1835,14 @@ function renderEmpMoonlighting(rows, error) {
   }
   wrap.innerHTML = `<table>
     <thead><tr>
-      <th>Date</th><th>Hours</th><th>MR</th><th>CT</th><th>CTA</th><th>US</th><th>XR</th><th>DXA</th><th>Total Studies</th><th>Status</th><th>Notes</th><th></th>
+      <th>Date</th><th>Hours</th><th>MR</th><th>CT</th><th>CTA</th><th>US</th><th>XR</th><th>DXA</th><th>NM</th><th>Total Studies</th><th>Status</th><th>Notes</th><th></th>
     </tr></thead>
     <tbody>${rows.map(r => {
-      const total = (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0);
+      const total = (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0);
       return `<tr>
         <td style="white-space:nowrap">${fmtDate(r.session_date)}${r.entered_by_admin ? ` <span style="font-size:10px;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Admin Entry${r.entered_by_name ? ' · ' + esc(r.entered_by_name) : ''}</span>` : ''}</td>
         <td><strong>${parseFloat(r.hours).toFixed(1)}</strong></td>
-        <td>${r.mr||0}</td><td>${r.ct||0}</td><td>${r.cta||0}</td><td>${r.us||0}</td><td>${r.xray||0}</td><td>${r.dxa||0}</td>
+        <td>${r.mr||0}</td><td>${r.ct||0}</td><td>${r.cta||0}</td><td>${r.us||0}</td><td>${r.xray||0}</td><td>${r.dxa||0}</td><td>${r.nm||0}</td>
         <td><strong>${total}</strong></td>
         <td>${mlBadge(r.status)}</td>
         <td style="font-size:12px;color:var(--text-muted)">${esc(r.manager_notes||'')}</td>
@@ -1861,14 +1867,14 @@ async function loadMgrMoonlighting() {
 }
 
 async function loadMgrMoonlightingStats() {
-  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, us, xray, dxa');
+  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, cta, us, xray, dxa, nm');
   if (!data) return;
   let pending = 0, approvedHrs = 0, paidHrs = 0, studies = 0;
   data.forEach(r => {
     if (r.status === 'pending')  pending++;
     if (r.status === 'approved') approvedHrs += parseFloat(r.hours || 0);
     if (r.status === 'paid')     paidHrs     += parseFloat(r.hours || 0);
-    studies += (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0);
+    studies += (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0);
   });
   document.getElementById('mML-pending').textContent = pending;
   document.getElementById('mML-hours').textContent   = approvedHrs.toFixed(1) + ' hrs';
@@ -1885,7 +1891,7 @@ function renderMgrMoonlighting(rows, error) {
   }
   wrap.innerHTML = `<table>
     <thead><tr>
-      <th>Date</th><th>Employee</th><th>Hours</th><th>MR</th><th>CT</th><th>CTA</th><th>US</th><th>XR</th><th>DXA</th><th>Status</th><th>Actions</th>
+      <th>Date</th><th>Employee</th><th>Hours</th><th>MR</th><th>CT</th><th>CTA</th><th>US</th><th>XR</th><th>DXA</th><th>NM</th><th>Status</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows.map(r => {
       const actions = r.status === 'pending'
@@ -1897,7 +1903,7 @@ function renderMgrMoonlighting(rows, error) {
         <td style="white-space:nowrap">${fmtDate(r.session_date)}</td>
         <td><strong>${esc(r.full_name||'—')}</strong>${r.entered_by_admin ? ` <span style="font-size:10px;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Admin Entry${r.entered_by_name ? ' · ' + esc(r.entered_by_name) : ''}</span>` : ''}</td>
         <td><strong>${parseFloat(r.hours).toFixed(1)}</strong></td>
-        <td>${r.mr||0}</td><td>${r.ct||0}</td><td>${r.cta||0}</td><td>${r.us||0}</td><td>${r.xray||0}</td><td>${r.dxa||0}</td>
+        <td>${r.mr||0}</td><td>${r.ct||0}</td><td>${r.cta||0}</td><td>${r.us||0}</td><td>${r.xray||0}</td><td>${r.dxa||0}</td><td>${r.nm||0}</td>
         <td>${mlBadge(r.status)}</td>
         <td>${actions}</td>
       </tr>`;
@@ -1909,12 +1915,12 @@ let mlReviewingId = null;
 async function openMlReview(id) {
   mlReviewingId = id;
   const { data: r } = await sb.from('moonlighting_submissions').select('*').eq('id', id).single();
-  const total = (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0);
+  const total = (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0);
   document.getElementById('mlReviewDetail').innerHTML = `
     <div class="detail-row"><span class="detail-label">Employee</span><span>${esc(r.full_name||'—')}</span></div>
     <div class="detail-row"><span class="detail-label">Session Date</span><span>${fmtDate(r.session_date)}</span></div>
     <div class="detail-row"><span class="detail-label">Hours</span><strong>${parseFloat(r.hours).toFixed(1)}</strong></div>
-    <div class="detail-row"><span class="detail-label">Exams Read</span><span>MR: ${r.mr||0} · CT: ${r.ct||0} · CTA: ${r.cta||0} · US: ${r.us||0} · XR: ${r.xray||0} · DXA: ${r.dxa||0} <strong>(${total} total)</strong></span></div>
+    <div class="detail-row"><span class="detail-label">Exams Read</span><span>MR: ${r.mr||0} · CT: ${r.ct||0} · CTA: ${r.cta||0} · US: ${r.us||0} · XR: ${r.xray||0} · DXA: ${r.dxa||0} · NM: ${r.nm||0} <strong>(${total} total)</strong></span></div>
     ${r.comments ? `<div class="detail-row"><span class="detail-label">Comments</span><span>${esc(r.comments)}</span></div>` : ''}
   `;
   document.getElementById('mlReviewNotes').value = r.manager_notes || '';
@@ -1973,7 +1979,7 @@ async function exportMoonlightingExcel() {
     ['Moonlighting Incentive'],
     ['2026'],
     [], [], [],
-    ['Employee', 'Total Hrs', 'MRIs', 'CT', 'CTA', 'Ultrasound', 'X-Ray', 'DXA', 'Total Studies'],
+    ['Employee', 'Total Hrs', 'MRIs', 'CT', 'CTA', 'Ultrasound', 'X-Ray', 'DXA', 'NM', 'Total Studies'],
     ...Object.entries(byEmployee).map(([name, ss]) => [
       name,
       ss.reduce((a, r) => a + parseFloat(r.hours || 0), 0),
@@ -1983,7 +1989,8 @@ async function exportMoonlightingExcel() {
       ss.reduce((a, r) => a + (r.us   || 0), 0),
       ss.reduce((a, r) => a + (r.xray || 0), 0),
       ss.reduce((a, r) => a + (r.dxa  || 0), 0),
-      ss.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0), 0),
+      ss.reduce((a, r) => a + (r.nm   || 0), 0),
+      ss.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
     ]),
   ];
   const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
@@ -2000,9 +2007,10 @@ async function exportMoonlightingExcel() {
       sessions.reduce((a, r) => a + (r.ct   || 0), 0),
       sessions.reduce((a, r) => a + (r.cta  || 0), 0),
       sessions.reduce((a, r) => a + (r.us   || 0), 0),
-      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0), 0),
+      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
       sessions.reduce((a, r) => a + (r.xray || 0), 0),
       sessions.reduce((a, r) => a + (r.dxa  || 0), 0),
+      sessions.reduce((a, r) => a + (r.nm   || 0), 0),
       '', '',
       sessions.reduce((a, r) => a + parseFloat(r.hours || 0) * 325, 0),
     ];
@@ -2011,7 +2019,7 @@ async function exportMoonlightingExcel() {
       ['Extra Work Hours'],
       ['2026'],
       [], [], [],
-      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','','','Amt','Pay Date','','Notes'],
+      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM','','Amt','Pay Date','','Notes'],
       ...sessions.map(r => [
         r.session_date || '',
         parseFloat(r.hours || 0),
@@ -2019,9 +2027,10 @@ async function exportMoonlightingExcel() {
         r.ct   || 0,
         r.cta  || 0,
         r.us   || 0,
-        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0),
+        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0),
         r.xray || 0,
         r.dxa  || 0,
+        r.nm   || 0,
         '', '',
         parseFloat(r.hours || 0) * 325,
         r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
