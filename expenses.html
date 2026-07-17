@@ -377,6 +377,10 @@
           <div class="balance-label">CME Balance</div>
           <div class="balance-amount" id="empCmeBalance">—</div>
         </div>
+        <div class="balance-card" style="border-color:#7c3aed">
+          <div class="balance-label">HSA Balance</div>
+          <div class="balance-amount" id="empHsaBalance" style="color:#7c3aed">—</div>
+        </div>
       </div>
 
       <div class="table-wrap">
@@ -634,13 +638,15 @@
       <div class="form-group">
         <label>Pool</label>
         <select id="addFundsPool">
+          <option value="">— Select pool —</option>
           <option value="HRA">HRA</option>
           <option value="CME">CME</option>
+          <option value="HSA">HSA</option>
         </select>
       </div>
       <div class="form-group">
-        <label>Amount ($)</label>
-        <input type="number" id="addFundsAmount" min="0.01" step="0.01" placeholder="0.00">
+        <label>Amount ($) <span style="font-weight:400;color:var(--text-muted)">— positive to add, negative to subtract</span></label>
+        <input type="number" id="addFundsAmount" step="0.01" placeholder="e.g. 500 or -250">
       </div>
       <div class="form-group">
         <label>Note <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
@@ -653,7 +659,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('addFundsModal')">Cancel</button>
-      <button class="btn btn-green" id="addFundsBtn" onclick="submitAddFunds()">Add Funds</button>
+      <button class="btn btn-green" id="addFundsBtn" onclick="submitAddFunds()">Apply</button>
     </div>
   </div>
 </div>
@@ -1198,14 +1204,16 @@ async function loadEmployeeBalances() {
     .eq('voided', false);
   const row = document.getElementById('empBalanceRow');
   if (!data || !data.length) { row.style.display = 'none'; return; }
-  let hra = 0, cme = 0;
+  let hra = 0, cme = 0, hsa = 0;
   data.forEach(t => {
     const sign = t.type === 'deposit' ? 1 : -1;
     if (t.pool === 'HRA') hra += sign * parseFloat(t.amount);
     if (t.pool === 'CME') cme += sign * parseFloat(t.amount);
+    if (t.pool === 'HSA') hsa += sign * parseFloat(t.amount);
   });
   document.getElementById('empHraBalance').textContent = '$' + hra.toFixed(2);
   document.getElementById('empCmeBalance').textContent = '$' + cme.toFixed(2);
+  document.getElementById('empHsaBalance').textContent = '$' + hsa.toFixed(2);
   row.style.display = 'flex';
 }
 
@@ -1526,14 +1534,15 @@ async function openBalancesModal() {
   // Compute balances from non-voided transactions
   const balMap = {};
   (txns || []).filter(t => !t.voided).forEach(t => {
-    if (!balMap[t.user_id]) balMap[t.user_id] = { hra: 0, cme: 0 };
+    if (!balMap[t.user_id]) balMap[t.user_id] = { hra: 0, cme: 0, hsa: 0 };
     const sign = t.type === 'deposit' ? 1 : -1;
     if (t.pool === 'HRA') balMap[t.user_id].hra += sign * parseFloat(t.amount);
     if (t.pool === 'CME') balMap[t.user_id].cme += sign * parseFloat(t.amount);
+    if (t.pool === 'HSA') balMap[t.user_id].hsa += sign * parseFloat(t.amount);
   });
 
   const employeeRows = employees.length ? employees.map(e => {
-    const b = balMap[e.id] || { hra: 0, cme: 0 };
+    const b = balMap[e.id] || { hra: 0, cme: 0, hsa: 0 };
     const safeName = (e.full_name || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
     const cls = e.class || 'Physician';
     const co  = e.cashout_election || '';
@@ -1542,6 +1551,7 @@ async function openBalancesModal() {
       <td><strong>${esc(e.full_name || '—')}</strong></td>
       <td style="color:#2a7d4f;font-weight:700">$${b.hra.toFixed(2)}</td>
       <td style="color:#1a6aa0;font-weight:700">$${b.cme.toFixed(2)}</td>
+      <td style="color:#7c3aed;font-weight:700">$${b.hsa.toFixed(2)}</td>
       <td>
         <select id="cls_${e.id}" style="${selStyle}">
           <option value="Physician" ${cls==='Physician'?'selected':''}>Physician</option>
@@ -1558,12 +1568,11 @@ async function openBalancesModal() {
       <td>
         <div class="action-row">
           <button class="btn btn-ghost btn-sm" onclick="saveEmployeeSettings('${e.id}')">Save</button>
-          <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}','HRA')">+ HRA</button>
-          <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}','CME')">+ CME</button>
+          <button class="btn btn-ghost btn-sm" onclick="openAddFundsModal('${e.id}','${safeName}')">Adjust</button>
         </div>
       </td>
     </tr>`;
-  }).join('') : `<tr class="empty-row"><td colspan="6">No employees found.</td></tr>`;
+  }).join('') : `<tr class="empty-row"><td colspan="7">No employees found.</td></tr>`;
 
   const recentRows = (txns || []).slice(0, 25).map(t => {
     const name = nameMap[t.user_id] || '—';
@@ -1591,7 +1600,7 @@ async function openBalancesModal() {
     <p class="section-label">Current Balances</p>
     <div style="margin-bottom:24px;border:1px solid var(--border);border-radius:9px;overflow:hidden">
       <table>
-        <thead><tr><th>Employee</th><th>HRA</th><th>CME</th><th>Class</th><th>Cash-out</th><th>Actions</th></tr></thead>
+        <thead><tr><th>Employee</th><th>HRA</th><th>CME</th><th>HSA</th><th>Class</th><th>Cash-out</th><th>Actions</th></tr></thead>
         <tbody>${employeeRows}</tbody>
       </table>
     </div>
@@ -1604,15 +1613,15 @@ async function openBalancesModal() {
     </div>`;
 }
 
-function openAddFundsModal(userId, userName, pool) {
+function openAddFundsModal(userId, userName) {
   addFundsUserId = userId;
   addFundsUserName = userName;
-  document.getElementById('addFundsPool').value   = pool || 'HRA';
+  document.getElementById('addFundsPool').value   = '';
   document.getElementById('addFundsAmount').value = '';
   document.getElementById('addFundsNote').value   = '';
   document.getElementById('addFundsAll').checked  = false;
   document.getElementById('addFundsTarget').textContent = 'Employee: ' + userName;
-  document.getElementById('addFundsBtn').textContent = 'Add Funds';
+  document.getElementById('addFundsBtn').textContent = 'Apply';
   clearError('addFundsError');
   openModal('addFundsModal');
 }
@@ -1622,7 +1631,7 @@ function toggleAddFundsAll() {
   document.getElementById('addFundsTarget').textContent = all
     ? 'Applying to: All Employees (' + allEmployees.length + ')'
     : 'Employee: ' + addFundsUserName;
-  document.getElementById('addFundsBtn').textContent = all ? 'Add to All Employees' : 'Add Funds';
+  document.getElementById('addFundsBtn').textContent = all ? 'Apply to All Employees' : 'Apply';
 }
 
 async function submitAddFunds() {
@@ -1631,14 +1640,18 @@ async function submitAddFunds() {
   const note     = document.getElementById('addFundsNote').value.trim();
   const applyAll = document.getElementById('addFundsAll').checked;
 
-  if (!amount || amount <= 0) return showError('addFundsError', 'Please enter a valid amount.');
+  if (!pool)              return showError('addFundsError', 'Please select a pool.');
+  if (!amount || amount === 0) return showError('addFundsError', 'Please enter a non-zero amount.');
+
+  const type = amount > 0 ? 'deposit' : 'deduction';
+  const absAmount = Math.abs(amount);
 
   const btn = document.getElementById('addFundsBtn');
   btn.disabled = true; btn.textContent = 'Saving…';
 
   const targets = applyAll ? allEmployees : [{ id: addFundsUserId }];
   const rows = targets.map(e => ({
-    user_id: e.id, pool, amount, type: 'deposit',
+    user_id: e.id, pool, amount: absAmount, type,
     note: note || null, created_by: currentUser.id
   }));
 
@@ -1647,7 +1660,8 @@ async function submitAddFunds() {
 
   if (error) { toggleAddFundsAll(); return showError('addFundsError', error.message); }
   closeModal('addFundsModal');
-  showToast('✅ ' + pool + ' funds added' + (applyAll ? ' for all employees' : ''));
+  const action = amount > 0 ? 'added to' : 'subtracted from';
+  showToast('✅ $' + absAmount.toFixed(2) + ' ' + action + ' ' + pool + (applyAll ? ' for all employees' : ''));
   openBalancesModal();
 }
 
