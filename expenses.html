@@ -897,6 +897,7 @@ let currentProfile = null;
 let reviewingId = null;
 let editingSubmissionId = null;
 let editingMlId = null;
+let editingAdminMlId = null;
 let selectedFile = null;
 let allEmployees = [];
 let addFundsUserId = null;
@@ -1737,7 +1738,10 @@ async function submitMoonlighting() {
 
 // ── ADMIN MOONLIGHTING ENTRY ──
 async function openAdminMlModal() {
+  editingAdminMlId = null;
   clearError('adminMlError');
+  document.getElementById('adminMlModal').querySelector('.modal-title').textContent = 'Add Entry for Employee';
+  document.getElementById('adminMlSubmitBtn').textContent = 'Add Session';
   document.getElementById('adminMlDate').value = new Date().toISOString().slice(0,10);
   document.getElementById('adminMlHours').value = '';
   ['MR','CT','CTA','US','XR','DXA','NM'].forEach(m => document.getElementById('adminMl'+m).value = '0');
@@ -1745,6 +1749,7 @@ async function openAdminMlModal() {
 
   const sel = document.getElementById('adminMlEmployee');
   sel.innerHTML = '<option value="">Loading…</option>';
+  sel.disabled = false;
   openModal('adminMlModal');
 
   const { data: allProfiles } = await sb.from('profiles').select('id, full_name, email, role').order('full_name');
@@ -1760,10 +1765,44 @@ async function openAdminMlModal() {
   });
 }
 
+async function openEditAdminMlEntry(id) {
+  const { data: r, error } = await sb.from('moonlighting_submissions').select('*').eq('id', id).single();
+  if (error || !r) return showToast('Could not load session.', true);
+
+  editingAdminMlId = id;
+  clearError('adminMlError');
+  document.getElementById('adminMlModal').querySelector('.modal-title').textContent = 'Edit Entry';
+  document.getElementById('adminMlSubmitBtn').textContent = 'Save Changes';
+  document.getElementById('adminMlDate').value  = r.session_date || '';
+  document.getElementById('adminMlHours').value = r.hours || '';
+  document.getElementById('adminMlMR').value    = r.mr   || '0';
+  document.getElementById('adminMlCT').value    = r.ct   || '0';
+  document.getElementById('adminMlCTA').value   = r.cta  || '0';
+  document.getElementById('adminMlUS').value    = r.us   || '0';
+  document.getElementById('adminMlXR').value    = r.xray || '0';
+  document.getElementById('adminMlDXA').value   = r.dxa  || '0';
+  document.getElementById('adminMlNM').value    = r.nm   || '0';
+  document.getElementById('adminMlNotes').value = r.comments || '';
+
+  const sel = document.getElementById('adminMlEmployee');
+  sel.innerHTML = `<option value="${r.user_id}">${esc(r.full_name || r.user_id)}</option>`;
+  sel.disabled = true;
+  openModal('adminMlModal');
+}
+
+async function deleteAdminMlEntry(id) {
+  if (!confirm('Delete this admin-entered session? This cannot be undone.')) return;
+  const { error } = await sb.from('moonlighting_submissions').delete().eq('id', id).eq('entered_by_admin', true);
+  if (error) return showToast('Error: ' + error.message, true);
+  showToast('Session deleted.');
+  loadMgrMoonlighting();
+  loadMgrMoonlightingStats();
+}
+
 async function submitAdminMoonlighting() {
   const empSel  = document.getElementById('adminMlEmployee');
   const userId  = empSel.value;
-  const empName = empSel.options[empSel.selectedIndex]?.dataset.name || '';
+  const empName = empSel.options[empSel.selectedIndex]?.dataset.name || empSel.options[empSel.selectedIndex]?.textContent || '';
   const date    = document.getElementById('adminMlDate').value;
   const hours   = parseFloat(document.getElementById('adminMlHours').value);
   const mr      = parseInt(document.getElementById('adminMlMR').value)  || 0;
@@ -1775,29 +1814,38 @@ async function submitAdminMoonlighting() {
   const nm      = parseInt(document.getElementById('adminMlNM').value)  || 0;
   const notes   = document.getElementById('adminMlNotes').value.trim();
 
-  if (!userId)              return showError('adminMlError', 'Please select an employee.');
+  if (!editingAdminMlId && !userId) return showError('adminMlError', 'Please select an employee.');
   if (!date)                return showError('adminMlError', 'Please select a session date.');
   if (!hours || hours <= 0) return showError('adminMlError', 'Please enter valid hours worked.');
 
   const btn = document.getElementById('adminMlSubmitBtn');
-  btn.disabled = true; btn.textContent = 'Adding…';
+  btn.disabled = true; btn.textContent = editingAdminMlId ? 'Saving…' : 'Adding…';
 
-  const { error } = await sb.from('moonlighting_submissions').insert({
-    user_id: userId,
-    full_name: empName,
-    session_date: date,
-    hours, mr, ct, cta, us, xray, dxa, nm,
-    comments: notes || null,
-    status: 'approved',
-    entered_by_admin: true,
-    entered_by_name: currentProfile?.full_name || currentUser.email
-  });
+  let error;
+  if (editingAdminMlId) {
+    ({ error } = await sb.from('moonlighting_submissions')
+      .update({ session_date: date, hours, mr, ct, cta, us, xray, dxa, nm, comments: notes || null })
+      .eq('id', editingAdminMlId).eq('entered_by_admin', true));
+  } else {
+    ({ error } = await sb.from('moonlighting_submissions').insert({
+      user_id: userId,
+      full_name: empName,
+      session_date: date,
+      hours, mr, ct, cta, us, xray, dxa, nm,
+      comments: notes || null,
+      status: 'approved',
+      entered_by_admin: true,
+      entered_by_name: currentProfile?.full_name || currentUser.email
+    }));
+  }
 
-  btn.disabled = false; btn.textContent = 'Add Session';
+  btn.disabled = false; btn.textContent = editingAdminMlId ? 'Save Changes' : 'Add Session';
   if (error) return showError('adminMlError', error.message);
 
+  const wasEditing = !!editingAdminMlId;
+  editingAdminMlId = null;
   closeModal('adminMlModal');
-  showToast('✅ Session added for ' + empName);
+  showToast(wasEditing ? '✅ Session updated.' : '✅ Session added for ' + empName);
   loadMgrMoonlighting();
   loadMgrMoonlightingStats();
 }
@@ -1894,11 +1942,14 @@ function renderMgrMoonlighting(rows, error) {
       <th>Date</th><th>Employee</th><th>Hours</th><th>MR</th><th>CT</th><th>CTA</th><th>US</th><th>XR</th><th>DXA</th><th>NM/PET</th><th>Status</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows.map(r => {
+      const adminBtns = r.entered_by_admin && r.status !== 'paid'
+        ? ` <button class="btn btn-ghost btn-sm" onclick="openEditAdminMlEntry('${r.id}')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteAdminMlEntry('${r.id}')">🗑 Delete</button>`
+        : '';
       const actions = r.status === 'pending'
-        ? `<div class="action-row"><button class="btn btn-ghost btn-sm" onclick="openMlReview('${r.id}')">Review</button></div>`
+        ? `<div class="action-row"><button class="btn btn-ghost btn-sm" onclick="openMlReview('${r.id}')">Review</button>${adminBtns}</div>`
         : r.status === 'approved'
-        ? `<div class="action-row"><button class="btn btn-primary btn-sm" onclick="markMlPaid('${r.id}')">✓ Mark Paid</button></div>`
-        : `<span style="font-size:12px;color:var(--text-muted)">${r.status === 'paid' ? '✓ Paid' : '✗ Rejected'}</span>`;
+        ? `<div class="action-row"><button class="btn btn-primary btn-sm" onclick="markMlPaid('${r.id}')">✓ Mark Paid</button>${adminBtns}</div>`
+        : `<div class="action-row"><span style="font-size:12px;color:var(--text-muted)">${r.status === 'paid' ? '✓ Paid' : '✗ Rejected'}</span>${adminBtns}</div>`;
       return `<tr>
         <td style="white-space:nowrap">${fmtDate(r.session_date)}</td>
         <td><strong>${esc(r.full_name||'—')}</strong>${r.entered_by_admin ? ` <span style="font-size:10px;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Admin Entry${r.entered_by_name ? ' · ' + esc(r.entered_by_name) : ''}</span>` : ''}</td>
@@ -1971,30 +2022,35 @@ async function exportMoonlightingExcel() {
   });
 
   const totalHrs = data.reduce((s, r) => s + parseFloat(r.hours || 0), 0);
+  const totalAmt = totalHrs * 325;
   const wb = XLSX.utils.book_new();
 
   // ── Summary sheet ──────────────────────────────────────────
   const summaryData = [
-    ['Akron Radiology Inc', '', '', 'Total # of hrs worked', totalHrs],
+    ['Akron Radiology Inc', '', '', 'Total # of hrs worked', totalHrs, 'Total Amount ($)', totalAmt],
     ['Moonlighting Incentive'],
     ['2026'],
     [], [], [],
-    ['Employee', 'Total Hrs', 'MRIs', 'CT', 'CTA', 'Ultrasound', 'X-Ray', 'DXA', 'NM/PET', 'Total Studies'],
-    ...Object.entries(byEmployee).map(([name, ss]) => [
-      name,
-      ss.reduce((a, r) => a + parseFloat(r.hours || 0), 0),
-      ss.reduce((a, r) => a + (r.mr   || 0), 0),
-      ss.reduce((a, r) => a + (r.ct   || 0), 0),
-      ss.reduce((a, r) => a + (r.cta  || 0), 0),
-      ss.reduce((a, r) => a + (r.us   || 0), 0),
-      ss.reduce((a, r) => a + (r.xray || 0), 0),
-      ss.reduce((a, r) => a + (r.dxa  || 0), 0),
-      ss.reduce((a, r) => a + (r.nm   || 0), 0),
-      ss.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
-    ]),
+    ['Employee', 'Total Hrs', 'MRIs', 'CT', 'CTA', 'Ultrasound', 'X-Ray', 'DXA', 'NM/PET', 'Total Studies', 'Total Amount ($)'],
+    ...Object.entries(byEmployee).map(([name, ss]) => {
+      const hrs = ss.reduce((a, r) => a + parseFloat(r.hours || 0), 0);
+      return [
+        name,
+        hrs,
+        ss.reduce((a, r) => a + (r.mr   || 0), 0),
+        ss.reduce((a, r) => a + (r.ct   || 0), 0),
+        ss.reduce((a, r) => a + (r.cta  || 0), 0),
+        ss.reduce((a, r) => a + (r.us   || 0), 0),
+        ss.reduce((a, r) => a + (r.xray || 0), 0),
+        ss.reduce((a, r) => a + (r.dxa  || 0), 0),
+        ss.reduce((a, r) => a + (r.nm   || 0), 0),
+        ss.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
+        hrs * 325,
+      ];
+    }),
   ];
   const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-  summaryWs['!cols'] = [{wch:24},{wch:10},{wch:7},{wch:8},{wch:12},{wch:8},{wch:7},{wch:14}];
+  summaryWs['!cols'] = [{wch:24},{wch:10},{wch:7},{wch:8},{wch:12},{wch:8},{wch:7},{wch:14},{wch:10},{wch:14},{wch:16}];
   XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary by Pay Period');
 
   // ── One sheet per employee ─────────────────────────────────
