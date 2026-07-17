@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     /* ── CONFIG: paste your Supabase values into the JS below ── */
 
@@ -401,7 +402,10 @@
           <div class="dash-title">My Moonlighting</div>
           <div class="dash-sub">Log sessions and track approval status</div>
         </div>
-        <button class="btn btn-accent" onclick="openMoonlightingModal()">+ Log Session</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="openEmpMlTrendsModal()">📊 My Trends</button>
+          <button class="btn btn-accent" onclick="openMoonlightingModal()">+ Log Session</button>
+        </div>
       </div>
 
       <div class="ml-summary">
@@ -483,6 +487,7 @@
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-primary" onclick="openAdminMlModal()">＋ Add Entry for Employee</button>
+          <button class="btn btn-ghost" onclick="openMlTrendsModal()">📊 Trends</button>
           <button class="btn btn-ghost" onclick="exportMoonlightingExcel()">⬇ Export Excel</button>
         </div>
       </div>
@@ -756,6 +761,26 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('adminMlModal')">Cancel</button>
       <button class="btn btn-accent" id="adminMlSubmitBtn" onclick="submitAdminMoonlighting()">Add Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TRENDS MODAL ── -->
+<div class="modal-overlay" id="mlTrendsModal" onclick="closeOnOverlay(event,'mlTrendsModal')">
+  <div class="modal" style="max-width:780px;width:95%">
+    <div class="modal-header">
+      <div class="modal-title">Moonlighting Trends</div>
+      <button class="modal-close" onclick="closeModal('mlTrendsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+        <label style="font-weight:600;font-size:13px">Radiologist</label>
+        <select id="mlTrendsEmployee" onchange="mlTrendsSelectionChanged()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);min-width:200px"></select>
+      </div>
+      <div id="mlTrendsNoData" style="display:none;text-align:center;padding:40px;color:var(--text-muted)">No data available.</div>
+      <div style="position:relative;height:360px">
+        <canvas id="mlTrendsCanvas"></canvas>
+      </div>
     </div>
   </div>
 </div>
@@ -2101,6 +2126,139 @@ async function exportMoonlightingExcel() {
   });
 
   XLSX.writeFile(wb, `ARI-moonlighting-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+// ── MOONLIGHTING TRENDS CHART ──
+let mlTrendsChart = null;
+let mlTrendsData  = null;
+
+const TREND_COLORS = [
+  '#3b82f6','#ef4444','#10b981','#f59e0b',
+  '#8b5cf6','#ec4899','#06b6d4','#f97316',
+];
+
+async function openMlTrendsModal() {
+  openModal('mlTrendsModal');
+  const sel = document.getElementById('mlTrendsEmployee');
+  sel.parentElement.style.display = 'flex';
+  sel.innerHTML = '<option value="all">Loading…</option>';
+
+  const { data } = await sb.from('moonlighting_submissions')
+    .select('full_name, session_date, hours')
+    .order('session_date', { ascending: true });
+
+  mlTrendsData = data || [];
+
+  if (!mlTrendsData.length) {
+    document.getElementById('mlTrendsNoData').style.display = 'block';
+    document.getElementById('mlTrendsCanvas').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('mlTrendsNoData').style.display = 'none';
+  document.getElementById('mlTrendsCanvas').style.display = 'block';
+
+  const names = [...new Set(mlTrendsData.map(r => r.full_name || 'Unknown'))].sort();
+  sel.innerHTML = '<option value="all">All Radiologists</option>' +
+    names.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+
+  renderMlTrendsChart('all');
+}
+
+async function openEmpMlTrendsModal() {
+  openModal('mlTrendsModal');
+  const sel = document.getElementById('mlTrendsEmployee');
+  sel.parentElement.style.display = 'none';
+
+  const { data } = await sb.from('moonlighting_submissions')
+    .select('full_name, session_date, hours')
+    .eq('user_id', currentUser.id)
+    .order('session_date', { ascending: true });
+
+  mlTrendsData = data || [];
+
+  if (!mlTrendsData.length) {
+    document.getElementById('mlTrendsNoData').style.display = 'block';
+    document.getElementById('mlTrendsCanvas').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('mlTrendsNoData').style.display = 'none';
+  document.getElementById('mlTrendsCanvas').style.display = 'block';
+  renderMlTrendsChart(mlTrendsData[0]?.full_name || 'Me');
+}
+
+function mlTrendsSelectionChanged() {
+  const sel = document.getElementById('mlTrendsEmployee');
+  renderMlTrendsChart(sel.value);
+}
+
+function renderMlTrendsChart(selected) {
+  const data = mlTrendsData;
+
+  // Collect all months present in data
+  const months = [...new Set(data.map(r => r.session_date?.slice(0, 7)))].filter(Boolean).sort();
+  const labels = months.map(m => {
+    const [y, mo] = m.split('-');
+    return new Date(parseInt(y), parseInt(mo) - 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  });
+
+  let datasets;
+  const stacked = selected === 'all';
+
+  if (stacked) {
+    const names = [...new Set(data.map(r => r.full_name || 'Unknown'))].sort();
+    datasets = names.map((name, i) => {
+      const byMonth = {};
+      data.filter(r => (r.full_name || 'Unknown') === name)
+          .forEach(r => { const m = r.session_date?.slice(0,7); byMonth[m] = (byMonth[m]||0) + parseFloat(r.hours||0); });
+      return {
+        label: name,
+        data: months.map(m => +(byMonth[m] || 0).toFixed(1)),
+        backgroundColor: TREND_COLORS[i % TREND_COLORS.length],
+        borderRadius: 4,
+      };
+    });
+  } else {
+    const byMonth = {};
+    data.filter(r => (r.full_name || 'Unknown') === selected)
+        .forEach(r => { const m = r.session_date?.slice(0,7); byMonth[m] = (byMonth[m]||0) + parseFloat(r.hours||0); });
+    datasets = [{
+      label: selected,
+      data: months.map(m => +(byMonth[m] || 0).toFixed(1)),
+      backgroundColor: TREND_COLORS[0],
+      borderRadius: 4,
+    }];
+  }
+
+  const ctx = document.getElementById('mlTrendsCanvas').getContext('2d');
+  if (mlTrendsChart) mlTrendsChart.destroy();
+
+  mlTrendsChart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 14, padding: 16 } },
+        tooltip: {
+          callbacks: {
+            footer: items => 'Total: ' + items.reduce((s, i) => s + i.parsed.y, 0).toFixed(1) + ' hrs',
+          },
+        },
+      },
+      scales: {
+        x: { stacked, grid: { display: false } },
+        y: {
+          stacked,
+          beginAtZero: true,
+          title: { display: true, text: 'Hours' },
+          ticks: { stepSize: 1 },
+        },
+      },
+    },
+  });
 }
 
 function mlBadge(status) {
