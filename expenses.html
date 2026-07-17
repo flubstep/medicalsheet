@@ -773,9 +773,12 @@
       <button class="modal-close" onclick="closeModal('mlTrendsModal')">✕</button>
     </div>
     <div class="modal-body">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-        <label style="font-weight:600;font-size:13px">Radiologist</label>
-        <select id="mlTrendsEmployee" onchange="mlTrendsSelectionChanged()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);min-width:200px"></select>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <label style="font-weight:600;font-size:13px">Radiologist</label>
+          <select id="mlTrendsEmployee" onchange="mlTrendsSelectionChanged()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);min-width:200px"></select>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="downloadTrendsChart()">⬇ Download PNG</button>
       </div>
       <div id="mlTrendsNoData" style="display:none;text-align:center;padding:40px;color:var(--text-muted)">No data available.</div>
       <div style="position:relative;height:360px">
@@ -2186,6 +2189,14 @@ async function openEmpMlTrendsModal() {
   document.getElementById('mlTrendsNoData').style.display = 'none';
   document.getElementById('mlTrendsCanvas').style.display = 'block';
   renderMlTrendsChart(mlTrendsData[0]?.full_name || 'Me');
+}
+
+function downloadTrendsChart() {
+  if (!mlTrendsChart) return;
+  const a = document.createElement('a');
+  a.href = mlTrendsChart.toBase64Image('image/png', 1);
+  a.download = `ARI-moonlighting-trends-${new Date().toISOString().slice(0,10)}.png`;
+  a.click();
 }
 
 function mlTrendsSelectionChanged() {
