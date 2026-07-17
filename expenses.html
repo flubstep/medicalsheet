@@ -447,6 +447,7 @@
           <div class="dash-sub">Review, approve, and process employee submissions</div>
         </div>
         <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" onclick="openAdminExpModal()">＋ Add Entry for Employee</button>
           <button class="btn btn-accent" onclick="openSubmitModal()">+ New Submission</button>
           <button class="btn btn-ghost" onclick="openBalancesModal()">💰 Manage Balances</button>
           <button class="btn btn-ghost" onclick="exportExcel()">⬇ Export Excel</button>
@@ -534,6 +535,8 @@
           <option>Office Supplies</option>
           <option>Equipment</option>
           <option>Licensing &amp; Fees</option>
+          <option>Dental</option>
+          <option>Vision</option>
           <option>Other</option>
         </select>
       </div>
@@ -765,6 +768,70 @@
   </div>
 </div>
 
+<!-- ── ADMIN EXPENSE ENTRY MODAL ── -->
+<div class="modal-overlay" id="adminExpModal" onclick="closeOnOverlay(event,'adminExpModal')">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <div class="modal-title">Add Entry for Employee</div>
+      <button class="modal-close" onclick="closeModal('adminExpModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="adminExpError"></div>
+      <div class="form-group">
+        <label>Employee</label>
+        <select id="adminExpEmployee"></select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="adminExpCategory">
+            <option>Meals &amp; Entertainment</option>
+            <option>Travel</option>
+            <option>CME / Education</option>
+            <option>Office Supplies</option>
+            <option>Equipment</option>
+            <option>Licensing &amp; Fees</option>
+            <option>Dental</option>
+            <option>Vision</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Reimbursement Pool</label>
+          <select id="adminExpPool">
+            <option value="">— Select pool —</option>
+            <option value="HRA">HRA</option>
+            <option value="CME">CME</option>
+            <option value="Corporate">Corporate (no pool deduction)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Amount ($)</label>
+          <input type="number" id="adminExpAmount" min="0.01" step="0.01" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Date of Expense</label>
+          <input type="date" id="adminExpDate">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" id="adminExpDesc" placeholder="Brief description of expense">
+      </div>
+      <div class="form-group">
+        <label>Admin Notes <span style="font-weight:400;opacity:0.6">(optional)</span></label>
+        <textarea id="adminExpNotes" placeholder="e.g. Entered by admin per email from employee…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('adminExpModal')">Cancel</button>
+      <button class="btn btn-accent" id="adminExpSubmitBtn" onclick="submitAdminExpense()">Add Entry</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── TRENDS MODAL ── -->
 <div class="modal-overlay" id="mlTrendsModal" onclick="closeOnOverlay(event,'mlTrendsModal')">
   <div class="modal" style="max-width:780px;width:95%">
@@ -924,6 +991,7 @@ let currentUser = null;
 let currentProfile = null;
 let reviewingId = null;
 let editingSubmissionId = null;
+let editingAdminExpId   = null;
 let editingMlId = null;
 let editingAdminMlId = null;
 let selectedFile = null;
@@ -1188,10 +1256,14 @@ function renderManagerTable(rows) {
       <th>Submitted</th><th>Employee</th><th>Category</th>
       <th>Description</th><th>Amount</th><th>Pool</th><th>Status</th><th>Actions</th>
     </tr></thead>
-    <tbody>${rows.map(r => `
-      <tr>
+    <tbody>${rows.map(r => {
+      const adminBadge = r.entered_by_admin ? ` <span style="font-size:10px;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Admin Entry${r.entered_by_name ? ' · ' + esc(r.entered_by_name) : ''}</span>` : '';
+      const adminBtns  = r.entered_by_admin && r.status !== 'processed'
+        ? `<button class="btn btn-ghost btn-sm" onclick="openEditAdminExpEntry('${r.id}')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteAdminExpEntry('${r.id}')">🗑 Delete</button>`
+        : '';
+      return `<tr>
         <td style="white-space:nowrap">${fmtDate(r.submitted_at)}</td>
-        <td><strong>${esc(r.full_name || '—')}</strong></td>
+        <td><strong>${esc(r.full_name || '—')}</strong>${adminBadge}</td>
         <td>${r.category}</td>
         <td>${esc(r.description)}</td>
         <td><strong>$${parseFloat(r.amount).toFixed(2)}</strong></td>
@@ -1203,11 +1275,139 @@ function renderManagerTable(rows) {
             ${r.status === 'pending' ? `<button class="btn btn-ghost btn-sm" onclick="openReview('${r.id}')">Review</button>` : ''}
             ${r.status === 'approved' ? `<button class="btn btn-primary btn-sm" onclick="markProcessed('${r.id}')">✓ Mark Processed</button>` : ''}
             ${r.status === 'processed' ? `<span style="color:var(--blue);font-size:12px;font-weight:700">✓ Done</span>` : ''}
+            ${adminBtns}
           </div>
         </td>
-      </tr>`).join('')}
+      </tr>`;
+    }).join('')}
     </tbody>
   </table>`;
+}
+
+// ── ADMIN EXPENSE ENTRY ──
+async function openAdminExpModal() {
+  editingAdminExpId = null;
+  clearError('adminExpError');
+  document.getElementById('adminExpModal').querySelector('.modal-title').textContent = 'Add Entry for Employee';
+  document.getElementById('adminExpSubmitBtn').textContent = 'Add Entry';
+  document.getElementById('adminExpCategory').value = document.getElementById('adminExpCategory').options[0].value;
+  document.getElementById('adminExpPool').value    = '';
+  document.getElementById('adminExpAmount').value  = '';
+  document.getElementById('adminExpDate').value    = new Date().toISOString().slice(0,10);
+  document.getElementById('adminExpDesc').value    = '';
+  document.getElementById('adminExpNotes').value   = '';
+
+  const sel = document.getElementById('adminExpEmployee');
+  sel.innerHTML = '<option value="">Loading…</option>';
+  sel.disabled = false;
+  openModal('adminExpModal');
+
+  const { data: allProfiles } = await sb.from('profiles').select('id, full_name, email').order('full_name');
+  const sorted = (allProfiles || []).sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
+  sel.innerHTML = '<option value="">— Select employee —</option>';
+  sorted.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.id;
+    opt.dataset.name = e.full_name || e.email;
+    opt.textContent = e.full_name || e.email;
+    sel.appendChild(opt);
+  });
+}
+
+async function openEditAdminExpEntry(id) {
+  const { data: r, error } = await sb.from('submissions').select('*').eq('id', id).single();
+  if (error || !r) return showToast('Could not load submission.', true);
+
+  editingAdminExpId = id;
+  clearError('adminExpError');
+  document.getElementById('adminExpModal').querySelector('.modal-title').textContent = 'Edit Entry';
+  document.getElementById('adminExpSubmitBtn').textContent = 'Save Changes';
+  document.getElementById('adminExpCategory').value = r.category || '';
+  document.getElementById('adminExpPool').value     = r.pool     || '';
+  document.getElementById('adminExpAmount').value   = r.amount   || '';
+  document.getElementById('adminExpDate').value     = r.expense_date || '';
+  document.getElementById('adminExpDesc').value     = r.description  || '';
+  document.getElementById('adminExpNotes').value    = r.manager_notes || '';
+
+  const sel = document.getElementById('adminExpEmployee');
+  sel.innerHTML = `<option value="${r.user_id}">${esc(r.full_name || r.user_id)}</option>`;
+  sel.disabled = true;
+  openModal('adminExpModal');
+}
+
+async function deleteAdminExpEntry(id) {
+  if (!confirm('Delete this admin-entered submission? This cannot be undone.')) return;
+  await sb.from('pool_transactions').delete().eq('submission_id', id);
+  const { error } = await sb.from('submissions').delete().eq('id', id).eq('entered_by_admin', true);
+  if (error) return showToast('Error: ' + error.message, true);
+  showToast('Submission deleted.');
+  loadManagerSubmissions();
+  loadManagerStats();
+}
+
+async function submitAdminExpense() {
+  const empSel   = document.getElementById('adminExpEmployee');
+  const userId   = empSel.value;
+  const empName  = empSel.options[empSel.selectedIndex]?.dataset.name || empSel.options[empSel.selectedIndex]?.textContent || '';
+  const category = document.getElementById('adminExpCategory').value;
+  const pool     = document.getElementById('adminExpPool').value;
+  const amount   = parseFloat(document.getElementById('adminExpAmount').value);
+  const date     = document.getElementById('adminExpDate').value;
+  const description = document.getElementById('adminExpDesc').value.trim();
+  const notes    = document.getElementById('adminExpNotes').value.trim();
+
+  if (!editingAdminExpId && !userId) return showError('adminExpError', 'Please select an employee.');
+  if (!pool)                         return showError('adminExpError', 'Please select a reimbursement pool.');
+  if (!amount || amount <= 0)        return showError('adminExpError', 'Please enter a valid amount.');
+  if (!date)                         return showError('adminExpError', 'Please select the expense date.');
+
+  const btn = document.getElementById('adminExpSubmitBtn');
+  btn.disabled = true; btn.textContent = editingAdminExpId ? 'Saving…' : 'Adding…';
+
+  let error, submissionId;
+
+  if (editingAdminExpId) {
+    ({ error } = await sb.from('submissions')
+      .update({ category, pool, amount, expense_date: date, description, manager_notes: notes || null })
+      .eq('id', editingAdminExpId).eq('entered_by_admin', true));
+    submissionId = editingAdminExpId;
+    if (!error && (pool === 'HRA' || pool === 'CME')) {
+      await sb.from('pool_transactions')
+        .update({ pool, amount, note: category })
+        .eq('submission_id', submissionId);
+    }
+  } else {
+    const { data: inserted, error: insErr } = await sb.from('submissions').insert({
+      user_id: userId, full_name: empName,
+      category, pool, amount, expense_date: date, description,
+      manager_notes: notes || null,
+      status: 'approved',
+      reviewed_at: new Date().toISOString(),
+      entered_by_admin: true,
+      entered_by_name: currentProfile?.full_name || currentUser.email
+    }).select().single();
+    error = insErr;
+    submissionId = inserted?.id;
+
+    if (!error && submissionId && (pool === 'HRA' || pool === 'CME')) {
+      const { error: txErr } = await sb.from('pool_transactions').insert({
+        user_id: userId, pool, amount,
+        type: 'deduction', note: category,
+        submission_id: submissionId, created_by: currentUser.id
+      });
+      if (txErr) showToast('⚠️ Entry added but pool deduction not recorded: ' + txErr.message, true);
+    }
+  }
+
+  btn.disabled = false; btn.textContent = editingAdminExpId ? 'Save Changes' : 'Add Entry';
+  if (error) return showError('adminExpError', error.message);
+
+  const wasEditing = !!editingAdminExpId;
+  editingAdminExpId = null;
+  closeModal('adminExpModal');
+  showToast(wasEditing ? '✅ Entry updated.' : '✅ Entry added for ' + empName);
+  loadManagerSubmissions();
+  loadManagerStats();
 }
 
 // ── SUBMIT EXPENSE ──
