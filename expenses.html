@@ -306,13 +306,21 @@
       #balancesTableWrap { overflow-x: auto; }
       th, td { padding: 7px 9px; font-size: 12px; white-space: nowrap; }
 
-      /* Modal: tighter padding, full-width */
-      .modal { width: 100% !important; max-width: 100% !important; margin: 0; border-radius: 14px 14px 0 0; align-self: flex-end; }
+      /* Modal: tighter padding, full-width bottom sheet */
+      .modal { width: 100% !important; max-width: 100% !important; max-height: 82vh !important; margin: 0; border-radius: 14px 14px 0 0; align-self: flex-end; }
       .modal-overlay { align-items: flex-end; padding: 0; }
-      .modal-body { padding: 14px 16px; }
-      .modal-header { padding: 14px 16px 12px; }
-      .modal-footer { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+      .modal-body { padding: 12px 14px; }
+      .modal-header { padding: 12px 14px 10px; }
+      .modal-footer { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
       .modal-footer .btn { flex: 1; text-align: center; }
+
+      /* Compact form fields */
+      .form-group { margin-bottom: 10px; }
+      .form-group label { font-size: 11px; margin-bottom: 3px; }
+      .form-group input, .form-group select, .form-group textarea {
+        padding: 7px 10px; font-size: 13px;
+      }
+      .form-group textarea { min-height: 52px; }
 
       /* Collapse 2-column form grids to single column */
       .modal-body [style*="grid-template-columns:1fr 1fr"] {
@@ -321,6 +329,7 @@
 
       /* Modality grid: 3 columns instead of 7 */
       .ml-modality-grid { grid-template-columns: repeat(3, 1fr) !important; }
+      .ml-mod-cell input { padding: 6px 4px; font-size: 13px; }
 
       /* Dash header: allow buttons to wrap */
       .dash-header { flex-direction: column; align-items: flex-start; }
