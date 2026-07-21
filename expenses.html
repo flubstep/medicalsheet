@@ -297,9 +297,41 @@
     .policy-list li::before { content: '·'; position: absolute; left: 4px; color: var(--accent); font-weight: 700; }
 
     @media (max-width: 600px) {
-      main { padding: 16px 12px; }
-      .login-wrap { padding: 24px 18px; }
-      th, td { padding: 8px 10px; }
+      main { padding: 12px 10px; }
+      .login-wrap { padding: 24px 16px; }
+
+      /* Tables: horizontal scroll instead of overflow clip */
+      .table-wrap { overflow-x: auto; }
+      #empTableWrap, #mgrTableWrap, #empMlTableWrap, #mgrMlTableWrap,
+      #balancesTableWrap { overflow-x: auto; }
+      th, td { padding: 7px 9px; font-size: 12px; white-space: nowrap; }
+
+      /* Modal: tighter padding, full-width */
+      .modal { width: 100% !important; max-width: 100% !important; margin: 0; border-radius: 14px 14px 0 0; align-self: flex-end; }
+      .modal-overlay { align-items: flex-end; padding: 0; }
+      .modal-body { padding: 14px 16px; }
+      .modal-header { padding: 14px 16px 12px; }
+      .modal-footer { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+      .modal-footer .btn { flex: 1; text-align: center; }
+
+      /* Collapse 2-column form grids to single column */
+      .modal-body [style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Modality grid: 3 columns instead of 7 */
+      .ml-modality-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+      /* Dash header: allow buttons to wrap */
+      .dash-header { flex-direction: column; align-items: flex-start; }
+      .dash-header > div[style*="flex"] { flex-wrap: wrap; width: 100%; }
+      .dash-header > button { width: 100%; }
+
+      /* Balance cards: min 2 per row */
+      .balance-card { min-width: calc(50% - 7px); }
+
+      /* Stat cards already use auto-fit grid — shrink min a bit */
+      .stat-row { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
     }
   </style>
 </head>
@@ -654,7 +686,7 @@
       </div>
       <label style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;cursor:pointer;padding:10px 12px;background:var(--surface2);border-radius:7px;margin-top:4px">
         <input type="checkbox" id="addFundsAll" onchange="toggleAddFundsAll()" style="width:auto">
-        Apply this amount to <strong style="color:var(--blue)">all employees</strong>
+        Apply this change to <strong style="color:var(--blue)">all employees</strong>
       </label>
     </div>
     <div class="modal-footer">
