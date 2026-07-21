@@ -2075,10 +2075,14 @@ async function openEditAdminMlEntry(id) {
 }
 
 async function deleteAdminMlEntry(id) {
-  if (!confirm('Delete this admin-entered session? This cannot be undone.')) return;
-  const { error } = await sb.from('moonlighting_submissions').delete().eq('id', id).eq('entered_by_admin', true);
+  if (!confirm('Mark this session as deleted? It will remain visible in the log with a deleted tag.')) return;
+  const { error } = await sb.from('moonlighting_submissions').update({
+    deleted: true,
+    deleted_by: currentProfile?.full_name || currentUser.email,
+    deleted_at: new Date().toISOString(),
+  }).eq('id', id).eq('entered_by_admin', true);
   if (error) return showToast('Error: ' + error.message, true);
-  showToast('Session deleted.');
+  showToast('Session marked as deleted.');
   loadMgrMoonlighting();
   loadMgrMoonlightingStats();
 }
@@ -2136,14 +2140,14 @@ async function submitAdminMoonlighting() {
 
 async function loadEmpMoonlighting() {
   const filter = document.getElementById('empMlFilter').value;
-  let q = sb.from('moonlighting_submissions').select('*').eq('user_id', currentUser.id).order('session_date', { ascending: false });
+  let q = sb.from('moonlighting_submissions').select('*').eq('user_id', currentUser.id).neq('deleted', true).order('session_date', { ascending: false });
   if (filter !== 'all') q = q.eq('status', filter);
   const { data, error } = await q;
   renderEmpMoonlighting(data || [], error);
 }
 
 async function loadEmpMoonlightingStats() {
-  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, cta, us, xray, dxa, nm').eq('user_id', currentUser.id);
+  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, cta, us, xray, dxa, nm').eq('user_id', currentUser.id).neq('deleted', true);
   if (!data) return;
   let pending = 0, approved = 0, paid = 0, studies = 0;
   data.forEach(r => {
@@ -2199,10 +2203,11 @@ async function loadMgrMoonlighting() {
 }
 
 async function loadMgrMoonlightingStats() {
-  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, cta, us, xray, dxa, nm');
+  const { data } = await sb.from('moonlighting_submissions').select('status, hours, mr, ct, cta, us, xray, dxa, nm, deleted');
   if (!data) return;
   let pending = 0, approvedHrs = 0, paidHrs = 0, studies = 0;
   data.forEach(r => {
+    if (r.deleted) return;
     if (r.status === 'pending')  pending++;
     if (r.status === 'approved') approvedHrs += parseFloat(r.hours || 0);
     if (r.status === 'paid')     paidHrs     += parseFloat(r.hours || 0);
@@ -2226,20 +2231,25 @@ function renderMgrMoonlighting(rows, error) {
       <th>Date</th><th>Employee</th><th>Hours</th><th>MR</th><th>CT</th><th>CTA</th><th>US</th><th>XR</th><th>DXA</th><th>NM/PET</th><th>Status</th><th>Actions</th>
     </tr></thead>
     <tbody>${rows.map(r => {
-      const adminBtns = r.entered_by_admin && r.status !== 'paid'
+      const isDeleted = !!r.deleted;
+      const strike = isDeleted ? 'text-decoration:line-through;opacity:0.55;' : '';
+      const adminBtns = r.entered_by_admin && !isDeleted && r.status !== 'paid'
         ? ` <button class="btn btn-ghost btn-sm" onclick="openEditAdminMlEntry('${r.id}')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteAdminMlEntry('${r.id}')">🗑 Delete</button>`
         : '';
-      const actions = r.status === 'pending'
+      const actions = isDeleted
+        ? `<div class="action-row"><span style="font-size:11px;color:var(--text-muted)">Deleted${r.deleted_by ? ' by ' + esc(r.deleted_by) : ''}${r.deleted_at ? '<br>' + fmtDate(r.deleted_at) : ''}</span></div>`
+        : r.status === 'pending'
         ? `<div class="action-row"><button class="btn btn-ghost btn-sm" onclick="openMlReview('${r.id}')">Review</button>${adminBtns}</div>`
         : r.status === 'approved'
         ? `<div class="action-row"><button class="btn btn-primary btn-sm" onclick="markMlPaid('${r.id}')">✓ Mark Paid</button>${adminBtns}</div>`
         : `<div class="action-row"><span style="font-size:12px;color:var(--text-muted)">${r.status === 'paid' ? '✓ Paid' : '✗ Rejected'}</span>${adminBtns}</div>`;
-      return `<tr>
-        <td style="white-space:nowrap">${fmtDate(r.session_date)}</td>
-        <td><strong>${esc(r.full_name||'—')}</strong>${r.entered_by_admin ? ` <span style="font-size:10px;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Admin Entry${r.entered_by_name ? ' · ' + esc(r.entered_by_name) : ''}</span>` : ''}</td>
-        <td><strong>${parseFloat(r.hours).toFixed(1)}</strong></td>
-        <td>${r.mr||0}</td><td>${r.ct||0}</td><td>${r.cta||0}</td><td>${r.us||0}</td><td>${r.xray||0}</td><td>${r.dxa||0}</td><td>${r.nm||0}</td>
-        <td>${mlBadge(r.status)}</td>
+      const deletedBadge = isDeleted ? ` <span style="font-size:10px;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Deleted</span>` : '';
+      return `<tr style="${isDeleted ? 'background:var(--surface2)' : ''}">
+        <td style="white-space:nowrap;${strike}">${fmtDate(r.session_date)}</td>
+        <td><strong style="${strike}">${esc(r.full_name||'—')}</strong>${deletedBadge}${!isDeleted && r.entered_by_admin ? ` <span style="font-size:10px;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:4px;padding:1px 5px;vertical-align:middle;white-space:nowrap">Admin Entry${r.entered_by_name ? ' · ' + esc(r.entered_by_name) : ''}</span>` : ''}</td>
+        <td style="${strike}"><strong>${parseFloat(r.hours).toFixed(1)}</strong></td>
+        <td style="${strike}">${r.mr||0}</td><td style="${strike}">${r.ct||0}</td><td style="${strike}">${r.cta||0}</td><td style="${strike}">${r.us||0}</td><td style="${strike}">${r.xray||0}</td><td style="${strike}">${r.dxa||0}</td><td style="${strike}">${r.nm||0}</td>
+        <td>${isDeleted ? '' : mlBadge(r.status)}</td>
         <td>${actions}</td>
       </tr>`;
     }).join('')}
