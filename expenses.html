@@ -6,7 +6,7 @@
   <title>ARI Expense Reimbursement</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     /* ── CONFIG: paste your Supabase values into the JS below ── */
@@ -1344,7 +1344,7 @@ async function openAdminExpModal() {
   document.getElementById('adminExpCategory').value = document.getElementById('adminExpCategory').options[0].value;
   document.getElementById('adminExpPool').value    = '';
   document.getElementById('adminExpAmount').value  = '';
-  document.getElementById('adminExpDate').value    = new Date().toISOString().slice(0,10);
+  document.getElementById('adminExpDate').value    = todayLocal();
   document.getElementById('adminExpDesc').value    = '';
   document.getElementById('adminExpNotes').value   = '';
 
@@ -1468,7 +1468,7 @@ function openSubmitModal() {
   document.getElementById('submitBtn').textContent = 'Submit Expense';
   document.getElementById('subCategory').value = document.getElementById('subCategory').options[0].value;
   document.getElementById('subAmount').value   = '';
-  document.getElementById('subDate').value     = new Date().toISOString().slice(0,10);
+  document.getElementById('subDate').value     = todayLocal();
   document.getElementById('subDesc').value     = '';
   clearFile();
   clearError('submitError');
@@ -1937,7 +1937,7 @@ function openMoonlightingModal() {
   editingMlId = null;
   document.getElementById('moonlightingModal').querySelector('.modal-title').textContent = 'Log Moonlighting Session';
   document.getElementById('mlSubmitBtn').textContent = 'Submit Session';
-  document.getElementById('mlDate').value     = new Date().toISOString().slice(0,10);
+  document.getElementById('mlDate').value     = todayLocal();
   document.getElementById('mlHours').value    = '';
   document.getElementById('mlMR').value       = '0';
   document.getElementById('mlCT').value       = '0';
@@ -2027,7 +2027,7 @@ async function openAdminMlModal() {
   clearError('adminMlError');
   document.getElementById('adminMlModal').querySelector('.modal-title').textContent = 'Add Entry for Employee';
   document.getElementById('adminMlSubmitBtn').textContent = 'Add Session';
-  document.getElementById('adminMlDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('adminMlDate').value = todayLocal();
   document.getElementById('adminMlHours').value = '';
   ['MR','CT','CTA','US','XR','DXA','NM'].forEach(m => document.getElementById('adminMl'+m).value = '0');
   document.getElementById('adminMlNotes').value = '';
@@ -2302,11 +2302,48 @@ async function markMlPaid(id) {
   loadMgrMoonlightingStats();
 }
 
+function applyMlSheetStyle(ws, headerIdx, dataStart, numData, totalsIdx, currencyCol) {
+  if (!ws['!ref']) return;
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  const rgb = c => ({ rgb: c });
+
+  for (let R = range.s.r; R <= range.e.r; R++) {
+    for (let C = range.s.c; C <= range.e.c; C++) {
+      const addr = XLSX.utils.encode_cell({ r: R, c: C });
+      if (!ws[addr]) continue;
+
+      if (R === 0 && C === 0) {
+        ws[addr].s = { font: { bold: true, sz: 13, color: rgb('1A365D'), name: 'Arial' } };
+      } else if ((R === 1 || R === 2) && C === 0) {
+        ws[addr].s = { font: { italic: true, sz: 10, color: rgb('4A6080'), name: 'Arial' } };
+      } else if (R === headerIdx) {
+        ws[addr].s = {
+          fill: { patternType: 'solid', fgColor: rgb('1E4176') },
+          font: { bold: true, color: rgb('FFFFFF'), sz: 10, name: 'Arial' },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: { bottom: { style: 'medium', color: rgb('0D2450') } },
+        };
+      } else if (R >= dataStart && R < dataStart + numData) {
+        const isAlt = (R - dataStart) % 2 === 1;
+        ws[addr].s = isAlt ? { fill: { patternType: 'solid', fgColor: rgb('EBF3FB') } } : {};
+        if (C === currencyCol && ws[addr].t === 'n') ws[addr].z = '"$"#,##0.00';
+      } else if (totalsIdx !== null && R === totalsIdx) {
+        ws[addr].s = {
+          fill: { patternType: 'solid', fgColor: rgb('BBDAF4') },
+          font: { bold: true, name: 'Arial' },
+          border: { top: { style: 'medium', color: rgb('1E4176') } },
+        };
+        if (C === currencyCol && ws[addr].t === 'n') ws[addr].z = '"$"#,##0.00';
+      }
+    }
+  }
+}
+
 async function exportMoonlightingExcel() {
   const { data } = await sb.from('moonlighting_submissions').select('*').order('session_date', { ascending: true });
   if (!data?.length) return showToast('No moonlighting data to export.', true);
 
-  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:4},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
+  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:12},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
 
   // Group sessions by employee name
   const byEmployee = {};
@@ -2346,6 +2383,7 @@ async function exportMoonlightingExcel() {
   ];
   const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
   summaryWs['!cols'] = [{wch:24},{wch:10},{wch:7},{wch:8},{wch:12},{wch:8},{wch:7},{wch:14},{wch:10},{wch:14},{wch:16}];
+  applyMlSheetStyle(summaryWs, 6, 7, Object.keys(byEmployee).length, null, 10);
   XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary by Pay Period');
 
   // ── One sheet per employee ─────────────────────────────────
@@ -2362,15 +2400,17 @@ async function exportMoonlightingExcel() {
       sessions.reduce((a, r) => a + (r.xray || 0), 0),
       sessions.reduce((a, r) => a + (r.dxa  || 0), 0),
       sessions.reduce((a, r) => a + (r.nm   || 0), 0),
-      '', '',
+      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
+      '',
       sessions.reduce((a, r) => a + parseFloat(r.hours || 0) * 325, 0),
     ];
+    const footnoteRow = 7 + sessions.length + 3;
     const aoa = [
       [name],
       ['Extra Work Hours'],
       ['2026'],
       [], [], [],
-      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','','','Dollar Amount','Date Paid','','Notes'],
+      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','All Studies','','Dollar Amount','Date Paid','','Notes'],
       ...sessions.map(r => [
         r.session_date || '',
         parseFloat(r.hours || 0),
@@ -2382,16 +2422,22 @@ async function exportMoonlightingExcel() {
         r.xray || 0,
         r.dxa  || 0,
         r.nm   || 0,
-        '', '',
+        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0),
+        '',
         parseFloat(r.hours || 0) * 325,
         r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
         '',
         r.comments || '',
       ]),
       [], [], totRow,
+      [],
+      ['* MCCU Total = MRI + CT + CTA + Ultrasound'],
     ];
     const ws = XLSX.utils.aoa_to_sheet(aoa);
     ws['!cols'] = COLS;
+    applyMlSheetStyle(ws, 6, 7, sessions.length, 7 + sessions.length + 2, 12);
+    const fnAddr = XLSX.utils.encode_cell({ r: footnoteRow, c: 0 });
+    if (ws[fnAddr]) ws[fnAddr].s = { font: { italic: true, color: { rgb: '555555' }, sz: 9, name: 'Arial' } };
     XLSX.utils.book_append_sheet(wb, ws, lastName);
   });
 
@@ -2407,7 +2453,7 @@ async function exportEmpMoonlightingExcel() {
   if (!data?.length) return showToast('No moonlighting data to export.', true);
 
   const name = currentProfile?.full_name || currentUser.email;
-  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:4},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
+  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:12},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
 
   const totalHrs = data.reduce((s, r) => s + parseFloat(r.hours || 0), 0);
   const totRow = [
@@ -2421,16 +2467,18 @@ async function exportEmpMoonlightingExcel() {
     data.reduce((a, r) => a + (r.xray || 0), 0),
     data.reduce((a, r) => a + (r.dxa  || 0), 0),
     data.reduce((a, r) => a + (r.nm   || 0), 0),
-    '', '',
+    data.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
+    '',
     totalHrs * 325,
   ];
 
+  const footnoteRow = 7 + data.length + 3;
   const aoa = [
     [name],
     ['Extra Work Hours'],
     ['2026'],
     [], [], [],
-    ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','','','Dollar Amount','Date Paid','','Notes'],
+    ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','All Studies','','Dollar Amount','Date Paid','','Notes'],
     ...data.map(r => [
       r.session_date || '',
       parseFloat(r.hours || 0),
@@ -2442,17 +2490,23 @@ async function exportEmpMoonlightingExcel() {
       r.xray || 0,
       r.dxa  || 0,
       r.nm   || 0,
-      '', '',
+      (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0),
+      '',
       parseFloat(r.hours || 0) * 325,
       r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
       '',
       r.comments || '',
     ]),
     [], [], totRow,
+    [],
+    ['* MCCU Total = MRI + CT + CTA + Ultrasound'],
   ];
 
   const ws = XLSX.utils.aoa_to_sheet(aoa);
   ws['!cols'] = COLS;
+  applyMlSheetStyle(ws, 6, 7, data.length, 7 + data.length + 2, 12);
+  const fnAddr = XLSX.utils.encode_cell({ r: footnoteRow, c: 0 });
+  if (ws[fnAddr]) ws[fnAddr].s = { font: { italic: true, color: { rgb: '555555' }, sz: 9, name: 'Arial' } };
   const wb = XLSX.utils.book_new();
   const sheetName = name.split(' ').pop().slice(0, 31);
   XLSX.utils.book_append_sheet(wb, ws, sheetName);
@@ -2644,6 +2698,9 @@ function poolBadge(pool) {
   if (!pool) return '<span style="color:var(--text-muted)">—</span>';
   const cls = pool === 'HRA' ? 'pool-hra' : pool === 'CME' ? 'pool-cme' : 'pool-corp';
   return `<span class="${cls}">${pool}</span>`;
+}
+function todayLocal() {
+  return new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
 }
 function fmtDate(d) {
   if (!d) return '—';
