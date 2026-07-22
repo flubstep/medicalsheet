@@ -2305,7 +2305,7 @@ async function exportMoonlightingExcel() {
   const { data } = await sb.from('moonlighting_submissions').select('*').order('session_date', { ascending: true });
   if (!data?.length) return showToast('No moonlighting data to export.', true);
 
-  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:4},{wch:4},{wch:10},{wch:14},{wch:4},{wch:35}];
+  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:4},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
 
   // Group sessions by employee name
   const byEmployee = {};
@@ -2369,7 +2369,7 @@ async function exportMoonlightingExcel() {
       ['Extra Work Hours'],
       ['2026'],
       [], [], [],
-      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','','Amt','Pay Date','','Notes'],
+      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','','','Dollar Amount','Date Paid','','Notes'],
       ...sessions.map(r => [
         r.session_date || '',
         parseFloat(r.hours || 0),
