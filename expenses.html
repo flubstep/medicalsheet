@@ -470,6 +470,7 @@
             <option value="paid">Paid</option>
             <option value="rejected">Rejected</option>
           </select>
+          <button class="btn btn-ghost" onclick="exportEmpMoonlightingExcel()">⬇ Export Excel</button>
         </div>
         <div id="empMlTableWrap"><div class="loading">Loading…</div></div>
       </div>
@@ -2395,6 +2396,67 @@ async function exportMoonlightingExcel() {
   });
 
   XLSX.writeFile(wb, `ARI-moonlighting-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+async function exportEmpMoonlightingExcel() {
+  const { data } = await sb.from('moonlighting_submissions')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .neq('deleted', true)
+    .order('session_date', { ascending: true });
+  if (!data?.length) return showToast('No moonlighting data to export.', true);
+
+  const name = currentProfile?.full_name || currentUser.email;
+  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:4},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
+
+  const totalHrs = data.reduce((s, r) => s + parseFloat(r.hours || 0), 0);
+  const totRow = [
+    'Totals',
+    totalHrs,
+    data.reduce((a, r) => a + (r.mr   || 0), 0),
+    data.reduce((a, r) => a + (r.ct   || 0), 0),
+    data.reduce((a, r) => a + (r.cta  || 0), 0),
+    data.reduce((a, r) => a + (r.us   || 0), 0),
+    data.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
+    data.reduce((a, r) => a + (r.xray || 0), 0),
+    data.reduce((a, r) => a + (r.dxa  || 0), 0),
+    data.reduce((a, r) => a + (r.nm   || 0), 0),
+    '', '',
+    totalHrs * 325,
+  ];
+
+  const aoa = [
+    [name],
+    ['Extra Work Hours'],
+    ['2026'],
+    [], [], [],
+    ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','','','Dollar Amount','Date Paid','','Notes'],
+    ...data.map(r => [
+      r.session_date || '',
+      parseFloat(r.hours || 0),
+      r.mr   || 0,
+      r.ct   || 0,
+      r.cta  || 0,
+      r.us   || 0,
+      (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0),
+      r.xray || 0,
+      r.dxa  || 0,
+      r.nm   || 0,
+      '', '',
+      parseFloat(r.hours || 0) * 325,
+      r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
+      '',
+      r.comments || '',
+    ]),
+    [], [], totRow,
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = COLS;
+  const wb = XLSX.utils.book_new();
+  const sheetName = name.split(' ').pop().slice(0, 31);
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  XLSX.writeFile(wb, `ARI-moonlighting-${name.replace(/\s+/g,'-')}-${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 // ── MOONLIGHTING TRENDS CHART ──
