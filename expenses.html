@@ -889,12 +889,19 @@
       <button class="modal-close" onclick="closeModal('mlTrendsModal')">✕</button>
     </div>
     <div class="modal-body">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
         <div style="display:flex;align-items:center;gap:12px">
           <label style="font-weight:600;font-size:13px">Radiologist</label>
           <select id="mlTrendsEmployee" onchange="mlTrendsSelectionChanged()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);min-width:200px"></select>
         </div>
         <button class="btn btn-ghost btn-sm" onclick="downloadTrendsChart()">⬇ Download PNG</button>
+      </div>
+      <div id="mlTrendsDateRow" style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <label style="font-weight:600;font-size:13px;white-space:nowrap">Date range</label>
+        <input type="date" id="mlTrendsFrom" onchange="mlTrendsSelectionChanged()" style="font-size:13px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text)">
+        <span style="font-size:13px;color:var(--text-muted)">to</span>
+        <input type="date" id="mlTrendsTo" onchange="mlTrendsSelectionChanged()" style="font-size:13px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text)">
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('mlTrendsFrom').value='';document.getElementById('mlTrendsTo').value='';mlTrendsSelectionChanged()">Clear</button>
       </div>
       <div id="mlTrendsNoData" style="display:none;text-align:center;padding:40px;color:var(--text-muted)">No data available.</div>
       <div style="position:relative;height:360px">
@@ -2526,6 +2533,7 @@ async function openMlTrendsModal() {
   openModal('mlTrendsModal');
   const sel = document.getElementById('mlTrendsEmployee');
   sel.parentElement.style.display = 'flex';
+  document.getElementById('mlTrendsDateRow').style.display = 'flex';
   sel.innerHTML = '<option value="all">Loading…</option>';
 
   const { data } = await sb.from('moonlighting_submissions')
@@ -2554,6 +2562,7 @@ async function openEmpMlTrendsModal() {
   openModal('mlTrendsModal');
   const sel = document.getElementById('mlTrendsEmployee');
   sel.parentElement.style.display = 'none';
+  document.getElementById('mlTrendsDateRow').style.display = 'none';
 
   const { data } = await sb.from('moonlighting_submissions')
     .select('full_name, session_date, hours')
@@ -2587,7 +2596,13 @@ function mlTrendsSelectionChanged() {
 }
 
 function renderMlTrendsChart(selected) {
-  const data = mlTrendsData;
+  const from = document.getElementById('mlTrendsFrom')?.value || '';
+  const to   = document.getElementById('mlTrendsTo')?.value   || '';
+  const data = mlTrendsData.filter(r => {
+    if (from && r.session_date < from) return false;
+    if (to   && r.session_date > to)   return false;
+    return true;
+  });
 
   // Collect all months present in data
   const months = [...new Set(data.map(r => r.session_date?.slice(0, 7)))].filter(Boolean).sort();
