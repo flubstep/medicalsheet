@@ -1806,6 +1806,7 @@ async function exportExcel() {
 
   const rows = data.map(r => ({
     'Submitted':      fmtDate(r.submitted_at),
+    'Quarter':        getQuarter(r.submitted_at),
     'Employee':       r.full_name || '',
     'Category':       r.category || '',
     'Description':    r.description || '',
@@ -1823,6 +1824,7 @@ async function exportExcel() {
   // Column widths
   ws['!cols'] = [
     { wch: 14 }, // Submitted
+    { wch: 10 }, // Quarter
     { wch: 22 }, // Employee
     { wch: 20 }, // Category
     { wch: 36 }, // Description
@@ -1853,9 +1855,7 @@ async function saveEmployeeSettings(userId) {
 function getQuarter(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
-  const q  = Math.ceil((d.getMonth() + 1) / 3);
-  const yr = String(d.getFullYear()).slice(-2);
-  return `${q}Q${yr}`;
+  return `Q${Math.ceil((d.getMonth() + 1) / 3)} ${d.getFullYear()}`;
 }
 
 function getGLCode(pool, cls, category) {
@@ -2350,7 +2350,7 @@ async function exportMoonlightingExcel() {
   const { data } = await sb.from('moonlighting_submissions').select('*').order('session_date', { ascending: true });
   if (!data?.length) return showToast('No moonlighting data to export.', true);
 
-  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:12},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
+  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:7},{wch:7},{wch:7},{wch:4},{wch:12},{wch:12},{wch:14},{wch:14},{wch:4},{wch:35}];
 
   // Group sessions by employee name
   const byEmployee = {};
@@ -2403,12 +2403,12 @@ async function exportMoonlightingExcel() {
       sessions.reduce((a, r) => a + (r.ct   || 0), 0),
       sessions.reduce((a, r) => a + (r.cta  || 0), 0),
       sessions.reduce((a, r) => a + (r.us   || 0), 0),
-      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
       sessions.reduce((a, r) => a + (r.xray || 0), 0),
       sessions.reduce((a, r) => a + (r.dxa  || 0), 0),
       sessions.reduce((a, r) => a + (r.nm   || 0), 0),
-      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
       '',
+      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
+      sessions.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
       sessions.reduce((a, r) => a + parseFloat(r.hours || 0) * 325, 0),
     ];
     const footnoteRow = 7 + sessions.length + 3;
@@ -2417,7 +2417,7 @@ async function exportMoonlightingExcel() {
       ['Extra Work Hours'],
       ['2026'],
       [], [], [],
-      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','All Studies','','Dollar Amount','Date Paid','','Notes'],
+      ['Date','Hrs','MRIs','CT','CTA','Ultrasound','Xray','Dexa','NM/PET','','MCCU Total','All Studies','Dollar Amount','Date Paid','','Notes'],
       ...sessions.map(r => [
         r.session_date || '',
         parseFloat(r.hours || 0),
@@ -2425,12 +2425,12 @@ async function exportMoonlightingExcel() {
         r.ct   || 0,
         r.cta  || 0,
         r.us   || 0,
-        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0),
         r.xray || 0,
         r.dxa  || 0,
         r.nm   || 0,
-        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0),
         '',
+        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0),
+        (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0),
         parseFloat(r.hours || 0) * 325,
         r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
         '',
@@ -2460,7 +2460,7 @@ async function exportEmpMoonlightingExcel() {
   if (!data?.length) return showToast('No moonlighting data to export.', true);
 
   const name = currentProfile?.full_name || currentUser.email;
-  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:12},{wch:7},{wch:7},{wch:7},{wch:12},{wch:4},{wch:14},{wch:14},{wch:4},{wch:35}];
+  const COLS = [{wch:14},{wch:6},{wch:7},{wch:6},{wch:6},{wch:12},{wch:7},{wch:7},{wch:7},{wch:4},{wch:12},{wch:12},{wch:14},{wch:14},{wch:4},{wch:35}];
 
   const totalHrs = data.reduce((s, r) => s + parseFloat(r.hours || 0), 0);
   const totRow = [
@@ -2470,12 +2470,12 @@ async function exportEmpMoonlightingExcel() {
     data.reduce((a, r) => a + (r.ct   || 0), 0),
     data.reduce((a, r) => a + (r.cta  || 0), 0),
     data.reduce((a, r) => a + (r.us   || 0), 0),
-    data.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
     data.reduce((a, r) => a + (r.xray || 0), 0),
     data.reduce((a, r) => a + (r.dxa  || 0), 0),
     data.reduce((a, r) => a + (r.nm   || 0), 0),
-    data.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
     '',
+    data.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
+    data.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
     totalHrs * 325,
   ];
 
@@ -2485,7 +2485,7 @@ async function exportEmpMoonlightingExcel() {
     ['Extra Work Hours'],
     ['2026'],
     [], [], [],
-    ['Date','Hrs','MRIs','CT','CTA','Ultrasound','MCCU Total','Xray','Dexa','NM/PET','All Studies','','Dollar Amount','Date Paid','','Notes'],
+    ['Date','Hrs','MRIs','CT','CTA','Ultrasound','Xray','Dexa','NM/PET','','MCCU Total','All Studies','Dollar Amount','Date Paid','','Notes'],
     ...data.map(r => [
       r.session_date || '',
       parseFloat(r.hours || 0),
@@ -2493,12 +2493,12 @@ async function exportEmpMoonlightingExcel() {
       r.ct   || 0,
       r.cta  || 0,
       r.us   || 0,
-      (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0),
       r.xray || 0,
       r.dxa  || 0,
       r.nm   || 0,
-      (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0),
       '',
+      (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0),
+      (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0),
       parseFloat(r.hours || 0) * 325,
       r.status === 'paid' ? (r.reviewed_at || '').slice(0,10) : '',
       '',
