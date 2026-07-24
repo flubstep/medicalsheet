@@ -2370,7 +2370,7 @@ async function exportMoonlightingExcel() {
     ['Moonlighting Incentive'],
     ['2026'],
     [], [], [],
-    ['Employee', 'Total Hrs', 'MRIs', 'CT', 'CTA', 'Ultrasound', 'X-Ray', 'DXA', 'NM/PET', 'Total Studies', 'Total Amount ($)'],
+    ['Employee', 'Total Hrs', 'MRIs', 'CT', 'CTA', 'Ultrasound', 'X-Ray', 'DXA', 'NM/PET', '', 'MCCU Total', 'All Studies', 'Total Amount ($)'],
     ...Object.entries(byEmployee).map(([name, ss]) => {
       const hrs = ss.reduce((a, r) => a + parseFloat(r.hours || 0), 0);
       return [
@@ -2383,14 +2383,16 @@ async function exportMoonlightingExcel() {
         ss.reduce((a, r) => a + (r.xray || 0), 0),
         ss.reduce((a, r) => a + (r.dxa  || 0), 0),
         ss.reduce((a, r) => a + (r.nm   || 0), 0),
+        '',
+        ss.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.nm||0), 0),
         ss.reduce((a, r) => a + (r.mr||0)+(r.ct||0)+(r.cta||0)+(r.us||0)+(r.xray||0)+(r.dxa||0)+(r.nm||0), 0),
         hrs * 325,
       ];
     }),
   ];
   const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-  summaryWs['!cols'] = [{wch:24},{wch:10},{wch:7},{wch:8},{wch:12},{wch:8},{wch:7},{wch:14},{wch:10},{wch:14},{wch:16}];
-  applyMlSheetStyle(summaryWs, 6, 7, Object.keys(byEmployee).length, null, 10);
+  summaryWs['!cols'] = [{wch:24},{wch:10},{wch:7},{wch:8},{wch:12},{wch:8},{wch:7},{wch:7},{wch:7},{wch:4},{wch:12},{wch:12},{wch:16}];
+  applyMlSheetStyle(summaryWs, 6, 7, Object.keys(byEmployee).length, null, 12);
   XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary by Pay Period');
 
   // ── One sheet per employee ─────────────────────────────────
